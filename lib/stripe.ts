@@ -1,14 +1,28 @@
 import Stripe from 'stripe'
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  // @ts-expect-error - Stripe SDK may not have this version type yet
-  apiVersion: '2025-12-18.acacia',
-  typescript: true,
+let _stripe: Stripe | null = null
+
+export function getStripe(): Stripe {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not set')
+    }
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      typescript: true,
+    })
+  }
+  return _stripe
+}
+
+// Keep backwards compat export for existing imports
+export const stripe = new Proxy({} as Stripe, {
+  get(_, prop) {
+    return (getStripe() as Record<string | symbol, unknown>)[prop]
+  },
 })
 
 /**
  * Format an amount in cents to a display string.
- * e.g. 3999 → "$39.99"
  */
 export function formatAmountForDisplay(
   amountCents: number,
@@ -24,7 +38,6 @@ export function formatAmountForDisplay(
 
 /**
  * Convert a display amount (dollars) to the smallest currency unit (cents).
- * e.g. 39.99 → 3999
  */
 export function formatAmountForStripe(
   amount: number,
