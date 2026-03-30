@@ -4,22 +4,12 @@ let _stripe: Stripe | null = null
 
 export function getStripe(): Stripe {
   if (!_stripe) {
-    if (!process.env.STRIPE_SECRET_KEY) {
-      throw new Error('STRIPE_SECRET_KEY is not set')
-    }
-    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
       typescript: true,
     })
   }
   return _stripe
 }
-
-// Keep backwards compat export for existing imports
-export const stripe = new Proxy({} as Stripe, {
-  get(_, prop) {
-    return (getStripe() as Record<string | symbol, unknown>)[prop]
-  },
-})
 
 /**
  * Format an amount in cents to a display string.
