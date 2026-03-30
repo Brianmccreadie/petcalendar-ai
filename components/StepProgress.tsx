@@ -1,4 +1,9 @@
-const steps = ['Upload', 'Style', 'Review', 'Order']
+const steps = [
+  { label: 'Snap', color: 'bg-[#FF6B35]', ring: 'ring-[#FF6B35]/30' },
+  { label: 'Style', color: 'bg-[#FFD166]', ring: 'ring-[#FFD166]/30' },
+  { label: 'Magic', color: 'bg-[#06D6A0]', ring: 'ring-[#06D6A0]/30' },
+  { label: 'Order', color: 'bg-[#7C3AED]', ring: 'ring-[#7C3AED]/30' },
+]
 
 interface StepProgressProps {
   currentStep: number // 1-based
@@ -8,46 +13,46 @@ export default function StepProgress({ currentStep }: StepProgressProps) {
   return (
     <div className="w-full max-w-2xl mx-auto mb-10">
       <div className="flex items-center justify-between">
-        {steps.map((label, i) => {
+        {steps.map((step, i) => {
           const stepNum = i + 1
           const isComplete = stepNum < currentStep
           const isCurrent = stepNum === currentStep
           const isFuture = stepNum > currentStep
 
           return (
-            <div key={label} className="flex items-center flex-1 last:flex-none">
+            <div key={step.label} className="flex items-center flex-1 last:flex-none">
               <div className="flex flex-col items-center">
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                  className={`w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 ${
                     isComplete
-                      ? 'bg-[#7C3AED] text-white'
+                      ? `${step.color} text-white shadow-md`
                       : isCurrent
-                        ? 'bg-[#7C3AED] text-white ring-4 ring-purple-200'
-                        : 'bg-gray-200 text-gray-500'
+                        ? `${step.color} text-white ${step.ring} ring-4 animate-pulse-glow shadow-lg`
+                        : 'bg-gray-200 text-gray-400'
                   }`}
                 >
                   {isComplete ? (
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                    </svg>
+                    <span className="text-lg">🐾</span>
                   ) : (
                     stepNum
                   )}
                 </div>
                 <span
-                  className={`mt-2 text-xs font-medium ${
-                    isFuture ? 'text-gray-400' : 'text-[#7C3AED]'
+                  className={`mt-2 text-xs font-bold tracking-wide ${
+                    isFuture ? 'text-gray-400' : 'text-[#2D1B69]'
                   }`}
                 >
-                  {label}
+                  {step.label}
                 </span>
               </div>
               {/* Connecting line */}
               {stepNum < steps.length && (
                 <div className="flex-1 mx-2">
                   <div
-                    className={`h-0.5 w-full ${
-                      isComplete ? 'bg-[#7C3AED]' : 'bg-gray-200'
+                    className={`h-1 w-full rounded-full transition-all duration-500 ${
+                      isComplete
+                        ? 'bg-gradient-to-r from-[#FF6B35] to-[#FFD166]'
+                        : 'bg-gray-200'
                     }`}
                   />
                 </div>

@@ -76,32 +76,20 @@ export default function PhotoUploader({
         onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-10 cursor-pointer transition-all duration-300 ${
+        className={`relative flex flex-col items-center justify-center rounded-3xl border-3 border-dashed p-12 cursor-pointer transition-all duration-300 ${
           isDragOver
-            ? 'border-purple-500 bg-purple-50/50 scale-[1.02]'
-            : 'border-gray-300 bg-white hover:border-purple-400 hover:bg-purple-50/30'
+            ? 'border-[#FF6B35] bg-[#FFF0E8] scale-[1.02]'
+            : 'border-[#FF6B35]/40 bg-white hover:border-[#FF6B35] hover:bg-[#FFF0E8]/50'
         } ${photos.length >= maxPhotos ? 'opacity-50 pointer-events-none' : ''}`}
       >
-        <svg
-          className="w-12 h-12 text-purple-400 mb-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
-          />
-        </svg>
-        <p className="text-gray-700 font-semibold mb-1">
-          Drag & drop your pet photos here
+        <span className="text-5xl mb-4">🐾</span>
+        <p className="text-[#2D1B69] font-bold text-lg mb-1">
+          Drop your pet photos here
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-[#2D1B69]/50">
           or click to browse ({photos.length}/{maxPhotos} photos)
         </p>
-        <p className="text-xs text-gray-400 mt-2">
+        <p className="text-xs text-[#2D1B69]/30 mt-3">
           JPG, PNG up to 10MB each
         </p>
         <input
@@ -123,7 +111,7 @@ export default function PhotoUploader({
           {photos.map((photo) => (
             <div
               key={photo.id}
-              className="group relative aspect-square rounded-xl overflow-hidden border border-gray-200 shadow-sm"
+              className="group relative aspect-square rounded-2xl overflow-hidden border-2 border-[#FF6B35]/15 shadow-sm hover:shadow-md transition-all duration-300"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

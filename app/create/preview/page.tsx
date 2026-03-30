@@ -11,6 +11,7 @@ export default function PreviewPage() {
   const router = useRouter()
   const [pages, setPages] = useState<CalendarPage[]>([])
   const [projectId, setProjectId] = useState<string | null>(null)
+  const [petName, setPetName] = useState('Your Pet')
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -18,6 +19,7 @@ export default function PreviewPage() {
     if (stored) {
       const data = JSON.parse(stored)
       setProjectId(data.projectId || 'demo')
+      if (data.petName) setPetName(data.petName)
 
       const demoPages: CalendarPage[] = [
         {
@@ -95,8 +97,11 @@ export default function PreviewPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-12 h-12 rounded-full border-4 border-purple-200 border-t-[#7C3AED] animate-spin" />
+      <div className="min-h-screen bg-[#FFFBF5] flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-5xl animate-bounce-gentle mb-4">🐾</div>
+          <p className="text-[#2D1B69]/60 font-medium">Loading your calendar...</p>
+        </div>
       </div>
     )
   }
@@ -107,42 +112,48 @@ export default function PreviewPage() {
     .sort((a, b) => (a.month_number ?? 0) - (b.month_number ?? 0))
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#FFFBF5]">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <StepProgress currentStep={3} />
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-            Your calendar is ready! 🎉
+          <h1 className="heading-playful text-3xl sm:text-4xl font-extrabold text-[#2D1B69]">
+            {petName}&apos;s Calendar is Ready! 🎉
           </h1>
-          <p className="mt-3 text-gray-500 max-w-lg mx-auto">
-            Review each month below. Not happy with one? Click the refresh button to regenerate it (up to 3 times per month).
+          <p className="mt-3 text-[#2D1B69]/60 max-w-lg mx-auto">
+            Review each month below. Not happy with one? Hit regenerate!
           </p>
         </div>
 
         {/* Instructions callout */}
-        <div className="mb-10 mx-auto max-w-2xl rounded-xl bg-purple-50 border border-purple-100 p-5 flex items-start gap-4">
+        <div className="mb-10 mx-auto max-w-2xl rounded-2xl bg-[#FFF0E8] border border-[#FF6B35]/15 p-5 flex items-start gap-4">
           <span className="text-2xl shrink-0">💡</span>
-          <p className="text-sm text-purple-700 leading-relaxed">
-            Click any month to see it larger. Use the 🔄 button to regenerate months you want to change. When you&apos;re happy, hit Order!
+          <p className="text-sm text-[#FF6B35]/80 leading-relaxed font-medium">
+            <strong>How to customize:</strong> Tap any month to see it bigger. Not quite right? Hit 🔄 to regenerate it (3 tries per month). Love it? Hit Order below!
           </p>
         </div>
 
         {/* Cover */}
         {cover && (
           <div className="mb-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Cover</h2>
-            <PageCard
-              page={cover}
-              label="Cover"
-              onRegenerate={() => handleRegenerate(cover.id)}
-            />
+            <h2 className="text-lg font-extrabold text-[#2D1B69] mb-4 flex items-center gap-2">
+              🌟 Cover
+            </h2>
+            <div className="max-w-sm">
+              <PageCard
+                page={cover}
+                label="Cover"
+                onRegenerate={() => handleRegenerate(cover.id)}
+              />
+            </div>
           </div>
         )}
 
         {/* Month grid */}
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Monthly Pages</h2>
+        <h2 className="text-lg font-extrabold text-[#2D1B69] mb-4 flex items-center gap-2">
+          📅 Monthly Pages
+        </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {monthPages.map((page) => {
             const theme = MONTH_THEMES.find((m) => m.month === page.month_number)
@@ -161,19 +172,19 @@ export default function PreviewPage() {
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
           <button
             onClick={() => router.push('/create/style')}
-            className="text-gray-500 hover:text-[#7C3AED] font-medium transition-colors"
+            className="text-[#2D1B69]/50 hover:text-[#FF6B35] font-bold transition-colors"
           >
             ← Back to Style
           </button>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-3">
             <button
               onClick={() => router.push('/checkout')}
-              className="rounded-full bg-[#7C3AED] px-10 py-4 text-lg font-semibold text-white shadow-lg hover:bg-[#6D28D9] hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
+              className="rounded-full bg-[#FF6B35] px-10 py-4 text-lg font-bold text-white shadow-lg shadow-[#FF6B35]/20 hover:bg-[#E55A2B] hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
             >
-              Order This Calendar — $39.99
+              Order This Calendar — $39.99 📦
             </button>
-            <button className="text-sm text-gray-400 hover:text-[#7C3AED] transition-colors">
-              Save for Later
+            <button className="text-sm text-[#2D1B69]/40 hover:text-[#FF6B35] transition-colors font-medium">
+              💾 Save & Come Back Later
             </button>
           </div>
         </div>
@@ -195,9 +206,9 @@ function PageCard({
   const canRegenerate = attemptsLeft > 0 && page.status !== 'generating'
 
   return (
-    <div className="group rounded-2xl border border-gray-100 overflow-hidden bg-white hover:shadow-lg transition-all duration-300">
+    <div className="group rounded-3xl border-2 border-[#FF6B35]/8 overflow-hidden bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
       {/* Image area */}
-      <div className="relative aspect-[3/4] bg-gradient-to-br from-purple-100 to-purple-50 flex items-center justify-center">
+      <div className="relative aspect-[3/4] bg-gradient-to-br from-[#FFF0E8] to-[#FFF8E8] flex items-center justify-center">
         {page.status === 'complete' && page.cloudinary_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -207,39 +218,48 @@ function PageCard({
           />
         ) : page.status === 'generating' ? (
           <div className="text-center">
-            <div className="w-10 h-10 rounded-full border-3 border-purple-200 border-t-[#7C3AED] animate-spin mx-auto" />
-            <p className="mt-3 text-sm text-purple-500 font-medium">Creating...</p>
+            <div className="text-4xl animate-bounce-gentle mb-2">🐾</div>
+            <p className="text-sm text-[#FF6B35] font-bold">Creating...</p>
           </div>
         ) : page.status === 'failed' ? (
           <div className="text-center">
-            <span className="text-3xl">❌</span>
-            <p className="mt-2 text-sm text-red-500 font-medium">Generation failed</p>
+            <span className="text-3xl">😿</span>
+            <p className="mt-2 text-sm text-red-500 font-bold">Generation failed</p>
           </div>
         ) : (
           <div className="text-center">
-            <span className="text-4xl">🐾</span>
-            <p className="mt-2 text-sm text-purple-400">Pending</p>
+            <span className="text-5xl opacity-40">🐾</span>
+            <p className="mt-2 text-sm text-[#2D1B69]/30 font-medium">Pending</p>
           </div>
         )}
 
+        {/* Month pill */}
+        <div className="absolute top-3 left-3">
+          <span className="inline-block rounded-full bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-[#2D1B69] shadow-sm">
+            {label}
+          </span>
+        </div>
+
         {/* Hover overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
           {canRegenerate && (
             <button
               onClick={onRegenerate}
-              className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#7C3AED] shadow-lg hover:bg-purple-50 transition-colors"
+              className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#FF6B35] shadow-lg hover:bg-[#FFF0E8] transition-colors"
             >
-              🔄 Regenerate
+              🔄 Redo
             </button>
           )}
         </div>
       </div>
 
       {/* Info */}
-      <div className="p-3 flex items-center justify-between">
-        <span className="text-sm font-semibold text-gray-900">{label}</span>
+      <div className="p-3 flex items-center justify-between bg-white">
+        <span className="text-sm font-bold text-[#2D1B69]">{label}</span>
         {page.generation_attempts > 0 && (
-          <span className="text-xs text-gray-400">{attemptsLeft} left</span>
+          <span className="text-xs text-[#2D1B69]/40 font-medium">
+            {attemptsLeft} {attemptsLeft === 1 ? 'redo' : 'redos'} left
+          </span>
         )}
       </div>
     </div>
