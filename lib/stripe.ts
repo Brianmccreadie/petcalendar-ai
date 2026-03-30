@@ -1,7 +1,8 @@
 import Stripe from 'stripe'
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-03-25.dahlia',
+  // @ts-expect-error - Stripe SDK may not have this version type yet
+  apiVersion: '2025-12-18.acacia',
   typescript: true,
 })
 
