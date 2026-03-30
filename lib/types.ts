@@ -19,7 +19,7 @@ export type CalendarPageStatus = 'pending' | 'generating' | 'complete' | 'failed
 export type OrderStatus =
   | 'pending'
   | 'paid'
-  | 'submitted_to_printful'
+  | 'submitted_to_lulu'
   | 'in_production'
   | 'shipped'
   | 'delivered'
@@ -94,7 +94,7 @@ export interface Order {
   user_id: string
   stripe_checkout_session_id: string | null
   stripe_payment_intent_id: string | null
-  printful_order_id: string | null
+  lulu_order_id: string | null
   status: OrderStatus
   shipping_name: string | null
   shipping_address: ShippingAddress | null

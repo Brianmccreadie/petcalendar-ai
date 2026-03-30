@@ -75,13 +75,13 @@ export async function POST(request: Request) {
         .eq('id', metadata.project_id)
     }
 
-    // Trigger Printful submission (fire-and-forget)
+    // Trigger Lulu submission (fire-and-forget)
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     fetch(`${appUrl}/api/order`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ order_id: metadata.project_id }),
-    }).catch((err) => console.error('Printful submission trigger failed:', err))
+    }).catch((err) => console.error('Lulu submission trigger failed:', err))
   }
 
   return NextResponse.json({ received: true })

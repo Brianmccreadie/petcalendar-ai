@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
-import { createPrintfulOrder } from '@/lib/printful'
+import { createLuluOrder } from '@/lib/lulu'
 
 export async function POST(request: Request) {
   try {
@@ -56,22 +56,52 @@ export async function POST(request: Request) {
       )
     }
 
-    // Submit to Printful
-    const result = await createPrintfulOrder(order, pages)
+    // For Lulu, we need to compose all pages into a single interior PDF
+    // and provide a separate cover PDF. The calendar-renderer handles this.
+    // For now, we pass the Cloudinary URLs of the composed PDFs.
+    //
+    // The calendar-renderer should have already generated:
+    // 1. An interior PDF (all 12 month spreads)
+    // 2. A cover PDF (front + back cover)
+    //
+    // These URLs should be stored on the project or generated on-demand.
 
-    // Update order with Printful ID
+    const { data: project } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('id', order.project_id)
+      .single()
+
+    // TODO: In production, these would be pre-composed PDF URLs from the calendar renderer
+    // For now, we use placeholder logic — the actual PDF composition step
+    // (combining individual page images into print-ready PDFs) would happen
+    // before this endpoint is called.
+    const interiorPdfUrl = project?.interior_pdf_url || pages[0]?.cloudinary_url
+    const coverPdfUrl = project?.cover_pdf_url || pages.find((p: { page_type: string }) => p.page_type === 'cover')?.cloudinary_url
+
+    if (!interiorPdfUrl || !coverPdfUrl) {
+      return NextResponse.json(
+        { error: 'Calendar PDFs not yet generated. Please wait for processing to complete.' },
+        { status: 400 }
+      )
+    }
+
+    // Submit to Lulu
+    const result = await createLuluOrder(order, interiorPdfUrl, coverPdfUrl)
+
+    // Update order with Lulu order ID
     await supabase
       .from('orders')
       .update({
-        printful_order_id: String(result.printfulOrderId),
-        status: 'submitted_to_printful',
+        lulu_order_id: String(result.luluOrderId),
+        status: 'submitted_to_lulu',
         updated_at: new Date().toISOString(),
       })
       .eq('id', order_id)
 
     return NextResponse.json({
-      status: 'submitted_to_printful',
-      printful_order_id: result.printfulOrderId,
+      status: 'submitted_to_lulu',
+      lulu_order_id: result.luluOrderId,
     })
   } catch (error) {
     console.error('Order API error:', error)

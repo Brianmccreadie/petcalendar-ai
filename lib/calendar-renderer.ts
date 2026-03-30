@@ -159,7 +159,7 @@ export function composeCoverPage(
 
 /**
  * Generate composed URLs for all pages of a calendar.
- * Useful for building the Printful submission or the preview grid.
+ * Useful for building the Lulu submission or the preview grid.
  */
 export function composeAllCalendarPages(
   pages: Array<{ publicId: string; pageType: 'cover' | 'month' | 'back'; monthNumber: number | null }>,

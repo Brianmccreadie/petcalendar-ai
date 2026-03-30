@@ -178,8 +178,8 @@ CREATE TABLE orders (
   user_id UUID REFERENCES profiles(id),
   stripe_checkout_session_id TEXT,
   stripe_payment_intent_id TEXT,
-  printful_order_id TEXT,
-  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'submitted_to_printful', 'in_production', 'shipped', 'delivered', 'failed', 'refunded')),
+  lulu_order_id TEXT,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'submitted_to_lulu', 'in_production', 'shipped', 'delivered', 'failed', 'refunded')),
   shipping_name TEXT,
   shipping_address JSONB,
   shipping_method TEXT DEFAULT 'STANDARD',
@@ -211,5 +211,5 @@ CREATE INDEX idx_pet_photos_project_id ON pet_photos(project_id);
 CREATE INDEX idx_calendar_pages_project_id ON calendar_pages(project_id);
 CREATE INDEX idx_orders_user_id ON orders(user_id);
 CREATE INDEX idx_orders_project_id ON orders(project_id);
-CREATE INDEX idx_orders_printful_order_id ON orders(printful_order_id);
+CREATE INDEX idx_orders_lulu_order_id ON orders(lulu_order_id);
 CREATE INDEX idx_orders_stripe_session ON orders(stripe_checkout_session_id);
