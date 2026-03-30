@@ -4,44 +4,39 @@ import { useState } from 'react'
 
 const faqs = [
   {
-    question: 'How many photos do I need to upload?',
+    question: 'How many photos do I need?',
     answer:
-      'We recommend 3–5 clear photos of your pet from different angles. More variety helps the AI capture your pet\'s unique features — front, side, and playful shots work best.',
+      'We recommend 3-5 clear photos of your pet from different angles. Front, side, and full body shots help our AI capture their unique look.',
   },
   {
-    question: 'How long does it take to generate my calendar?',
+    question: 'What pets work best?',
     answer:
-      'AI generation typically takes 2–5 minutes for all 12 months plus the cover. You can preview each page and regenerate any month you\'re not happy with (up to 3 times per month).',
+      'Dogs and cats produce the best results, but our AI works great with rabbits, hamsters, birds, and other pets too. The clearer the photos, the better the outcome.',
   },
   {
-    question: 'What art styles are available?',
+    question: 'Can I change individual months?',
     answer:
-      'We offer 10 stunning styles: Watercolor, Oil Painting, Pop Art, Cartoon, Vintage Illustration, Minimalist Line Art, Stained Glass, Japanese Woodblock, Botanical, and Cozy Seasons. Each style transforms your pet into a unique monthly masterpiece.',
-  },
-  {
-    question: 'Can I choose which month my calendar starts?',
-    answer:
-      'Yes! You can select any starting month and year. Perfect for creating a calendar that starts on a birthday, anniversary, or any month you like.',
-  },
-  {
-    question: 'What is the print quality like?',
-    answer:
-      'Calendars are printed on premium thick matte paper at 300+ DPI for sharp, vivid images. They\'re standard wall calendar size — perfect for hanging at home or giving as a gift.',
+      'Yes! After generation, you can preview every month and regenerate any page you\'re not happy with — up to 3 times per month, completely free.',
   },
   {
     question: 'How long does shipping take?',
     answer:
-      'Production takes 3–5 business days, and standard shipping within the US is 5–7 business days. Shipping is free! You\'ll receive tracking information once your calendar ships.',
+      'Production takes 3-5 business days, and standard shipping within the US is 5-7 business days. Shipping is free! You\'ll receive tracking information once your calendar ships.',
+  },
+  {
+    question: 'What if I don\'t like the result?',
+    answer:
+      'You can regenerate any month up to 3 times before ordering. If you\'re still not satisfied after receiving your calendar, contact us and we\'ll make it right.',
   },
   {
     question: 'Can I order multiple copies?',
     answer:
-      'Absolutely! Your first calendar is $39.99, and additional copies of the same calendar are just $29.99 each — perfect for gifts.',
+      'Absolutely! Your first calendar is $39.99, and additional copies of the same design are just $29.99 each — perfect for gifts.',
   },
   {
-    question: 'What if I\'m not happy with the result?',
+    question: 'What paper quality is used?',
     answer:
-      'You can regenerate any month up to 3 times before ordering. If you\'re still not satisfied after receiving your calendar, contact us and we\'ll make it right.',
+      'Calendars are printed on premium 100# glossy paper with Wire-O binding. Standard wall calendar size (11x8.5") — perfect for hanging at home or gifting.',
   },
 ]
 
@@ -49,13 +44,12 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section id="faq" className="bg-[#FFFBF5] py-20 sm:py-28">
+    <section id="faq" className="bg-white py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-            Frequently Asked Questions
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">
+            Questions? We&apos;ve Got Answers
           </h2>
-          <div className="mt-4 mx-auto w-20 h-1 rounded-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500" />
         </div>
 
         <div className="space-y-3">
@@ -64,7 +58,11 @@ export default function FAQ() {
             return (
               <div
                 key={index}
-                className="rounded-2xl bg-white border border-gray-100 shadow-sm overflow-hidden transition-shadow hover:shadow-md"
+                className={`rounded-2xl border overflow-hidden transition-all duration-300 ${
+                  isOpen
+                    ? 'border-[#7C3AED]/20 bg-purple-50/50 shadow-sm'
+                    : 'border-gray-100 bg-white hover:border-gray-200'
+                }`}
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}
@@ -73,21 +71,17 @@ export default function FAQ() {
                   <span className="font-semibold text-gray-900 pr-4">
                     {faq.question}
                   </span>
-                  <svg
-                    className={`w-5 h-5 text-purple-500 shrink-0 transition-transform duration-300 ${
-                      isOpen ? 'rotate-180' : ''
+                  <span
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+                      isOpen
+                        ? 'bg-[#7C3AED] text-white rotate-45'
+                        : 'bg-gray-100 text-gray-500'
                     }`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                    />
-                  </svg>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                  </span>
                 </button>
                 <div
                   className={`overflow-hidden transition-all duration-300 ${
