@@ -28,6 +28,7 @@ const faqs = [
     answer:
       'Production takes 3-5 business days, and standard shipping within the US is 5-7 business days. Shipping is free! You\'ll receive tracking information once your calendar ships.',
   },
+  {
     emoji: '🎁',
     question: 'Can I order multiple copies?',
     answer:
