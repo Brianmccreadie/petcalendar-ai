@@ -95,7 +95,13 @@ export default function StylePage() {
         <StylePicker
           selectedStyle={selectedStyle}
           petType={petType}
-          onSelect={setSelectedStyle}
+          onSelect={(style) => {
+            setSelectedStyle(style)
+            // Auto-scroll to the bottom section after selection
+            setTimeout(() => {
+              bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }, 150)
+          }}
         />
 
         {/* Year picker */}
@@ -118,14 +124,6 @@ export default function StylePage() {
               ))}
             </select>
           </div>
-        </div>
-
-        {/* Info callout */}
-        <div className="mt-6 mx-auto max-w-md rounded-2xl bg-[#FFF0E8] border border-[#FF6B35]/15 p-4 flex items-start gap-3">
-          <span className="text-lg shrink-0">⏱</span>
-          <p className="text-sm text-[#FF6B35]/80 font-medium">
-            This takes about 2 minutes. Grab a treat for your pet while you wait!
-          </p>
         </div>
 
         {/* Error */}
