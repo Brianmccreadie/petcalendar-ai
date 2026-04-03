@@ -1,14 +1,15 @@
 import Hero from '@/components/Hero'
 import HowItWorks from '@/components/HowItWorks'
-import StylePicker from '@/components/StylePicker'
 import PricingSection from '@/components/PricingSection'
 import FAQ from '@/components/FAQ'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import Image from 'next/image'
+import { CALENDAR_STYLES } from '@/lib/types'
 
 const testimonials = [
   {
-    quote: 'My mom cried happy tears when she opened this as a Christmas gift. Buddy looked SO GOOD as a watercolor!',
+    quote: 'My mom cried happy tears when she opened this as a Christmas gift. Buddy as a Space Explorer was INCREDIBLE!',
     name: 'Sarah & Buddy the Golden',
     emoji: '🐕',
   },
@@ -22,6 +23,17 @@ const testimonials = [
     name: 'Mike & Biscuit the Pug',
     emoji: '🐕',
   },
+]
+
+const featuredThemes = [
+  { id: 'wizarding-world' as const, emoji: '🧙' },
+  { id: 'space-explorer' as const, emoji: '🚀' },
+  { id: 'secret-agent' as const, emoji: '🕵️' },
+  { id: 'superhero-origin' as const, emoji: '🦸' },
+  { id: 'pirate-life' as const, emoji: '🏴‍☠️' },
+  { id: 'high-school-yearbook' as const, emoji: '📸' },
+  { id: 'cozy-vibes' as const, emoji: '☕' },
+  { id: 'tiny-human' as const, emoji: '🛒' },
 ]
 
 const productFeatures = [
@@ -39,7 +51,56 @@ export default function Home() {
     <>
       <Hero />
       <HowItWorks />
-      <StylePicker showcase />
+      {/* Featured Themes */}
+      <section className="bg-[#FFFBF5] py-20 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#2D1B69]">
+              50 Themes to Choose From 🎨
+            </h2>
+            <p className="mt-4 text-lg text-[#2D1B69]/60">Here are a few of our favorites</p>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {featuredThemes.map((theme) => {
+              const style = CALENDAR_STYLES.find((s) => s.id === theme.id)
+              if (!style) return null
+              return (
+                <div
+                  key={style.id}
+                  className="group rounded-2xl overflow-hidden bg-white border border-[#FF6B35]/10 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                >
+                  <div className="relative aspect-[3/2] bg-gradient-to-br from-[#FFD166]/20 to-[#FF6B35]/20">
+                    <Image
+                      src={style.preview}
+                      alt={style.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+                  </div>
+                  <div className="p-3 sm:p-4">
+                    <p className="font-bold text-[#2D1B69] text-sm sm:text-base flex items-center gap-1.5">
+                      <span>{theme.emoji}</span>
+                      {style.name}
+                    </p>
+                    <p className="text-xs sm:text-sm text-[#2D1B69]/60 mt-1 line-clamp-1">
+                      {style.description}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div className="text-center mt-12">
+            <Link
+              href="/create"
+              className="inline-flex items-center justify-center rounded-full bg-[#FF6B35] px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-[#FF6B35]/20 hover:bg-[#E55A2B] hover:-translate-y-0.5 transition-all duration-300"
+            >
+              See All 50 Themes →
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Testimonials */}
       <section className="bg-white py-20 sm:py-28">
@@ -83,7 +144,7 @@ export default function Home() {
               <div className="w-72 h-80 rounded-3xl bg-gradient-to-br from-[#FF6B35]/15 via-[#FFD166]/15 to-[#06D6A0]/15 border-4 border-white shadow-2xl rotate-[-4deg] hover:rotate-0 transition-transform duration-500 flex flex-col items-center justify-center overflow-hidden">
                 <span className="text-7xl mb-3">🐕</span>
                 <span className="text-sm font-extrabold text-[#2D1B69]/70">2026 Calendar</span>
-                <span className="text-xs text-[#2D1B69]/40 mt-1">Watercolor Style</span>
+                <span className="text-xs text-[#2D1B69]/40 mt-1">Wizarding World</span>
                 <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/80" />
               </div>
               {/* Shadow card behind */}

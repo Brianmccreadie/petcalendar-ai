@@ -80,10 +80,65 @@ CREATE POLICY "Users can delete own projects"
   ON projects FOR DELETE
   USING (auth.uid() = user_id);
 
+-- ---- Pets ----
+CREATE TABLE pets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  pet_type TEXT NOT NULL DEFAULT 'dog' CHECK (pet_type IN ('dog', 'cat', 'other')),
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE pets ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own pets"
+  ON pets FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM projects
+      WHERE projects.id = pets.project_id
+        AND projects.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Users can insert own pets"
+  ON pets FOR INSERT
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM projects
+      WHERE projects.id = pets.project_id
+        AND projects.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Users can update own pets"
+  ON pets FOR UPDATE
+  USING (
+    EXISTS (
+      SELECT 1 FROM projects
+      WHERE projects.id = pets.project_id
+        AND projects.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Users can delete own pets"
+  ON pets FOR DELETE
+  USING (
+    EXISTS (
+      SELECT 1 FROM projects
+      WHERE projects.id = pets.project_id
+        AND projects.user_id = auth.uid()
+    )
+  );
+
+CREATE INDEX idx_pets_project_id ON pets(project_id);
+
 -- ---- Pet Photos ----
 CREATE TABLE pet_photos (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+  pet_id UUID REFERENCES pets(id) ON DELETE CASCADE,
   cloudinary_url TEXT NOT NULL,
   cloudinary_public_id TEXT NOT NULL,
   original_filename TEXT,
@@ -128,6 +183,7 @@ CREATE POLICY "Users can delete own pet photos"
 CREATE TABLE calendar_pages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+  pet_id UUID REFERENCES pets(id),
   page_type TEXT NOT NULL CHECK (page_type IN ('cover', 'month', 'back')),
   month_number INTEGER,
   prompt TEXT,

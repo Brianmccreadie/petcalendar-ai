@@ -9,6 +9,8 @@ const statusConfig: Record<string, { label: string; emoji: string; color: string
   shipped: { label: 'On Its Way!', emoji: '🚚', color: 'bg-[#E8FFF7] text-[#06D6A0]' },
 }
 
+const resumableStatuses = ['uploading', 'generating', 'preview']
+
 // Demo data — in production this comes from Supabase
 const demoProjects = [
   {
@@ -16,7 +18,7 @@ const demoProjects = [
     name: 'My Pet Calendar',
     pet_name: 'Buddy',
     pet_type: 'dog',
-    style: 'Watercolor',
+    style: 'Mythical Quest',
     status: 'preview',
     created_at: '2026-03-28T12:00:00Z',
   },
@@ -26,6 +28,18 @@ const petEmojis: Record<string, string> = {
   dog: '🐕',
   cat: '🐱',
   other: '🐾',
+}
+
+function getResumeHref(project: { id: string; status: string }): string {
+  switch (project.status) {
+    case 'uploading':
+      return `/create?project=${project.id}`
+    case 'generating':
+    case 'preview':
+      return `/create/preview?project=${project.id}`
+    default:
+      return `/create?project=${project.id}`
+  }
 }
 
 export default function DashboardPage() {
@@ -66,20 +80,24 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {demoProjects.map((project) => {
               const status = statusConfig[project.status] ?? statusConfig.draft
+              const canResume = resumableStatuses.includes(project.status)
+              const href = canResume ? getResumeHref(project) : `/create?project=${project.id}`
+
               return (
-                <Link
+                <div
                   key={project.id}
-                  href="/create"
                   className="group rounded-3xl bg-white border-2 border-[#FF6B35]/8 overflow-hidden hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
                 >
                   {/* Preview thumbnail */}
-                  <div className="aspect-[4/3] bg-gradient-to-br from-[#FFF0E8] via-[#FFF8E8] to-[#E8FFF7] flex items-center justify-center relative">
-                    <span className="text-6xl group-hover:scale-110 transition-transform duration-300">
-                      {petEmojis[project.pet_type] ?? '🐾'}
-                    </span>
-                    {/* Decorative paw */}
-                    <span className="absolute bottom-3 right-3 text-3xl opacity-10">🐾</span>
-                  </div>
+                  <Link href={href}>
+                    <div className="aspect-[4/3] bg-gradient-to-br from-[#FFF0E8] via-[#FFF8E8] to-[#E8FFF7] flex items-center justify-center relative">
+                      <span className="text-6xl group-hover:scale-110 transition-transform duration-300">
+                        {petEmojis[project.pet_type] ?? '🐾'}
+                      </span>
+                      {/* Decorative paw */}
+                      <span className="absolute bottom-3 right-3 text-3xl opacity-10">🐾</span>
+                    </div>
+                  </Link>
 
                   <div className="p-5">
                     <div className="flex items-center justify-between mb-2">
@@ -100,8 +118,18 @@ export default function DashboardPage() {
                         year: 'numeric',
                       })}
                     </p>
+
+                    {/* Continue button for resumable projects */}
+                    {canResume && (
+                      <Link
+                        href={href}
+                        className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#FF6B35] px-5 py-2 text-sm font-bold text-white hover:bg-[#E55A2B] transition-all duration-300 shadow-sm"
+                      >
+                        Continue →
+                      </Link>
+                    )}
                   </div>
-                </Link>
+                </div>
               )
             })}
           </div>

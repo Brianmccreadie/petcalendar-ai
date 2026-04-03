@@ -2,9 +2,20 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const pathname = usePathname()
+
+  // Determine if we're in the create flow
+  const isInCreateFlow = pathname.startsWith('/create')
+  const currentStep = pathname === '/create' ? 1
+    : pathname === '/create/style' ? 2
+    : pathname === '/create/preview' ? 3
+    : 0
+
+  const stepLabels = ['', 'Upload Photos', 'Pick a Theme', 'Preview & Edit']
 
   return (
     <header className="sticky top-0 z-50 bg-[#FFFBF5]/95 backdrop-blur-md border-b border-[#FF6B35]/10">
@@ -23,18 +34,18 @@ export default function Navbar() {
 
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-5">
-            <Link
-              href="/dashboard"
-              className="text-sm font-semibold text-[#2D1B69]/70 hover:text-[#FF6B35] transition-colors duration-200 flex items-center gap-1.5"
-            >
-              My Calendars 📁
-            </Link>
-            <Link
-              href="/create"
-              className="inline-flex items-center rounded-full bg-[#FF6B35] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#E55A2B] hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-[#FF6B35]/20"
-            >
-              Create Calendar 🎨
-            </Link>
+            {isInCreateFlow ? (
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#FFF0E8] px-5 py-2.5 text-sm font-bold text-[#FF6B35]">
+                Step {currentStep}: {stepLabels[currentStep]} ✨
+              </span>
+            ) : (
+              <Link
+                href="/create"
+                className="inline-flex items-center rounded-full bg-[#FF6B35] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#E55A2B] hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-[#FF6B35]/20"
+              >
+                Create Calendar 🎨
+              </Link>
+            )}
           </div>
 
           {/* Mobile hamburger */}
@@ -71,20 +82,19 @@ export default function Navbar() {
         }`}
       >
         <div className="border-t border-[#FF6B35]/10 bg-[#FFFBF5] px-4 pb-4 pt-3 space-y-2">
-          <Link
-            href="/dashboard"
-            onClick={() => setMobileOpen(false)}
-            className="block rounded-xl px-3 py-2.5 text-base font-medium text-[#2D1B69]/70 hover:bg-[#FFF0E8] hover:text-[#FF6B35] transition-colors"
-          >
-            📁 My Calendars
-          </Link>
-          <Link
-            href="/create"
-            onClick={() => setMobileOpen(false)}
-            className="block text-center rounded-full bg-[#FF6B35] px-5 py-2.5 text-base font-bold text-white hover:bg-[#E55A2B] transition-colors"
-          >
-            🎨 Create Calendar
-          </Link>
+          {isInCreateFlow ? (
+            <span className="block text-center rounded-xl px-3 py-2.5 text-base font-medium text-[#FF6B35] bg-[#FFF0E8]">
+              Step {currentStep}: {stepLabels[currentStep]} ✨
+            </span>
+          ) : (
+            <Link
+              href="/create"
+              onClick={() => setMobileOpen(false)}
+              className="block text-center rounded-full bg-[#FF6B35] px-5 py-2.5 text-base font-bold text-white hover:bg-[#E55A2B] transition-colors"
+            >
+              🎨 Create Calendar
+            </Link>
+          )}
         </div>
       </div>
     </header>

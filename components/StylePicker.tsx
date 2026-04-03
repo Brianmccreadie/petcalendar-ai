@@ -3,29 +3,78 @@
 import { CALENDAR_STYLES } from '@/lib/types'
 
 const styleEmojis: Record<string, string> = {
-  watercolor: '💧',
-  'oil-painting': '🖼️',
-  'pop-art': '🎭',
-  cartoon: '🎬',
-  vintage: '📷',
-  'line-art': '✏️',
-  'stained-glass': '🪟',
-  'japanese-woodblock': '🏯',
-  botanical: '🌸',
-  'cozy-seasons': '🧣',
+  'mythical-quest': '⚔️',
+  'wizarding-world': '🧙',
+  'space-explorer': '🚀',
+  'secret-agent': '🕵️',
+  'prehistoric-adventure': '🦕',
+  'pirate-life': '🏴‍☠️',
+  'superhero-origin': '🦸',
+  'royal-portrait': '👑',
+  'detective-noir': '🔍',
+  'wild-west': '🤠',
+  'underwater-odyssey': '🐠',
+  'high-school-yearbook': '🎓',
+  'professional-headshot': '📸',
+  'pet-photoshoot': '🌟',
+  'cozy-vibes': '☕',
+  'cooking-show': '👨‍🍳',
+  'rock-star': '🎸',
+  'fashion-week': '👗',
+  'office-life': '💼',
+  'sports-mvp': '🏆',
+  'around-the-world': '🌍',
+  'fairy-tale': '🏰',
+  'zombie-apocalypse': '🧟',
+  'renaissance-pet': '🎨',
+  'sitcom-star': '📺',
+  'mad-scientist': '🧪',
+  'movie-poster': '🎬',
+  'baby-photos': '👶',
+  'fitness-journey': '💪',
+  'art-museum': '🖼️',
+  'holiday-card': '🎄',
+  'camping-adventures': '⛺',
+  'noir-detective': '🎞️',
+  'tropical-paradise': '🌴',
+  'horror-movie': '👻',
+  'dating-profile': '💘',
+  'true-crime': '🔎',
+  'reality-tv': '📡',
+  'influencer': '📱',
+  'nap-champion': '😴',
+  'time-traveler': '⏰',
+  'video-game-hero': '🎮',
+  'broadway-star': '🎭',
+  'garden-party': '🌷',
+  'snow-day': '❄️',
+  'national-park': '🏔️',
+  'tiny-human': '🧑',
+  'anime-world': '🌸',
+  'galactic-emperor': '👾',
+  'cottage-core': '🏡',
 }
+
+import Image from 'next/image'
+import type { PetType } from '@/lib/types'
 
 interface StylePickerProps {
   onSelect?: (style: string) => void
   selectedStyle?: string
   showcase?: boolean
+  petType?: PetType
 }
 
 export default function StylePicker({
   onSelect,
   selectedStyle,
   showcase = false,
+  petType = 'dog',
 }: StylePickerProps) {
+  // Dynamic preview path based on pet type
+  const getPreviewSrc = (styleId: string) => {
+    return `/previews/${styleId}-${petType}.jpg`
+  }
   return (
     <section id="styles" className={showcase ? 'bg-[#FFF8F0] py-20 sm:py-28' : ''}>
       <div className={showcase ? 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8' : ''}>
@@ -81,20 +130,22 @@ export default function StylePicker({
                       : 'hover:shadow-lg hover:-translate-y-1 cursor-pointer border border-[#FF6B35]/8'
                   }`}
                 >
-                  {/* Gradient color block */}
-                  <div
-                    className="h-36 flex flex-col items-center justify-center relative"
-                    style={{
-                      background: `linear-gradient(135deg, ${style.accentColor}33, ${style.accentColor}66)`,
-                    }}
-                  >
-                    <span className="text-5xl mb-1 group-hover:scale-110 transition-transform duration-300">
+                  {/* Preview image */}
+                  <div className="relative h-36 overflow-hidden">
+                    <Image
+                      src={getPreviewSrc(style.id)}
+                      alt={style.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      sizes="300px"
+                    />
+                    {/* Emoji badge */}
+                    <div className="absolute top-2 left-2 rounded-full bg-white/90 backdrop-blur-sm w-8 h-8 flex items-center justify-center text-lg shadow-sm">
                       {styleEmojis[style.id] ?? '🎨'}
-                    </span>
-                    <span className="text-7xl opacity-10 absolute bottom-2 right-4">🐾</span>
+                    </div>
                     {/* Selected badge */}
                     {isSelected && (
-                      <div className="absolute top-3 right-3 rounded-full bg-[#FF6B35] px-3 py-1 text-xs font-bold text-white shadow-lg">
+                      <div className="absolute top-2 right-2 rounded-full bg-[#FF6B35] px-3 py-1 text-xs font-bold text-white shadow-lg">
                         ✓ Selected!
                       </div>
                     )}

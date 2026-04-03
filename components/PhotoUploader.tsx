@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useRef } from 'react'
+// heic2any uses window — must be dynamically imported client-side only
 
 interface UploadedPhoto {
   id: string
@@ -14,32 +15,69 @@ interface PhotoUploaderProps {
   maxPhotos?: number
 }
 
+const HEIF_TYPES = ['image/heic', 'image/heif', 'image/heic-sequence', 'image/heif-sequence']
+
+function isHeif(file: File): boolean {
+  if (HEIF_TYPES.includes(file.type.toLowerCase())) return true
+  // Some browsers report HEIC with empty type — check extension
+  const ext = file.name.split('.').pop()?.toLowerCase()
+  return ext === 'heic' || ext === 'heif'
+}
+
+async function convertHeifToJpeg(file: File): Promise<File> {
+  const heic2any = (await import('heic2any')).default
+  const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 })
+  const jpeg = Array.isArray(blob) ? blob[0] : blob
+  const name = file.name.replace(/\.(heic|heif)$/i, '.jpg')
+  return new File([jpeg], name, { type: 'image/jpeg' })
+}
+
 export default function PhotoUploader({
   photos,
   onPhotosChange,
   maxPhotos = 5,
 }: PhotoUploaderProps) {
   const [isDragOver, setIsDragOver] = useState(false)
+  const [converting, setConverting] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const addFiles = useCallback(
-    (files: FileList | File[]) => {
-      const newPhotos: UploadedPhoto[] = []
+    async (files: FileList | File[]) => {
       const remaining = maxPhotos - photos.length
+      const filesToProcess = Array.from(files).slice(0, remaining).filter((file) => {
+        return file.type.startsWith('image/') || isHeif(file)
+      })
 
-      Array.from(files)
-        .slice(0, remaining)
-        .forEach((file) => {
-          if (!file.type.startsWith('image/')) return
+      if (filesToProcess.length === 0) return
+
+      setConverting(true)
+      try {
+        const newPhotos: UploadedPhoto[] = []
+
+        for (const file of filesToProcess) {
+          let processedFile = file
+
+          if (isHeif(file)) {
+            try {
+              processedFile = await convertHeifToJpeg(file)
+            } catch (err) {
+              console.error('HEIF conversion failed:', err)
+              continue // skip this file
+            }
+          }
+
           newPhotos.push({
             id: crypto.randomUUID(),
-            file,
-            preview: URL.createObjectURL(file),
+            file: processedFile,
+            preview: URL.createObjectURL(processedFile),
           })
-        })
+        }
 
-      if (newPhotos.length > 0) {
-        onPhotosChange([...photos, ...newPhotos])
+        if (newPhotos.length > 0) {
+          onPhotosChange([...photos, ...newPhotos])
+        }
+      } finally {
+        setConverting(false)
       }
     },
     [photos, onPhotosChange, maxPhotos]
@@ -90,12 +128,21 @@ export default function PhotoUploader({
           or click to browse ({photos.length}/{maxPhotos} photos)
         </p>
         <p className="text-xs text-[#2D1B69]/30 mt-3">
-          JPG, PNG up to 10MB each
+          JPG, PNG, HEIC up to 10MB each
         </p>
+        {converting && (
+          <div className="mt-3 flex items-center gap-2 text-sm text-[#FF6B35] font-medium">
+            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            Converting photos...
+          </div>
+        )}
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*"
+          accept="image/*,.heic,.heif"
           multiple
           className="hidden"
           onChange={(e) => {

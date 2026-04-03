@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "app/api/generate/route.ts": {
+      "maxDuration": 800
+    },
+    "app/api/regenerate/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/create-project/route.ts": {
+      "maxDuration": 300,
+      "memory": 1024
+    }
+  }
+}
