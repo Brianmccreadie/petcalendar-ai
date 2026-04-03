@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useCallback, useRef } from 'react'
-// heic2any uses window — must be dynamically imported client-side only
 
 interface UploadedPhoto {
   id: string
@@ -19,7 +18,6 @@ const HEIF_TYPES = ['image/heic', 'image/heif', 'image/heic-sequence', 'image/he
 
 function isHeif(file: File): boolean {
   if (HEIF_TYPES.includes(file.type.toLowerCase())) return true
-  // Some browsers report HEIC with empty type — check extension
   const ext = file.name.split('.').pop()?.toLowerCase()
   return ext === 'heic' || ext === 'heif'
 }
@@ -62,7 +60,7 @@ export default function PhotoUploader({
               processedFile = await convertHeifToJpeg(file)
             } catch (err) {
               console.error('HEIF conversion failed:', err)
-              continue // skip this file
+              continue
             }
           }
 
@@ -105,7 +103,6 @@ export default function PhotoUploader({
 
   return (
     <div className="space-y-6">
-      {/* Drop zone */}
       <div
         onDragOver={(e) => {
           e.preventDefault()
@@ -114,24 +111,24 @@ export default function PhotoUploader({
         onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`relative flex flex-col items-center justify-center rounded-3xl border-3 border-dashed p-12 cursor-pointer transition-all duration-300 ${
+        className={`relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-12 cursor-pointer transition-all duration-300 ${
           isDragOver
-            ? 'border-[#A8D4F0] bg-[#E8F0FA] scale-[1.02]'
-            : 'border-[#A8D4F0]/50 bg-white hover:border-[#A8D4F0] hover:bg-[#E8F0FA]/50'
+            ? 'border-[var(--purple)] bg-[var(--purple)]/5 scale-[1.02]'
+            : 'border-[var(--purple)]/25 bg-white hover:border-[var(--purple)]/50 hover:bg-[var(--purple)]/3'
         } ${photos.length >= maxPhotos ? 'opacity-50 pointer-events-none' : ''}`}
       >
         <span className="text-5xl mb-4">🐾</span>
-        <p className="text-[#1A1A2E] font-bold text-lg mb-1">
+        <p className="text-[var(--ebony)] font-bold text-lg mb-1">
           Drop your pet photos here
         </p>
-        <p className="text-sm text-[#1A1A2E]/50">
+        <p className="text-sm text-[var(--wenge)]">
           or click to browse ({photos.length}/{maxPhotos} photos)
         </p>
-        <p className="text-xs text-[#1A1A2E]/30 mt-3">
+        <p className="text-xs text-[var(--wenge)]/50 mt-3">
           JPG, PNG, HEIC up to 10MB each
         </p>
         {converting && (
-          <div className="mt-3 flex items-center gap-2 text-sm text-[#FF6B35] font-medium">
+          <div className="mt-3 flex items-center gap-2 text-sm text-[var(--purple)] font-medium">
             <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
@@ -152,13 +149,12 @@ export default function PhotoUploader({
         />
       </div>
 
-      {/* Preview grid */}
       {photos.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
           {photos.map((photo) => (
             <div
               key={photo.id}
-              className="group relative aspect-square rounded-2xl overflow-hidden border-2 border-[#A8D4F0]/25 shadow-sm hover:shadow-md transition-all duration-300"
+              className="group relative aspect-square rounded-2xl overflow-hidden border-2 border-[var(--purple)]/15 shadow-sm hover:shadow-md transition-all duration-300"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

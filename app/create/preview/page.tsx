@@ -31,7 +31,6 @@ export default function PreviewPage() {
   const [pets, setPets] = useState<PetInfo[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  // Build placeholder pages (always show cover + 12 months)
   const buildPlaceholderPages = useCallback((): CalendarPage[] => {
     return [
       {
@@ -65,7 +64,6 @@ export default function PreviewPage() {
     ]
   }, [])
 
-  // Merge server pages onto placeholders
   const mergePages = useCallback((placeholders: CalendarPage[], serverPages: CalendarPage[]) => {
     return placeholders.map((ph) => {
       const match = serverPages.find(
@@ -89,7 +87,6 @@ export default function PreviewPage() {
     }
   }, [buildPlaceholderPages, mergePages])
 
-  // Load session data on mount
   useEffect(() => {
     const stored = sessionStorage.getItem('petcalendar_create')
     if (stored) {
@@ -110,10 +107,8 @@ export default function PreviewPage() {
         setPetName(data.petName)
       }
 
-      // Always start with all placeholders visible
       setPages(buildPlaceholderPages())
 
-      // Then fetch real data on top
       if (pid) {
         fetchPages(pid).then(() => setIsLoading(false))
       } else {
@@ -125,14 +120,11 @@ export default function PreviewPage() {
     }
   }, [fetchPages, buildPlaceholderPages])
 
-  // Poll for page status updates every 4 seconds
   useEffect(() => {
     if (!projectId) return
-
     const interval = setInterval(() => {
       fetchPages(projectId)
     }, 4000)
-
     return () => clearInterval(interval)
   }, [projectId, fetchPages])
 
@@ -149,7 +141,6 @@ export default function PreviewPage() {
     try {
       let res: Response
       if (newReference) {
-        // Send as FormData with the new reference image
         const formData = new FormData()
         formData.append('calendar_page_id', pageId)
         formData.append('custom_instructions', instructions)
@@ -162,7 +153,6 @@ export default function PreviewPage() {
           body: JSON.stringify({ calendar_page_id: pageId, custom_instructions: instructions }),
         })
       }
-      const _res = res
       if (res.ok) {
         const data = await res.json()
         setPages((prev) =>
@@ -231,10 +221,10 @@ export default function PreviewPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F5EDE8] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--alabaster)] flex items-center justify-center">
         <div className="text-center">
           <div className="text-5xl animate-bounce-gentle mb-4">🐾</div>
-          <p className="text-[#1A1A2E]/60 font-medium">Loading your calendar...</p>
+          <p className="text-[var(--wenge)] font-medium">Loading your calendar...</p>
         </div>
       </div>
     )
@@ -242,12 +232,12 @@ export default function PreviewPage() {
 
   if (!projectId) {
     return (
-      <div className="min-h-screen bg-[#F5EDE8] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--alabaster)] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-[#1A1A2E]/60 font-medium mb-4">No project found. Please start from the beginning.</p>
+          <p className="text-[var(--wenge)] font-medium mb-4">No project found. Please start from the beginning.</p>
           <button
             onClick={() => router.push('/create')}
-            className="rounded-full bg-[#FF6B35] px-6 py-3 text-white font-bold"
+            className="btn-purple"
           >
             Start Over
           </button>
@@ -265,7 +255,6 @@ export default function PreviewPage() {
     ? pets.map((p) => p.name).join(' & ')
     : petName
 
-  // Progress tracking
   const totalPages = pages.length
   const completedPages = pages.filter((p) => p.status === 'complete').length
   const generatingPages = pages.filter((p) => p.status === 'generating').length
@@ -273,40 +262,37 @@ export default function PreviewPage() {
   const pendingPages = pages.filter((p) => p.status === 'pending').length
   const progressPercent = totalPages > 0 ? Math.round((completedPages / totalPages) * 100) : 0
   const isAllDone = completedPages === totalPages && totalPages > 0
-  const isGenerating = generatingPages > 0 || pendingPages > 0
+  const isGeneratingActive = generatingPages > 0 || pendingPages > 0
 
   return (
-    <div className="min-h-screen bg-[#F5EDE8]">
+    <div className="min-h-screen bg-[var(--alabaster)]">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <StepProgress currentStep={3} />
 
         {/* Generation Progress Bar */}
-        {isGenerating && (
+        {isGeneratingActive && (
           <div className="mb-8 mx-auto max-w-2xl">
-            <div className="rounded-2xl bg-white border-2 border-[#A8D4F0]/25 p-5 shadow-sm">
+            <div className="rounded-2xl bg-white border-2 border-[var(--purple)]/10 p-5 shadow-sm">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-lg animate-bounce-gentle">🐾</span>
-                  <span className="font-bold text-[#1A1A2E] text-sm">
-                    {generatingPages > 0
-                      ? 'Creating your calendar...'
-                      : 'Waiting to start...'}
+                  <span className="font-bold text-[var(--ebony)] text-sm">
+                    {generatingPages > 0 ? 'Creating your calendar...' : 'Waiting to start...'}
                   </span>
                 </div>
-                <span className="text-sm font-bold text-[#FF6B35]">
+                <span className="text-sm font-bold text-[var(--purple)]">
                   {completedPages} / {totalPages} pages
                 </span>
               </div>
 
-              {/* Progress bar */}
-              <div className="relative h-4 rounded-full bg-[#E8F0FA] overflow-hidden">
+              <div className="relative h-4 rounded-full bg-[var(--purple)]/8 overflow-hidden">
                 <div
-                  className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#FF6B35] to-[#FFD166] transition-all duration-700 ease-out"
+                  className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[var(--purple)] to-[var(--green)] transition-all duration-700 ease-out"
                   style={{ width: `${progressPercent}%` }}
                 />
                 {generatingPages > 0 && (
                   <div
-                    className="absolute inset-y-0 rounded-full bg-[#FF6B35]/30 animate-pulse transition-all duration-700"
+                    className="absolute inset-y-0 rounded-full bg-[var(--purple)]/30 animate-pulse transition-all duration-700"
                     style={{
                       left: `${progressPercent}%`,
                       width: `${Math.round((generatingPages / totalPages) * 100)}%`,
@@ -315,23 +301,22 @@ export default function PreviewPage() {
                 )}
               </div>
 
-              {/* Status details */}
-              <div className="mt-3 flex items-center gap-4 text-xs text-[#1A1A2E]/50 font-medium">
+              <div className="mt-3 flex items-center gap-4 text-xs text-[var(--wenge)] font-medium">
                 {completedPages > 0 && (
                   <span className="flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-[#06D6A0]" />
+                    <span className="w-2 h-2 rounded-full bg-[var(--green)]" />
                     {completedPages} done
                   </span>
                 )}
                 {generatingPages > 0 && (
                   <span className="flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-[#FF6B35] animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-[var(--purple)] animate-pulse" />
                     {generatingPages} creating
                   </span>
                 )}
                 {pendingPages > 0 && (
                   <span className="flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-[#1A1A2E]/20" />
+                    <span className="w-2 h-2 rounded-full bg-gray-300" />
                     {pendingPages} queued
                   </span>
                 )}
@@ -343,9 +328,8 @@ export default function PreviewPage() {
                 )}
               </div>
 
-              {/* Estimated time */}
               {pendingPages + generatingPages > 0 && (
-                <p className="mt-2 text-xs text-[#5B8EC9]/60 font-medium">
+                <p className="mt-2 text-xs text-[var(--wenge)]/60 font-medium">
                   ⏱ ~{Math.ceil((pendingPages + generatingPages) * 0.3)} min remaining — grab a treat for your pet!
                 </p>
               )}
@@ -353,42 +337,38 @@ export default function PreviewPage() {
           </div>
         )}
 
-        {/* Waiting state when no pages yet */}
         {pages.length === 0 && (
           <div className="mb-8 mx-auto max-w-2xl">
-            <div className="rounded-2xl bg-white border-2 border-[#A8D4F0]/25 p-5 shadow-sm text-center">
+            <div className="rounded-2xl bg-white border-2 border-[var(--purple)]/10 p-5 shadow-sm text-center">
               <div className="text-4xl animate-bounce-gentle mb-3">🐾</div>
-              <p className="font-bold text-[#1A1A2E] text-sm">
+              <p className="font-bold text-[var(--ebony)] text-sm">
                 Getting things ready... Your calendar will appear here shortly.
               </p>
             </div>
           </div>
         )}
 
-        {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="heading-playful text-3xl sm:text-4xl font-extrabold text-[#1A1A2E]">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ebony)] capitalize">
             {isAllDone
               ? `${headerName}'s Calendar is Ready! 🎉`
               : `Creating ${headerName}'s Calendar... ✨`}
           </h1>
-          <p className="mt-3 text-[#1A1A2E]/60 max-w-lg mx-auto">
+          <p className="mt-3 text-[var(--wenge)] max-w-lg mx-auto font-medium">
             Review each month below. Not happy with one? Hit regenerate!
           </p>
         </div>
 
-        {/* Instructions callout */}
-        <div className="mb-10 mx-auto max-w-2xl rounded-2xl bg-[#E8F0FA] border border-[#A8D4F0]/25 p-5 flex items-start gap-4">
+        <div className="mb-10 mx-auto max-w-2xl rounded-2xl bg-[var(--purple)]/5 border border-[var(--purple)]/10 p-5 flex items-start gap-4">
           <span className="text-2xl shrink-0">💡</span>
-          <p className="text-sm text-[#5B8EC9]/80 leading-relaxed font-medium">
-            <strong>How to customize:</strong> Hover any month and hit 🔄 to regenerate from scratch, or ✏️ to iterate with specific instructions (e.g. &quot;make the background brighter&quot; or &quot;add more snow&quot;). Use the arrows to browse previous versions.
+          <p className="text-sm text-[var(--wenge)] leading-relaxed font-medium">
+            <strong className="text-[var(--ebony)]">How to customize:</strong> Hover any month and hit 🔄 to regenerate from scratch, or ✏️ to iterate with specific instructions (e.g. &quot;make the background brighter&quot; or &quot;add more snow&quot;). Use the arrows to browse previous versions.
           </p>
         </div>
 
-        {/* Cover */}
         {cover && (
           <div className="mb-8">
-            <h2 className="text-lg font-extrabold text-[#1A1A2E] mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[var(--ebony)] mb-4 flex items-center gap-2">
               🌟 Cover
             </h2>
             <div className="max-w-sm">
@@ -402,10 +382,9 @@ export default function PreviewPage() {
           </div>
         )}
 
-        {/* Month grid */}
         {monthPages.length > 0 && (
           <>
-            <h2 className="text-lg font-extrabold text-[#1A1A2E] mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[var(--ebony)] mb-4 flex items-center gap-2">
               📅 Monthly Pages
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -425,11 +404,10 @@ export default function PreviewPage() {
           </>
         )}
 
-        {/* Bottom actions */}
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
           <button
             onClick={() => router.push('/create/style')}
-            className="text-[#1A1A2E]/50 hover:text-[#5B8EC9] font-bold transition-colors"
+            className="text-[var(--wenge)] hover:text-[var(--purple)] font-bold transition-colors"
           >
             ← Back to Style
           </button>
@@ -437,15 +415,10 @@ export default function PreviewPage() {
             <button
               onClick={() => router.push('/checkout')}
               disabled={!isAllDone}
-              className={`rounded-full px-10 py-4 text-lg font-bold text-white transition-all duration-300 ${
-                isAllDone
-                  ? 'bg-[#FF6B35] shadow-lg shadow-[#A8D4F0]/20 hover:bg-[#E55A2B] hover:shadow-xl hover:-translate-y-0.5'
-                  : 'bg-gray-300 cursor-not-allowed'
-              }`}
+              className={`btn-green text-lg px-10 py-4 ${!isAllDone ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               Order This Calendar — $39.99 📦
             </button>
-
           </div>
         </div>
       </div>
@@ -474,7 +447,6 @@ function PageCard({
   const canRegenerate = page.status !== 'generating' && page.status !== 'pending'
   const canIterate = page.status === 'complete'
 
-  // Fetch versions when the page is complete
   useEffect(() => {
     if (page.status !== 'complete' || page.id.startsWith('placeholder')) return
     fetch(`/api/pages/${page.id}/versions`)
@@ -506,9 +478,8 @@ function PageCard({
 
   return (
     <>
-      <div className="group rounded-3xl border-2 border-[#A8D4F0]/20 overflow-hidden bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-        {/* Image area */}
-        <div className="relative aspect-[3/2] bg-gradient-to-br from-[#FFF0E8] to-[#FFF8E8] flex items-center justify-center">
+      <div className="group rounded-2xl border-2 border-[var(--purple)]/10 overflow-hidden bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div className="relative aspect-[3/2] bg-gradient-to-br from-[var(--alabaster)] to-[var(--purple)]/5 flex items-center justify-center">
           {page.status === 'complete' && (displayUrl || page.cloudinary_url) ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -519,7 +490,7 @@ function PageCard({
           ) : page.status === 'generating' ? (
             <div className="text-center">
               <div className="text-4xl animate-bounce-gentle mb-2">🐾</div>
-              <p className="text-sm text-[#5B8EC9] font-bold">Creating...</p>
+              <p className="text-sm text-[var(--purple)] font-bold">Creating...</p>
             </div>
           ) : page.status === 'failed' ? (
             <div className="text-center">
@@ -529,25 +500,23 @@ function PageCard({
           ) : (
             <div className="text-center">
               <span className="text-5xl opacity-40">🐾</span>
-              <p className="mt-2 text-sm text-[#1A1A2E]/30 font-medium">Pending</p>
+              <p className="mt-2 text-sm text-[var(--wenge)]/40 font-medium">Pending</p>
             </div>
           )}
 
-          {/* Month pill */}
           <div className="absolute top-3 left-3">
-            <span className="inline-block rounded-full bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-[#1A1A2E] shadow-sm">
+            <span className="inline-block rounded-full bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-[var(--ebony)] shadow-sm">
               {label}
             </span>
           </div>
 
-          {/* Version navigation arrows */}
           {hasMultipleVersions && loadedVersions && (
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); selectVersion(viewIndex - 1) }}
                 disabled={viewIndex === 0}
                 className={`absolute left-2 bottom-3 z-10 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm shadow flex items-center justify-center text-sm font-bold transition-all ${
-                  viewIndex === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-white text-[#1A1A2E]'
+                  viewIndex === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-white text-[var(--ebony)]'
                 }`}
               >
                 ‹
@@ -556,7 +525,7 @@ function PageCard({
                 onClick={(e) => { e.stopPropagation(); selectVersion(viewIndex + 1) }}
                 disabled={viewIndex === versions.length - 1}
                 className={`absolute right-2 bottom-3 z-10 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm shadow flex items-center justify-center text-sm font-bold transition-all ${
-                  viewIndex === versions.length - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-white text-[#1A1A2E]'
+                  viewIndex === versions.length - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-white text-[var(--ebony)]'
                 }`}
               >
                 ›
@@ -564,12 +533,11 @@ function PageCard({
             </>
           )}
 
-          {/* Hover overlay */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
             {canRegenerate && (
               <button
                 onClick={onRegenerate}
-                className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#FF6B35] shadow-lg hover:bg-[#E8F0FA] transition-colors"
+                className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[var(--purple)] shadow-lg hover:bg-[var(--purple)]/5 transition-colors"
               >
                 🔄 Redo
               </button>
@@ -577,7 +545,7 @@ function PageCard({
             {canIterate && (
               <button
                 onClick={() => setShowIterateModal(true)}
-                className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#7C3AED] shadow-lg hover:bg-[#F3EEFF] transition-colors"
+                className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[var(--green)] shadow-lg hover:bg-[var(--green)]/5 transition-colors"
               >
                 ✏️ Iterate
               </button>
@@ -585,58 +553,55 @@ function PageCard({
           </div>
         </div>
 
-        {/* Info */}
         <div className="p-3 flex items-center justify-between bg-white">
-          <span className="text-sm font-bold text-[#1A1A2E]">{label}</span>
+          <span className="text-sm font-bold text-[var(--ebony)]">{label}</span>
           {hasMultipleVersions && loadedVersions ? (
-            <span className="text-xs text-[#1A1A2E]/40 font-medium">
+            <span className="text-xs text-[var(--wenge)] font-medium">
               v{viewIndex + 1} of {versions.length}
             </span>
           ) : page.generation_attempts > 1 ? (
-            <span className="text-xs text-[#1A1A2E]/40 font-medium">
+            <span className="text-xs text-[var(--wenge)] font-medium">
               v{page.generation_attempts}
             </span>
           ) : null}
         </div>
       </div>
 
-      {/* Iterate Modal */}
       {showIterateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => { setShowIterateModal(false); setIterateText(''); setNewRefFile(null); setNewRefPreview(null) }}
           />
-          <div className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-extrabold text-[#1A1A2E] mb-1">
+          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-bold text-[var(--ebony)] mb-1">
               ✏️ Iterate on {label}
             </h3>
-            <p className="text-sm text-[#1A1A2E]/50 mb-4">
+            <p className="text-sm text-[var(--wenge)] mb-4">
               Tell us what you&apos;d like to change. We&apos;ll use the current image as a starting point.
             </p>
             <textarea
               value={iterateText}
               onChange={(e) => setIterateText(e.target.value)}
               placeholder="e.g., Make the background brighter, add more snow, make my pet look happier, change the setting to outdoors..."
-              className="w-full rounded-2xl border-2 border-[#7C3AED]/20 bg-white px-4 py-3 text-sm text-[#1A1A2E] placeholder:text-[#1A1A2E]/30 focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/20 outline-none transition-all resize-none"
+              className="input-zaipet resize-none"
               rows={3}
               autoFocus
             />
 
-            {/* New reference photo upload */}
-            <div className="mt-4 rounded-2xl bg-[#E8F0FA] border border-[#A8D4F0]/25 p-4">
-              <p className="text-sm font-bold text-[#FF6B35] mb-1">
+            <div className="mt-4 rounded-2xl bg-[var(--purple)]/5 border border-[var(--purple)]/10 p-4">
+              <p className="text-sm font-bold text-[var(--purple)] mb-1">
                 🐾 Doesn&apos;t look like your pet?
               </p>
-              <p className="text-xs text-[#1A1A2E]/50 mb-3">
+              <p className="text-xs text-[var(--wenge)] mb-3">
                 Upload a clear photo and we&apos;ll regenerate with a better reference.
               </p>
               {newRefPreview ? (
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={newRefPreview} alt="New reference" className="w-16 h-16 rounded-xl object-cover border-2 border-[#A8D4F0]/30" />
+                  <img src={newRefPreview} alt="New reference" className="w-16 h-16 rounded-xl object-cover border-2 border-[var(--purple)]/20" />
                   <div className="flex-1">
-                    <p className="text-xs font-bold text-[#1A1A2E]">New reference uploaded ✓</p>
+                    <p className="text-xs font-bold text-[var(--ebony)]">New reference uploaded ✓</p>
                     <button
                       onClick={() => { setNewRefFile(null); setNewRefPreview(null) }}
                       className="text-xs text-red-400 hover:text-red-600 font-medium"
@@ -646,8 +611,8 @@ function PageCard({
                   </div>
                 </div>
               ) : (
-                <label className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#A8D4F0]/40 px-4 py-3 cursor-pointer hover:border-[#A8D4F0] hover:bg-[#F0F4F8] transition-all">
-                  <span className="text-sm font-bold text-[#FF6B35]">📸 Upload a clearer photo</span>
+                <label className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[var(--purple)]/20 px-4 py-3 cursor-pointer hover:border-[var(--purple)]/40 hover:bg-[var(--purple)]/5 transition-all">
+                  <span className="text-sm font-bold text-[var(--purple)]">📸 Upload a clearer photo</span>
                   <input
                     type="file"
                     accept="image/*,.heic,.heif"
@@ -668,7 +633,7 @@ function PageCard({
             <div className="mt-4 flex gap-3">
               <button
                 onClick={() => { setShowIterateModal(false); setIterateText(''); setNewRefFile(null); setNewRefPreview(null) }}
-                className="flex-1 rounded-full border-2 border-gray-200 px-4 py-3 text-sm font-bold text-[#1A1A2E]/60 hover:bg-gray-50 transition-colors"
+                className="flex-1 rounded-full border-2 border-gray-200 px-4 py-3 text-sm font-bold text-[var(--wenge)] hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
@@ -683,10 +648,8 @@ function PageCard({
                   }
                 }}
                 disabled={!iterateText.trim() && !newRefFile}
-                className={`flex-1 rounded-full px-4 py-3 text-sm font-bold text-white transition-all ${
-                  (iterateText.trim() || newRefFile)
-                    ? 'bg-[#7C3AED] hover:bg-[#6D28D9] shadow-lg'
-                    : 'bg-gray-300 cursor-not-allowed'
+                className={`flex-1 btn-purple text-sm px-4 py-3 ${
+                  (!iterateText.trim() && !newRefFile) ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
                 🎨 Regenerate

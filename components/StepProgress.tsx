@@ -1,8 +1,8 @@
 const steps = [
-  { label: 'Snap', color: 'bg-[#FF6B35]', ring: 'ring-[#A8D4F0]/30' },
-  { label: 'Style', color: 'bg-[#FFD166]', ring: 'ring-[#FFD166]/30' },
-  { label: 'Magic', color: 'bg-[#06D6A0]', ring: 'ring-[#06D6A0]/30' },
-  { label: 'Order', color: 'bg-[#7C3AED]', ring: 'ring-[#7C3AED]/30' },
+  { label: 'Upload', color: 'bg-[var(--purple)]', ring: 'ring-[var(--purple)]/30' },
+  { label: 'Style', color: 'bg-[var(--green)]', ring: 'ring-[var(--green)]/30' },
+  { label: 'Magic', color: 'bg-[var(--yellow)]', ring: 'ring-[var(--yellow)]/30' },
+  { label: 'Order', color: 'bg-[var(--purple)]', ring: 'ring-[var(--purple)]/30' },
 ]
 
 interface StepProgressProps {
@@ -39,19 +39,18 @@ export default function StepProgress({ currentStep }: StepProgressProps) {
                 </div>
                 <span
                   className={`mt-2 text-xs font-bold tracking-wide ${
-                    isFuture ? 'text-gray-400' : 'text-[#1A1A2E]'
+                    isFuture ? 'text-gray-400' : 'text-[var(--ebony)]'
                   }`}
                 >
                   {step.label}
                 </span>
               </div>
-              {/* Connecting line */}
               {stepNum < steps.length && (
                 <div className="flex-1 mx-2">
                   <div
                     className={`h-1 w-full rounded-full transition-all duration-500 ${
                       isComplete
-                        ? 'bg-gradient-to-r from-[#FF6B35] to-[#FFD166]'
+                        ? 'bg-gradient-to-r from-[var(--purple)] to-[var(--green)]'
                         : 'bg-gray-200'
                     }`}
                   />

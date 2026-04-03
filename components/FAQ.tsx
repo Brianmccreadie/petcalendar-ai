@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 const faqs = [
   {
@@ -51,39 +52,45 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section id="faq" className="bg-[#F5EDE8] py-20 sm:py-28">
+    <section id="faq" className="section bg-[var(--alabaster)]">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#1A1A2E]">
+          <div className="flex items-center justify-center gap-2 mb-5">
+            <Image src="/webflow/Bonepna_1Bonepna.png" alt="" width={24} height={24} />
+            <span className="top-title">
+              <span className="light-color">Pet Calendar</span> FAQ
+            </span>
+          </div>
+          <h2 className="section-heading mx-auto text-center max-w-[600px]">
             Got Questions? We&apos;ve Got Answers
           </h2>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index
             return (
               <div
                 key={index}
-                className={`overflow-hidden transition-all duration-300 ${
+                className={`overflow-hidden transition-all duration-300 rounded-2xl ${
                   isOpen
-                    ? 'sketchy-card bg-white shadow-md'
-                    : 'bg-white border-2 border-[#1A1A2E]/15 rounded-2xl hover:border-[#1A1A2E]/30'
+                    ? 'bg-white shadow-md border-2 border-[var(--purple)]/15'
+                    : 'bg-white border-2 border-transparent hover:border-[var(--purple)]/10'
                 }`}
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   className="flex w-full items-center justify-between px-6 py-5 text-left"
                 >
-                  <span className="font-bold text-[#1A1A2E] pr-4 flex items-center gap-3">
+                  <span className="font-bold text-[var(--ebony)] pr-4 flex items-center gap-3">
                     <span className="text-lg">{faq.emoji}</span>
                     {faq.question}
                   </span>
                   <span
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+                    className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
                       isOpen
-                        ? 'bg-[#1A1A2E] text-white rotate-45'
-                        : 'bg-[#D4E8F7] text-[#1A1A2E]'
+                        ? 'bg-[var(--purple)] text-white rotate-45'
+                        : 'bg-[var(--purple)]/8 text-[var(--ebony)]'
                     }`}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
@@ -96,7 +103,7 @@ export default function FAQ() {
                     isOpen ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'
                   }`}
                 >
-                  <p className="px-6 pb-5 text-[#1A1A2E]/60 leading-relaxed pl-[3.25rem]">
+                  <p className="px-6 pb-5 text-[var(--wenge)] leading-relaxed pl-[3.25rem] font-medium">
                     {faq.answer}
                   </p>
                 </div>

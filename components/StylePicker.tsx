@@ -71,31 +71,29 @@ export default function StylePicker({
   showcase = false,
   petType = 'dog',
 }: StylePickerProps) {
-  // Dynamic preview path based on pet type
   const getPreviewSrc = (styleId: string) => {
     return `/previews/${styleId}-${petType}.jpg`
   }
   return (
-    <section id="styles" className={showcase ? 'bg-[#F0F4F8] py-20 sm:py-28' : ''}>
+    <section id="styles" className={showcase ? 'py-20 sm:py-28' : ''}>
       <div className={showcase ? 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8' : ''}>
         {showcase && (
           <div className="text-center mb-16">
-            <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#1A1A2E]">
+            <h2 className="section-heading mx-auto text-center max-w-[624px]">
               Pick an Art Style Your Pet Would Be Proud Of 😎
             </h2>
-            <p className="mt-4 text-lg text-[#1A1A2E]/60 max-w-xl mx-auto">
+            <p className="section-details text-center mx-auto max-w-xl">
               Each style transforms your pet photos into a unique art form
             </p>
           </div>
         )}
 
-        {/* Horizontal scroll on showcase, grid on picker */}
         {showcase ? (
           <div className="flex gap-5 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 sm:-mx-0 sm:px-0">
             {CALENDAR_STYLES.map((style) => (
               <div
                 key={style.id}
-                className="snap-start shrink-0 w-64 rounded-3xl overflow-hidden bg-white shadow-md hover:shadow-xl hover-tilt transition-all duration-300 border border-[#A8D4F0]/20"
+                className="snap-start shrink-0 w-64 rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
               >
                 <div
                   className="h-44 flex flex-col items-center justify-center relative"
@@ -107,8 +105,8 @@ export default function StylePicker({
                   <span className="text-7xl opacity-10 absolute bottom-2 right-4">🐾</span>
                 </div>
                 <div className="p-5">
-                  <h3 className="font-extrabold text-[#1A1A2E] text-lg">{style.name}</h3>
-                  <p className="mt-1.5 text-sm text-[#1A1A2E]/50 leading-relaxed line-clamp-2">
+                  <h3 className="font-bold text-[var(--ebony)] text-lg">{style.name}</h3>
+                  <p className="mt-1.5 text-sm text-[var(--wenge)] leading-relaxed line-clamp-2">
                     {style.description}
                   </p>
                 </div>
@@ -124,10 +122,10 @@ export default function StylePicker({
                   key={style.id}
                   type="button"
                   onClick={() => onSelect?.(style.id)}
-                  className={`group relative text-left rounded-3xl overflow-hidden transition-all duration-300 hover-wiggle ${
+                  className={`group relative text-left rounded-2xl overflow-hidden transition-all duration-300 ${
                     isSelected
-                      ? 'ring-4 ring-[#A8D4F0] shadow-xl -translate-y-1'
-                      : 'hover:shadow-lg hover:-translate-y-1 cursor-pointer border border-[#A8D4F0]/20'
+                      ? 'ring-4 ring-[var(--purple)] shadow-xl -translate-y-1'
+                      : 'hover:shadow-lg hover:-translate-y-1 cursor-pointer border border-[var(--purple)]/10'
                   }`}
                 >
                   {/* Preview image */}
@@ -139,22 +137,19 @@ export default function StylePicker({
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                       sizes="300px"
                     />
-                    {/* Emoji badge */}
                     <div className="absolute top-2 left-2 rounded-full bg-white/90 backdrop-blur-sm w-8 h-8 flex items-center justify-center text-lg shadow-sm">
                       {styleEmojis[style.id] ?? '🎨'}
                     </div>
-                    {/* Selected badge */}
                     {isSelected && (
-                      <div className="absolute top-2 right-2 rounded-full bg-[#FF6B35] px-3 py-1 text-xs font-bold text-white shadow-lg">
+                      <div className="absolute top-2 right-2 rounded-full bg-[var(--green)] px-3 py-1 text-xs font-bold text-white shadow-lg">
                         ✓ Selected!
                       </div>
                     )}
                   </div>
 
-                  {/* Info */}
                   <div className="bg-white p-4">
-                    <h3 className="font-extrabold text-[#1A1A2E]">{style.name}</h3>
-                    <p className="mt-1 text-sm text-[#1A1A2E]/50 leading-relaxed line-clamp-2">
+                    <h3 className="font-bold text-[var(--ebony)]">{style.name}</h3>
+                    <p className="mt-1 text-sm text-[var(--wenge)] leading-relaxed line-clamp-2">
                       {style.description}
                     </p>
                   </div>

@@ -19,10 +19,10 @@ interface PetEntry {
   photos: UploadedPhoto[]
 }
 
-const petTypes: { value: PetType; label: string; emoji: string; bg: string }[] = [
-  { value: 'dog', label: 'Dog', emoji: '🐕', bg: 'bg-[#E8F0FA] border-[#A8D4F0]' },
-  { value: 'cat', label: 'Cat', emoji: '🐱', bg: 'bg-[#E8FFF7] border-[#06D6A0]' },
-  { value: 'other', label: 'Other Pet', emoji: '🐾', bg: 'bg-[#F3EEFF] border-[#7C3AED]' },
+const petTypes: { value: PetType; label: string; emoji: string }[] = [
+  { value: 'dog', label: 'Dog', emoji: '🐕' },
+  { value: 'cat', label: 'Cat', emoji: '🐱' },
+  { value: 'other', label: 'Other Pet', emoji: '🐾' },
 ]
 
 function createEmptyPet(): PetEntry {
@@ -61,7 +61,6 @@ export default function CreatePage() {
     setUploadError(null)
 
     try {
-      // Step 1: Create project + pets (small JSON, no photos)
       const createRes = await fetch('/api/create-project', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -82,7 +81,6 @@ export default function CreatePage() {
       const projectId = createResult.projectId
       const petIds: string[] = createResult.petIds
 
-      // Step 2: Upload photos one at a time (avoids body size limits)
       for (let petIndex = 0; petIndex < pets.length; petIndex++) {
         const pet = pets[petIndex]
         const petId = petIds[petIndex]
@@ -105,7 +103,6 @@ export default function CreatePage() {
         }
       }
 
-      // Store project data in sessionStorage for the style + preview pages
       const petsData = pets.map((pet) => ({
         id: pet.id,
         name: pet.name.trim(),
@@ -128,31 +125,28 @@ export default function CreatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5EDE8]">
+    <div className="min-h-screen bg-[var(--alabaster)]">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <StepProgress currentStep={1} />
 
-        {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="heading-playful text-3xl sm:text-4xl font-extrabold text-[#1A1A2E]">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ebony)] capitalize">
             First, let&apos;s meet your pet{pets.length > 1 ? 's' : ''}! 📸
           </h1>
-          <p className="mt-3 text-[#1A1A2E]/60 max-w-lg mx-auto">
+          <p className="mt-3 text-[var(--wenge)] max-w-lg mx-auto font-medium">
             Upload 3-5 photos per pet. Different angles work best — front,
             side, and full body shots help our AI capture their unique look.
           </p>
         </div>
 
-        {/* Pet sections */}
         <div className="space-y-8">
           {pets.map((pet, index) => (
             <div
               key={pet.id}
-              className="rounded-3xl border-2 border-[#A8D4F0]/20 bg-white p-6 sm:p-8 shadow-sm"
+              className="rounded-2xl border-2 border-[var(--purple)]/10 bg-white p-6 sm:p-8 shadow-sm"
             >
-              {/* Pet header */}
               <div className="flex items-center justify-between mb-6">
-                <h2 className="font-extrabold text-[#1A1A2E] text-lg">
+                <h2 className="font-bold text-[var(--ebony)] text-lg">
                   {pets.length > 1 ? `Pet #${index + 1}` : 'Your Pet'}
                 </h2>
                 {pets.length > 1 && (
@@ -165,11 +159,10 @@ export default function CreatePage() {
                 )}
               </div>
 
-              {/* Pet name */}
               <div className="mb-6">
                 <label
                   htmlFor={`petName-${pet.id}`}
-                  className="block text-sm font-bold text-[#1A1A2E] mb-2"
+                  className="block text-sm font-bold text-[var(--ebony)] mb-2"
                 >
                   What&apos;s your pet&apos;s name?
                 </label>
@@ -179,13 +172,12 @@ export default function CreatePage() {
                   value={pet.name}
                   onChange={(e) => updatePet(pet.id, { name: e.target.value })}
                   placeholder="e.g., Buddy, Luna, Mr. Whiskers..."
-                  className="w-full rounded-2xl border-2 border-[#A8D4F0]/30 bg-white px-5 py-3.5 text-[#1A1A2E] placeholder:text-[#1A1A2E]/30 focus:border-[#A8D4F0] focus:ring-2 focus:ring-[#A8D4F0]/20 focus:bg-white outline-none transition-all text-lg"
+                  className="input-zaipet"
                 />
               </div>
 
-              {/* Pet type */}
               <div className="mb-6">
-                <label className="block text-sm font-bold text-[#1A1A2E] mb-3">
+                <label className="block text-sm font-bold text-[var(--ebony)] mb-3">
                   What type of pet?
                 </label>
                 <div className="grid grid-cols-3 gap-3">
@@ -193,10 +185,10 @@ export default function CreatePage() {
                     <button
                       key={type.value}
                       onClick={() => updatePet(pet.id, { type: type.value })}
-                      className={`flex flex-col items-center gap-2 rounded-2xl border-3 px-4 py-6 font-bold transition-all duration-200 hover-wiggle ${
+                      className={`flex flex-col items-center gap-2 rounded-2xl border-2 px-4 py-6 font-bold transition-all duration-200 ${
                         pet.type === type.value
-                          ? `${type.bg} shadow-md`
-                          : 'border-gray-200 bg-white text-[#1A1A2E]/60 hover:border-[#A8D4F0]/40 hover:bg-[#E8F0FA]/30'
+                          ? 'border-[var(--purple)] bg-[var(--purple)]/5 shadow-md text-[var(--ebony)]'
+                          : 'border-gray-200 bg-white text-[var(--wenge)] hover:border-[var(--purple)]/30'
                       }`}
                     >
                       <span className="text-4xl">{type.emoji}</span>
@@ -206,9 +198,8 @@ export default function CreatePage() {
                 </div>
               </div>
 
-              {/* Photo uploader */}
               <div>
-                <label className="block text-sm font-bold text-[#1A1A2E] mb-3">
+                <label className="block text-sm font-bold text-[var(--ebony)] mb-3">
                   Photos of {pet.name || 'your pet'}
                 </label>
                 <PhotoUploader
@@ -221,52 +212,50 @@ export default function CreatePage() {
           ))}
         </div>
 
-        {/* Add another pet */}
         <div className="mt-6 text-center">
           <button
             onClick={() => setPets((prev) => [...prev, createEmptyPet()])}
             disabled={isUploading}
-            className="inline-flex items-center gap-2 rounded-full border-2 border-dashed border-[#A8D4F0]/40 px-6 py-3 text-sm font-bold text-[#FF6B35] hover:border-[#A8D4F0] hover:bg-[#E8F0FA] transition-all"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-dashed border-[var(--purple)]/25 px-6 py-3 text-sm font-bold text-[var(--purple)] hover:border-[var(--purple)]/50 hover:bg-[var(--purple)]/5 transition-all"
           >
             + Add Another Pet
           </button>
         </div>
 
-        {/* Multi-pet mode selector — only shows with 2+ pets */}
         {pets.length > 1 && (
-          <div className="mt-8 mx-auto max-w-md rounded-3xl bg-white border-2 border-[#A8D4F0]/20 p-6 sm:p-8 shadow-sm">
-            <h2 className="font-bold text-[#1A1A2E] mb-2 flex items-center gap-2">
+          <div className="mt-8 mx-auto max-w-md rounded-2xl bg-white border-2 border-[var(--purple)]/10 p-6 sm:p-8 shadow-sm">
+            <h2 className="font-bold text-[var(--ebony)] mb-2 flex items-center gap-2">
               🐾 How should your pets appear?
             </h2>
-            <p className="text-sm text-[#1A1A2E]/50 mb-4">
+            <p className="text-sm text-[var(--wenge)] mb-4">
               Choose how your pets show up in the calendar
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
                 onClick={() => setMultiPetMode('alternate')}
-                className={`text-left rounded-2xl border-3 p-4 transition-all duration-200 ${
+                className={`text-left rounded-2xl border-2 p-4 transition-all duration-200 ${
                   multiPetMode === 'alternate'
-                    ? 'border-[#A8D4F0] bg-[#E8F0FA] shadow-md'
-                    : 'border-gray-200 bg-white hover:border-[#A8D4F0]/40'
+                    ? 'border-[var(--purple)] bg-[var(--purple)]/5 shadow-md'
+                    : 'border-gray-200 bg-white hover:border-[var(--purple)]/30'
                 }`}
               >
                 <div className="text-2xl mb-2">🔄</div>
-                <div className="font-bold text-[#1A1A2E] text-sm">Take Turns</div>
-                <p className="text-xs text-[#1A1A2E]/50 mt-1">
+                <div className="font-bold text-[var(--ebony)] text-sm">Take Turns</div>
+                <p className="text-xs text-[var(--wenge)] mt-1">
                   Each pet gets their own months, alternating through the calendar
                 </p>
               </button>
               <button
                 onClick={() => setMultiPetMode('together')}
-                className={`text-left rounded-2xl border-3 p-4 transition-all duration-200 ${
+                className={`text-left rounded-2xl border-2 p-4 transition-all duration-200 ${
                   multiPetMode === 'together'
-                    ? 'border-[#A8D4F0] bg-[#E8F0FA] shadow-md'
-                    : 'border-gray-200 bg-white hover:border-[#A8D4F0]/40'
+                    ? 'border-[var(--purple)] bg-[var(--purple)]/5 shadow-md'
+                    : 'border-gray-200 bg-white hover:border-[var(--purple)]/30'
                 }`}
               >
                 <div className="text-2xl mb-2">🤝</div>
-                <div className="font-bold text-[#1A1A2E] text-sm">Together</div>
-                <p className="text-xs text-[#1A1A2E]/50 mt-1">
+                <div className="font-bold text-[var(--ebony)] text-sm">Together</div>
+                <p className="text-xs text-[var(--wenge)] mt-1">
                   All your pets appear together in every single month&apos;s image
                 </p>
               </button>
@@ -274,27 +263,22 @@ export default function CreatePage() {
           </div>
         )}
 
-        <p className="text-center text-xs text-[#5B8EC9]/70 mt-4 font-medium">
+        <p className="text-center text-xs text-[var(--wenge)] mt-4 font-medium">
           💡 Pro tip: Front face, side profile, and a full body shot give the best results!
         </p>
 
-        {/* Upload error */}
         {uploadError && (
           <div className="mt-4 mx-auto max-w-md rounded-2xl bg-red-50 border border-red-200 p-4 text-center">
             <p className="text-sm text-red-600 font-medium">{uploadError}</p>
           </div>
         )}
 
-        {/* Continue button */}
         <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
           <button
             onClick={handleContinue}
             disabled={!canContinue || isUploading}
-            className={`rounded-full px-8 py-4 text-lg font-bold text-white transition-all duration-300 order-1 sm:order-2 ${
-              canContinue && !isUploading
-                ? 'bg-[#FF6B35] hover:bg-[#E55A2B] shadow-lg shadow-[#A8D4F0]/20 hover:shadow-xl hover:-translate-y-0.5'
-                : 'bg-gray-300 cursor-not-allowed'
+            className={`btn-purple text-lg px-8 py-4 order-1 sm:order-2 ${
+              !canContinue || isUploading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
             {isUploading ? (

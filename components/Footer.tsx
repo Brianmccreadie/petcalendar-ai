@@ -2,45 +2,50 @@ import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1A1A2E] text-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-          {/* Logo */}
+    <footer className="bg-[var(--ebony)] text-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2 mb-4">
               <span className="text-2xl">🐾</span>
-              <span className="text-xl font-extrabold tracking-tight heading-playful">
-                PetCalendar<span className="text-[#A8D4F0]">.ai</span>
+              <span className="text-xl font-bold tracking-tight">
+                PetCalendar<span className="text-[var(--green)]">.ai</span>
               </span>
             </Link>
-            <p className="mt-3 text-white/50 text-sm">
-              Made with ❤️ and 🐾 for pet lovers everywhere
+            <p className="text-white/50 text-sm font-medium leading-relaxed max-w-[300px]">
+              Turn your pet into a work of art. Upload photos, choose a style, and get a stunning personalized calendar delivered to your door.
             </p>
           </div>
 
-          {/* Links */}
-          <div className="flex flex-wrap gap-6 text-sm text-white/50">
-            <Link href="#faq" className="hover:text-[#A8D4F0] transition-colors">
-              FAQ
-            </Link>
-            <Link href="/privacy" className="hover:text-[#A8D4F0] transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="hover:text-[#A8D4F0] transition-colors">
-              Terms
-            </Link>
-            <a href="mailto:hello@petcalendar.ai" className="hover:text-[#A8D4F0] transition-colors">
-              Contact
-            </a>
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-bold mb-6 text-white capitalize">Quick Links</h4>
+            <div className="space-y-3">
+              <Link href="/#how-it-works" className="block text-white/50 font-medium hover:text-[var(--green)] transition-colors">How It Works</Link>
+              <Link href="/#themes" className="block text-white/50 font-medium hover:text-[var(--green)] transition-colors">Themes</Link>
+              <Link href="/#pricing" className="block text-white/50 font-medium hover:text-[var(--green)] transition-colors">Pricing</Link>
+              <Link href="/#faq" className="block text-white/50 font-medium hover:text-[var(--green)] transition-colors">FAQ</Link>
+            </div>
+          </div>
+
+          {/* Legal & Contact */}
+          <div>
+            <h4 className="text-lg font-bold mb-6 text-white capitalize">Support</h4>
+            <div className="space-y-3">
+              <a href="mailto:hello@petcalendar.ai" className="block text-white/50 font-medium hover:text-[var(--green)] transition-colors">hello@petcalendar.ai</a>
+              <Link href="/privacy" className="block text-white/50 font-medium hover:text-[var(--green)] transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="block text-white/50 font-medium hover:text-[var(--green)] transition-colors">Terms of Service</Link>
+            </div>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-white/10">
-          <p className="text-center text-xs text-white/30">
-            No pets were harmed in the making of this website. Many were spoiled.
-          </p>
-          <p className="text-center text-xs text-white/20 mt-2">
+        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-white/30">
             &copy; {new Date().getFullYear()} PetCalendar.ai. All rights reserved.
+          </p>
+          <p className="text-xs text-white/20">
+            No pets were harmed in the making of this website. Many were spoiled. 🐾
           </p>
         </div>
       </div>
