@@ -141,11 +141,14 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-12 items-center max-w-4xl mx-auto">
             {/* Tilted calendar mockup */}
             <div className="relative flex justify-center">
-              <div className="w-72 h-80 rounded-3xl bg-gradient-to-br from-[#FF6B35]/15 via-[#FFD166]/15 to-[#06D6A0]/15 border-4 border-white shadow-2xl rotate-[-4deg] hover:rotate-0 transition-transform duration-500 flex flex-col items-center justify-center overflow-hidden">
-                <span className="text-7xl mb-3">🐕</span>
-                <span className="text-sm font-extrabold text-[#2D1B69]/70">2026 Calendar</span>
-                <span className="text-xs text-[#2D1B69]/40 mt-1">Wizarding World</span>
-                <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/80" />
+              <div className="w-72 h-80 rounded-3xl bg-gradient-to-br from-[#FF6B35]/15 via-[#FFD166]/15 to-[#06D6A0]/15 border-4 border-white shadow-2xl rotate-[-4deg] hover:rotate-0 transition-transform duration-500 overflow-hidden relative">
+                <Image
+                  src="/calendar-hero-mockup.png"
+                  alt="Pet calendar mockup"
+                  fill
+                  className="object-contain p-2"
+                  sizes="288px"
+                />
               </div>
               {/* Shadow card behind */}
               <div className="absolute -bottom-3 -right-3 w-72 h-80 rounded-3xl bg-[#FFD166]/10 border-4 border-white rotate-[4deg] -z-10" />
