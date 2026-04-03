@@ -28,13 +28,6 @@ const faqs = [
     answer:
       'Production takes 3-5 business days, and standard shipping within the US is 5-7 business days. Shipping is free! You\'ll receive tracking information once your calendar ships.',
   },
-  {
-    emoji: '🤔',
-    question: 'What if I don\'t like the result?',
-    answer:
-      'You can regenerate any month up to 3 times before ordering. If you\'re still not satisfied after receiving your calendar, contact us and we\'ll make it right.',
-  },
-  {
     emoji: '🎁',
     question: 'Can I order multiple copies?',
     answer:
