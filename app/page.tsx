@@ -26,14 +26,14 @@ const testimonials = [
 ]
 
 const featuredThemes = [
-  { id: 'wizarding-world' as const, emoji: '🧙' },
-  { id: 'space-explorer' as const, emoji: '🚀' },
-  { id: 'secret-agent' as const, emoji: '🕵️' },
-  { id: 'superhero-origin' as const, emoji: '🦸' },
-  { id: 'pirate-life' as const, emoji: '🏴‍☠️' },
-  { id: 'high-school-yearbook' as const, emoji: '📸' },
-  { id: 'cozy-vibes' as const, emoji: '☕' },
-  { id: 'tiny-human' as const, emoji: '🛒' },
+  { id: 'wizarding-world' as const, emoji: '🧙', pet: 'cat' },
+  { id: 'space-explorer' as const, emoji: '🚀', pet: 'dog' },
+  { id: 'secret-agent' as const, emoji: '🕵️', pet: 'cat' },
+  { id: 'superhero-origin' as const, emoji: '🦸', pet: 'dog' },
+  { id: 'pirate-life' as const, emoji: '🏴‍☠️', pet: 'other' },
+  { id: 'high-school-yearbook' as const, emoji: '📸', pet: 'cat' },
+  { id: 'cozy-vibes' as const, emoji: '☕', pet: 'dog' },
+  { id: 'tiny-human' as const, emoji: '🛒', pet: 'other' },
 ]
 
 const productFeatures = [
@@ -71,7 +71,7 @@ export default function Home() {
                 >
                   <div className="relative aspect-[3/2] bg-gradient-to-br from-[#FFD166]/20 to-[#FF6B35]/20">
                     <Image
-                      src={style.preview}
+                      src={`/previews/${theme.id}-${theme.pet}.jpg`}
                       alt={style.name}
                       fill
                       className="object-cover"
