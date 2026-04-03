@@ -46,17 +46,77 @@ const productFeatures = [
   { emoji: '❤️', text: 'Satisfaction guaranteed' },
 ]
 
+/* Doodle SVG components for section dividers */
+function PawDoodle({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10" cy="6" r="3.5" fill="currentColor"/>
+      <circle cx="22" cy="6" r="3.5" fill="currentColor"/>
+      <circle cx="5" cy="14" r="3" fill="currentColor"/>
+      <circle cx="27" cy="14" r="3" fill="currentColor"/>
+      <ellipse cx="16" cy="22" rx="7" ry="6" fill="currentColor"/>
+    </svg>
+  )
+}
+
+function BoneDoodle({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="40" height="20" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="7" width="24" height="6" rx="3" fill="currentColor"/>
+      <circle cx="7" cy="5" r="4" fill="currentColor"/>
+      <circle cx="7" cy="15" r="4" fill="currentColor"/>
+      <circle cx="33" cy="5" r="4" fill="currentColor"/>
+      <circle cx="33" cy="15" r="4" fill="currentColor"/>
+    </svg>
+  )
+}
+
+function SparkDoodle({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L13.5 9.5L20 12L13.5 14.5L12 22L10.5 14.5L4 12L10.5 9.5L12 2Z" fill="currentColor"/>
+    </svg>
+  )
+}
+
+function HeartDoodle({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 21C12 21 2 14 2 7.5C2 4 4.5 2 7.5 2C9.5 2 11 3.5 12 4.5C13 3.5 14.5 2 16.5 2C19.5 2 22 4 22 7.5C22 14 12 21 12 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+function SquigglyDoodle({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="80" height="12" viewBox="0 0 80 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 6C10 2 14 10 22 6C30 2 34 10 42 6C50 2 54 10 62 6C70 2 74 10 78 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
 export default function Home() {
   return (
     <>
       <Hero />
       <HowItWorks />
+
+      {/* Doodle divider */}
+      <div className="flex items-center justify-center gap-4 py-2 bg-[#FFF5EE]">
+        <PawDoodle className="w-5 h-5 text-[#89CFF0] opacity-20" />
+        <SquigglyDoodle className="w-16 h-3 text-[#89CFF0] opacity-20" />
+        <SparkDoodle className="w-4 h-4 text-[#FFD166] opacity-25" />
+      </div>
+
       {/* Featured Themes */}
-      <section className="bg-[#FFFBF5] py-20 sm:py-28">
+      <section className="relative bg-[#FFF5EE] py-20 sm:py-28">
+        <BoneDoodle className="absolute top-10 left-[6%] text-[#89CFF0] opacity-15 w-9 h-5 rotate-[-15deg] animate-doodle" />
+        <SparkDoodle className="absolute bottom-14 right-[8%] text-[#FFD166] opacity-20 w-5 h-5 animate-doodle" />
+
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#2D1B69]">
-              50 Themes to Choose From 🎨
+              50 Themes to Choose From
             </h2>
             <p className="mt-4 text-lg text-[#2D1B69]/60">Here are a few of our favorites</p>
           </div>
@@ -67,9 +127,9 @@ export default function Home() {
               return (
                 <div
                   key={style.id}
-                  className="group rounded-2xl overflow-hidden bg-white border border-[#FF6B35]/10 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                  className="group rounded-2xl overflow-hidden bg-white border border-[#89CFF0]/15 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                 >
-                  <div className="relative aspect-[3/2] bg-gradient-to-br from-[#FFD166]/20 to-[#FF6B35]/20">
+                  <div className="relative aspect-[3/2] bg-gradient-to-br from-[#89CFF0]/15 to-[#B8DCEF]/20">
                     <Image
                       src={`/previews/${theme.id}-${theme.pet}.jpg`}
                       alt={style.name}
@@ -102,21 +162,31 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Doodle divider */}
+      <div className="flex items-center justify-center gap-4 py-2 bg-white">
+        <HeartDoodle className="w-4 h-4 text-[#89CFF0] opacity-20" />
+        <SquigglyDoodle className="w-16 h-3 text-[#89CFF0] opacity-15" />
+        <PawDoodle className="w-5 h-5 text-[#89CFF0] opacity-20" />
+      </div>
+
       {/* Testimonials */}
-      <section className="bg-white py-20 sm:py-28">
+      <section className="relative bg-white py-20 sm:py-28">
+        <PawDoodle className="absolute top-12 right-[10%] text-[#89CFF0] opacity-15 w-7 h-7 rotate-[20deg] animate-doodle" />
+        <HeartDoodle className="absolute bottom-16 left-[6%] text-[#89CFF0] opacity-15 w-6 h-5 rotate-[-10deg] animate-doodle" />
+
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#2D1B69]">
-              Pet Parents Love Us 🐾
+              Pet Parents Love Us
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
               <div
                 key={i}
-                className="rounded-3xl bg-[#FFF8F0] p-8 relative border border-[#FF6B35]/8"
+                className="rounded-3xl bg-[#E8F4FD] p-8 relative border border-[#89CFF0]/20"
               >
-                <span className="text-5xl text-[#FF6B35]/20 font-serif absolute top-4 left-6">&ldquo;</span>
+                <span className="text-5xl text-[#89CFF0]/30 font-serif absolute top-4 left-6">&ldquo;</span>
                 <p className="text-[#2D1B69]/70 leading-relaxed mt-6 mb-6 relative z-10">
                   {t.quote}
                 </p>
@@ -131,17 +201,20 @@ export default function Home() {
       </section>
 
       {/* Product Details */}
-      <section className="bg-[#FFFBF5] py-20 sm:py-28">
+      <section className="relative bg-[#FFF5EE] py-20 sm:py-28">
+        <BoneDoodle className="absolute top-8 right-[12%] text-[#89CFF0] opacity-15 w-8 h-4 rotate-[30deg] animate-doodle" />
+        <SparkDoodle className="absolute bottom-20 left-[10%] text-[#FFD166] opacity-20 w-5 h-5 animate-doodle" />
+
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#2D1B69]">
-              What You Get 📦
+              What You Get
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-12 items-center max-w-4xl mx-auto">
             {/* Tilted calendar mockup */}
             <div className="relative flex justify-center">
-              <div className="w-72 h-80 rounded-3xl bg-gradient-to-br from-[#FF6B35]/15 via-[#FFD166]/15 to-[#06D6A0]/15 border-4 border-white shadow-2xl rotate-[-4deg] hover:rotate-0 transition-transform duration-500 overflow-hidden relative">
+              <div className="w-72 h-80 rounded-3xl bg-gradient-to-br from-[#89CFF0]/15 via-[#B8DCEF]/15 to-[#FFD166]/10 border-4 border-white shadow-2xl rotate-[-4deg] hover:rotate-0 transition-transform duration-500 overflow-hidden relative">
                 <Image
                   src="/calendar-hero-mockup.png"
                   alt="Pet calendar mockup"
@@ -151,7 +224,7 @@ export default function Home() {
                 />
               </div>
               {/* Shadow card behind */}
-              <div className="absolute -bottom-3 -right-3 w-72 h-80 rounded-3xl bg-[#FFD166]/10 border-4 border-white rotate-[4deg] -z-10" />
+              <div className="absolute -bottom-3 -right-3 w-72 h-80 rounded-3xl bg-[#89CFF0]/10 border-4 border-white rotate-[4deg] -z-10" />
             </div>
 
             {/* Feature list */}
@@ -172,18 +245,30 @@ export default function Home() {
       <PricingSection />
       <FAQ />
 
+      {/* Doodle divider above CTA */}
+      <div className="flex items-center justify-center gap-4 py-2 bg-[#FFF5EE]">
+        <SparkDoodle className="w-4 h-4 text-[#89CFF0] opacity-25" />
+        <BoneDoodle className="w-8 h-4 text-[#89CFF0] opacity-15" />
+        <HeartDoodle className="w-4 h-4 text-[#89CFF0] opacity-20" />
+      </div>
+
       {/* Final CTA */}
-      <section className="bg-gradient-to-br from-[#FF6B35] to-[#FFD166] py-16 sm:py-20 text-center">
-        <div className="mx-auto max-w-2xl px-4">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
-            Ready to Make Your Pet a Star? ⭐
+      <section className="bg-gradient-to-br from-[#FAF0E6] via-[#E8F4FD] to-[#89CFF0] py-16 sm:py-20 text-center relative overflow-hidden">
+        {/* Subtle doodles on CTA */}
+        <PawDoodle className="absolute top-6 left-[10%] text-white opacity-15 w-8 h-8 rotate-[-15deg]" />
+        <BoneDoodle className="absolute bottom-8 right-[8%] text-white opacity-10 w-10 h-5 rotate-[20deg]" />
+        <SparkDoodle className="absolute top-10 right-[20%] text-white opacity-15 w-6 h-6" />
+
+        <div className="mx-auto max-w-2xl px-4 relative z-10">
+          <h2 className="heading-playful text-3xl sm:text-4xl font-extrabold text-[#2D1B69] mb-4">
+            Ready to Make Your Pet a Star?
           </h2>
-          <p className="text-white/80 text-lg mb-8">
+          <p className="text-[#2D1B69]/60 text-lg mb-8">
             It only takes 5 minutes. Your pet deserves this.
           </p>
           <Link
             href="/create"
-            className="inline-flex items-center justify-center rounded-full bg-white px-10 py-4 text-lg font-bold text-[#FF6B35] shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+            className="inline-flex items-center justify-center rounded-full bg-[#FF6B35] px-10 py-4 text-lg font-bold text-white shadow-xl shadow-[#FF6B35]/25 hover:bg-[#E55A2B] hover:-translate-y-1 transition-all duration-300"
           >
             Start Creating Now →
           </Link>

@@ -9,7 +9,6 @@ const steps = [
     ),
     title: 'Upload Photos',
     description: 'Snap 3-5 photos of your pet from different angles',
-    color: '#FF6B35',
   },
   {
     number: 2,
@@ -20,7 +19,6 @@ const steps = [
     ),
     title: 'Pick a Style',
     description: '50 fun themes — from Wizarding World to Pirate Life',
-    color: '#FFD166',
   },
   {
     number: 3,
@@ -31,7 +29,6 @@ const steps = [
     ),
     title: 'AI Magic',
     description: 'We generate 12 unique monthly images of your pet',
-    color: '#06D6A0',
   },
   {
     number: 4,
@@ -42,17 +39,44 @@ const steps = [
     ),
     title: 'Delivered',
     description: 'Printed on premium paper & shipped free to your door',
-    color: '#7C3AED',
   },
 ]
 
+function BoneDoodle({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="40" height="20" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="7" width="24" height="6" rx="3" fill="currentColor"/>
+      <circle cx="7" cy="5" r="4" fill="currentColor"/>
+      <circle cx="7" cy="15" r="4" fill="currentColor"/>
+      <circle cx="33" cy="5" r="4" fill="currentColor"/>
+      <circle cx="33" cy="15" r="4" fill="currentColor"/>
+    </svg>
+  )
+}
+
+function PawDoodle({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10" cy="6" r="3.5" fill="currentColor"/>
+      <circle cx="22" cy="6" r="3.5" fill="currentColor"/>
+      <circle cx="5" cy="14" r="3" fill="currentColor"/>
+      <circle cx="27" cy="14" r="3" fill="currentColor"/>
+      <ellipse cx="16" cy="22" rx="7" ry="6" fill="currentColor"/>
+    </svg>
+  )
+}
+
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-[#FFFBF5] py-20 sm:py-28">
+    <section id="how-it-works" className="relative bg-[#FFF5EE] py-20 sm:py-28">
+      {/* Decorative doodles */}
+      <BoneDoodle className="absolute top-12 right-[10%] text-[#89CFF0] opacity-15 w-10 h-5 rotate-[20deg] animate-doodle" />
+      <PawDoodle className="absolute bottom-16 left-[8%] text-[#89CFF0] opacity-15 w-7 h-7 rotate-[-10deg] animate-doodle" />
+
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#2D1B69]">
-            How It Works 🐾
+            How It Works
           </h2>
           <p className="mt-4 text-lg text-[#2D1B69]/50 max-w-md mx-auto">
             Four steps. Five minutes. One calendar your fridge will be proud of.
@@ -62,7 +86,7 @@ export default function HowItWorks() {
         {/* Timeline layout */}
         <div className="relative">
           {/* Connecting line */}
-          <div className="hidden lg:block absolute top-16 left-[calc(12.5%+24px)] right-[calc(12.5%+24px)] h-[2px] bg-gradient-to-r from-[#FF6B35]/30 via-[#06D6A0]/30 to-[#7C3AED]/30" />
+          <div className="hidden lg:block absolute top-16 left-[calc(12.5%+24px)] right-[calc(12.5%+24px)] h-[2px] bg-gradient-to-r from-[#89CFF0]/40 via-[#89CFF0]/30 to-[#89CFF0]/40" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
             {steps.map((step) => (
@@ -71,22 +95,21 @@ export default function HowItWorks() {
                 <div
                   className="relative w-[72px] h-[72px] rounded-full flex items-center justify-center mb-6 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
                   style={{
-                    background: `linear-gradient(135deg, ${step.color}20, ${step.color}40)`,
-                    border: `2px solid ${step.color}50`,
+                    background: 'linear-gradient(135deg, rgba(137,207,240,0.15), rgba(137,207,240,0.3))',
+                    border: '2px solid rgba(137,207,240,0.4)',
                   }}
                 >
-                  <div style={{ color: step.color }}>{step.icon}</div>
+                  <div className="text-[#89CFF0]">{step.icon}</div>
                   {/* Number badge */}
                   <div
-                    className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"
-                    style={{ backgroundColor: step.color }}
+                    className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md bg-[#89CFF0]"
                   >
                     {step.number}
                   </div>
                 </div>
 
                 {/* Title */}
-                <h3 className="text-lg font-extrabold text-[#2D1B69] mb-1">{step.title}</h3>
+                <h3 className="heading-playful text-lg font-extrabold text-[#2D1B69] mb-1">{step.title}</h3>
 
                 {/* Description */}
                 <p className="text-sm text-[#2D1B69]/50 leading-relaxed max-w-[200px]">

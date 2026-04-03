@@ -51,11 +51,11 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section id="faq" className="bg-[#FFFBF5] py-20 sm:py-28">
+    <section id="faq" className="bg-[#FFF5EE] py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#2D1B69]">
-            Got Questions? We&apos;ve Got Answers 💬
+            Got Questions? We&apos;ve Got Answers
           </h2>
         </div>
 
@@ -67,8 +67,8 @@ export default function FAQ() {
                 key={index}
                 className={`rounded-2xl border-2 overflow-hidden transition-all duration-300 ${
                   isOpen
-                    ? 'border-[#FF6B35]/30 bg-white shadow-md border-l-4 border-l-[#FF6B35]'
-                    : 'border-[#FF6B35]/8 bg-white hover:border-[#FF6B35]/20'
+                    ? 'border-[#89CFF0]/40 bg-white shadow-md border-l-4 border-l-[#89CFF0]'
+                    : 'border-[#89CFF0]/12 bg-white hover:border-[#89CFF0]/25'
                 }`}
               >
                 <button
@@ -82,8 +82,8 @@ export default function FAQ() {
                   <span
                     className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
                       isOpen
-                        ? 'bg-[#FF6B35] text-white rotate-45'
-                        : 'bg-[#FFF0E8] text-[#FF6B35]'
+                        ? 'bg-[#89CFF0] text-white rotate-45'
+                        : 'bg-[#E8F4FD] text-[#89CFF0]'
                     }`}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">

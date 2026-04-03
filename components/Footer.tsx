@@ -9,8 +9,8 @@ export default function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-2">
               <span className="text-2xl">🐾</span>
-              <span className="text-xl font-extrabold tracking-tight">
-                PetCalendar<span className="text-[#FF6B35]">.ai</span>
+              <span className="text-xl font-extrabold tracking-tight heading-playful">
+                PetCalendar<span className="text-[#89CFF0]">.ai</span>
               </span>
             </Link>
             <p className="mt-3 text-white/50 text-sm">
@@ -20,16 +20,16 @@ export default function Footer() {
 
           {/* Links */}
           <div className="flex flex-wrap gap-6 text-sm text-white/50">
-            <Link href="#faq" className="hover:text-[#FF6B35] transition-colors">
+            <Link href="#faq" className="hover:text-[#89CFF0] transition-colors">
               FAQ
             </Link>
-            <Link href="/privacy" className="hover:text-[#FF6B35] transition-colors">
+            <Link href="/privacy" className="hover:text-[#89CFF0] transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-[#FF6B35] transition-colors">
+            <Link href="/terms" className="hover:text-[#89CFF0] transition-colors">
               Terms
             </Link>
-            <a href="mailto:hello@petcalendar.ai" className="hover:text-[#FF6B35] transition-colors">
+            <a href="mailto:hello@petcalendar.ai" className="hover:text-[#89CFF0] transition-colors">
               Contact
             </a>
           </div>

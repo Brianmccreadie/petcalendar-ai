@@ -18,7 +18,7 @@ export default function Navbar() {
   const stepLabels = ['', 'Upload Photos', 'Pick a Theme', 'Preview & Edit']
 
   return (
-    <header className="sticky top-0 z-50 bg-[#FFFBF5]/95 backdrop-blur-md border-b border-[#FF6B35]/10">
+    <header className="sticky top-0 z-50 bg-[#FFF5EE]/95 backdrop-blur-md border-b border-[#89CFF0]/15">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -26,7 +26,7 @@ export default function Navbar() {
             <span className="text-3xl transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
               🐾
             </span>
-            <span className="text-xl font-extrabold text-[#2D1B69] tracking-tight">
+            <span className="text-xl font-extrabold text-[#2D1B69] tracking-tight heading-playful">
               PetCalendar
               <span className="text-[#FF6B35]">.ai</span>
             </span>
@@ -35,7 +35,7 @@ export default function Navbar() {
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-5">
             {isInCreateFlow ? (
-              <span className="inline-flex items-center gap-2 rounded-full bg-[#FFF0E8] px-5 py-2.5 text-sm font-bold text-[#FF6B35]">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#89CFF0]/15 px-5 py-2.5 text-sm font-bold text-[#2D1B69]">
                 Step {currentStep}: {stepLabels[currentStep]} ✨
               </span>
             ) : (
@@ -81,9 +81,9 @@ export default function Navbar() {
           mobileOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="border-t border-[#FF6B35]/10 bg-[#FFFBF5] px-4 pb-4 pt-3 space-y-2">
+        <div className="border-t border-[#89CFF0]/15 bg-[#FFF5EE] px-4 pb-4 pt-3 space-y-2">
           {isInCreateFlow ? (
-            <span className="block text-center rounded-xl px-3 py-2.5 text-base font-medium text-[#FF6B35] bg-[#FFF0E8]">
+            <span className="block text-center rounded-xl px-3 py-2.5 text-base font-medium text-[#2D1B69] bg-[#89CFF0]/15">
               Step {currentStep}: {stepLabels[currentStep]} ✨
             </span>
           ) : (

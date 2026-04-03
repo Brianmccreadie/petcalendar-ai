@@ -12,19 +12,19 @@ const features = [
 
 export default function PricingSection() {
   return (
-    <section id="pricing" className="bg-gradient-to-br from-[#FFF0E8] to-[#FFF8E8] py-20 sm:py-28">
+    <section id="pricing" className="bg-gradient-to-br from-[#E8F4FD] to-[#FFF5EE] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-lg mx-auto">
           {/* Pricing card */}
-          <div className="bg-white rounded-[2rem] shadow-2xl shadow-[#FF6B35]/10 p-10 sm:p-12 text-center relative overflow-hidden">
+          <div className="bg-white rounded-[2rem] shadow-2xl shadow-[#89CFF0]/15 p-10 sm:p-12 text-center relative overflow-hidden">
             {/* Badge */}
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#FFD166]/20 px-4 py-1.5 text-sm font-bold text-[#2D1B69] mb-6">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#89CFF0]/15 px-4 py-1.5 text-sm font-bold text-[#2D1B69] mb-6">
               🏷️ Launch Price — Won&apos;t Last!
             </div>
 
             {/* Price */}
             <div className="mb-2">
-              <span className="text-6xl sm:text-7xl font-extrabold text-[#2D1B69]">
+              <span className="text-6xl sm:text-7xl font-extrabold text-[#2D1B69] heading-playful">
                 $39<span className="text-4xl sm:text-5xl">.99</span>
               </span>
             </div>
@@ -50,9 +50,13 @@ export default function PricingSection() {
               Create My Calendar →
             </Link>
 
-            {/* Decorative paw prints */}
-            <div className="absolute -bottom-4 -right-4 text-8xl opacity-[0.04] rotate-12">🐾</div>
-            <div className="absolute -top-4 -left-4 text-6xl opacity-[0.04] -rotate-12">🐾</div>
+            {/* Decorative doodle paw prints */}
+            <svg className="absolute -bottom-2 -right-2 w-20 h-20 text-[#89CFF0] opacity-[0.06] rotate-12" viewBox="0 0 32 32" fill="currentColor">
+              <circle cx="10" cy="6" r="3.5"/><circle cx="22" cy="6" r="3.5"/><circle cx="5" cy="14" r="3"/><circle cx="27" cy="14" r="3"/><ellipse cx="16" cy="22" rx="7" ry="6"/>
+            </svg>
+            <svg className="absolute -top-2 -left-2 w-16 h-16 text-[#89CFF0] opacity-[0.06] -rotate-12" viewBox="0 0 32 32" fill="currentColor">
+              <circle cx="10" cy="6" r="3.5"/><circle cx="22" cy="6" r="3.5"/><circle cx="5" cy="14" r="3"/><circle cx="27" cy="14" r="3"/><ellipse cx="16" cy="22" rx="7" ry="6"/>
+            </svg>
           </div>
         </div>
       </div>
