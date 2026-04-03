@@ -77,7 +77,7 @@ export default function StylePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFFBF5]">
+    <div className="min-h-screen bg-[#FAFAF8]">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <StepProgress currentStep={2} />
 
@@ -105,7 +105,7 @@ export default function StylePage() {
         />
 
         {/* Year picker */}
-        <div ref={bottomRef} className="mt-12 mx-auto max-w-md rounded-3xl bg-white border-2 border-[#FF6B35]/10 p-6 sm:p-8 shadow-sm">
+        <div ref={bottomRef} className="mt-12 mx-auto max-w-md rounded-3xl bg-white border-2 border-[#89CFF0]/20 p-6 sm:p-8 shadow-sm">
           <h2 className="font-bold text-[#2D1B69] mb-4 flex items-center gap-2">
             📅 What year is this calendar for?
           </h2>
@@ -117,7 +117,7 @@ export default function StylePage() {
               id="startYear"
               value={startYear}
               onChange={(e) => setStartYear(Number(e.target.value))}
-              className="w-full rounded-xl border-2 border-[#FF6B35]/15 bg-white px-4 py-3 text-[#2D1B69] focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20 outline-none transition-all"
+              className="w-full rounded-xl border-2 border-[#89CFF0]/25 bg-white px-4 py-3 text-[#2D1B69] focus:border-[#89CFF0] focus:ring-2 focus:ring-[#89CFF0]/20 outline-none transition-all"
             >
               {years.map((y) => (
                 <option key={y} value={y}>{y}</option>
@@ -137,7 +137,7 @@ export default function StylePage() {
         <div className="mt-10 flex items-center justify-between max-w-md mx-auto">
           <button
             onClick={() => router.push('/create')}
-            className="text-[#2D1B69]/50 hover:text-[#FF6B35] font-bold transition-colors"
+            className="text-[#2D1B69]/50 hover:text-[#5B8EC9] font-bold transition-colors"
           >
             ← Back
           </button>
@@ -146,7 +146,7 @@ export default function StylePage() {
             disabled={!canGenerate}
             className={`rounded-full px-8 py-4 text-lg font-bold text-white transition-all duration-300 ${
               canGenerate
-                ? 'bg-[#FF6B35] hover:bg-[#E55A2B] shadow-lg shadow-[#FF6B35]/20 hover:shadow-xl hover:-translate-y-0.5'
+                ? 'bg-[#FF6B35] hover:bg-[#E55A2B] shadow-lg shadow-[#89CFF0]/20 hover:shadow-xl hover:-translate-y-0.5'
                 : 'bg-gray-300 cursor-not-allowed'
             }`}
           >

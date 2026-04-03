@@ -231,7 +231,7 @@ export default function PreviewPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#FFFBF5] flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
           <div className="text-5xl animate-bounce-gentle mb-4">🐾</div>
           <p className="text-[#2D1B69]/60 font-medium">Loading your calendar...</p>
@@ -242,7 +242,7 @@ export default function PreviewPage() {
 
   if (!projectId) {
     return (
-      <div className="min-h-screen bg-[#FFFBF5] flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
           <p className="text-[#2D1B69]/60 font-medium mb-4">No project found. Please start from the beginning.</p>
           <button
@@ -276,14 +276,14 @@ export default function PreviewPage() {
   const isGenerating = generatingPages > 0 || pendingPages > 0
 
   return (
-    <div className="min-h-screen bg-[#FFFBF5]">
+    <div className="min-h-screen bg-[#FAFAF8]">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <StepProgress currentStep={3} />
 
         {/* Generation Progress Bar */}
         {isGenerating && (
           <div className="mb-8 mx-auto max-w-2xl">
-            <div className="rounded-2xl bg-white border-2 border-[#FF6B35]/15 p-5 shadow-sm">
+            <div className="rounded-2xl bg-white border-2 border-[#89CFF0]/25 p-5 shadow-sm">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-lg animate-bounce-gentle">🐾</span>
@@ -299,7 +299,7 @@ export default function PreviewPage() {
               </div>
 
               {/* Progress bar */}
-              <div className="relative h-4 rounded-full bg-[#FFF0E8] overflow-hidden">
+              <div className="relative h-4 rounded-full bg-[#E8F0FA] overflow-hidden">
                 <div
                   className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#FF6B35] to-[#FFD166] transition-all duration-700 ease-out"
                   style={{ width: `${progressPercent}%` }}
@@ -345,7 +345,7 @@ export default function PreviewPage() {
 
               {/* Estimated time */}
               {pendingPages + generatingPages > 0 && (
-                <p className="mt-2 text-xs text-[#FF6B35]/60 font-medium">
+                <p className="mt-2 text-xs text-[#5B8EC9]/60 font-medium">
                   ⏱ ~{Math.ceil((pendingPages + generatingPages) * 0.3)} min remaining — grab a treat for your pet!
                 </p>
               )}
@@ -356,7 +356,7 @@ export default function PreviewPage() {
         {/* Waiting state when no pages yet */}
         {pages.length === 0 && (
           <div className="mb-8 mx-auto max-w-2xl">
-            <div className="rounded-2xl bg-white border-2 border-[#FF6B35]/15 p-5 shadow-sm text-center">
+            <div className="rounded-2xl bg-white border-2 border-[#89CFF0]/25 p-5 shadow-sm text-center">
               <div className="text-4xl animate-bounce-gentle mb-3">🐾</div>
               <p className="font-bold text-[#2D1B69] text-sm">
                 Getting things ready... Your calendar will appear here shortly.
@@ -378,9 +378,9 @@ export default function PreviewPage() {
         </div>
 
         {/* Instructions callout */}
-        <div className="mb-10 mx-auto max-w-2xl rounded-2xl bg-[#FFF0E8] border border-[#FF6B35]/15 p-5 flex items-start gap-4">
+        <div className="mb-10 mx-auto max-w-2xl rounded-2xl bg-[#E8F0FA] border border-[#89CFF0]/25 p-5 flex items-start gap-4">
           <span className="text-2xl shrink-0">💡</span>
-          <p className="text-sm text-[#FF6B35]/80 leading-relaxed font-medium">
+          <p className="text-sm text-[#5B8EC9]/80 leading-relaxed font-medium">
             <strong>How to customize:</strong> Hover any month and hit 🔄 to regenerate from scratch, or ✏️ to iterate with specific instructions (e.g. &quot;make the background brighter&quot; or &quot;add more snow&quot;). Use the arrows to browse previous versions.
           </p>
         </div>
@@ -429,7 +429,7 @@ export default function PreviewPage() {
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
           <button
             onClick={() => router.push('/create/style')}
-            className="text-[#2D1B69]/50 hover:text-[#FF6B35] font-bold transition-colors"
+            className="text-[#2D1B69]/50 hover:text-[#5B8EC9] font-bold transition-colors"
           >
             ← Back to Style
           </button>
@@ -439,7 +439,7 @@ export default function PreviewPage() {
               disabled={!isAllDone}
               className={`rounded-full px-10 py-4 text-lg font-bold text-white transition-all duration-300 ${
                 isAllDone
-                  ? 'bg-[#FF6B35] shadow-lg shadow-[#FF6B35]/20 hover:bg-[#E55A2B] hover:shadow-xl hover:-translate-y-0.5'
+                  ? 'bg-[#FF6B35] shadow-lg shadow-[#89CFF0]/20 hover:bg-[#E55A2B] hover:shadow-xl hover:-translate-y-0.5'
                   : 'bg-gray-300 cursor-not-allowed'
               }`}
             >
@@ -506,7 +506,7 @@ function PageCard({
 
   return (
     <>
-      <div className="group rounded-3xl border-2 border-[#FF6B35]/8 overflow-hidden bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+      <div className="group rounded-3xl border-2 border-[#89CFF0]/20 overflow-hidden bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         {/* Image area */}
         <div className="relative aspect-[3/2] bg-gradient-to-br from-[#FFF0E8] to-[#FFF8E8] flex items-center justify-center">
           {page.status === 'complete' && (displayUrl || page.cloudinary_url) ? (
@@ -519,7 +519,7 @@ function PageCard({
           ) : page.status === 'generating' ? (
             <div className="text-center">
               <div className="text-4xl animate-bounce-gentle mb-2">🐾</div>
-              <p className="text-sm text-[#FF6B35] font-bold">Creating...</p>
+              <p className="text-sm text-[#5B8EC9] font-bold">Creating...</p>
             </div>
           ) : page.status === 'failed' ? (
             <div className="text-center">
@@ -569,7 +569,7 @@ function PageCard({
             {canRegenerate && (
               <button
                 onClick={onRegenerate}
-                className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#FF6B35] shadow-lg hover:bg-[#FFF0E8] transition-colors"
+                className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#FF6B35] shadow-lg hover:bg-[#E8F0FA] transition-colors"
               >
                 🔄 Redo
               </button>
@@ -624,7 +624,7 @@ function PageCard({
             />
 
             {/* New reference photo upload */}
-            <div className="mt-4 rounded-2xl bg-[#FFF0E8] border border-[#FF6B35]/15 p-4">
+            <div className="mt-4 rounded-2xl bg-[#E8F0FA] border border-[#89CFF0]/25 p-4">
               <p className="text-sm font-bold text-[#FF6B35] mb-1">
                 🐾 Doesn&apos;t look like your pet?
               </p>
@@ -634,7 +634,7 @@ function PageCard({
               {newRefPreview ? (
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={newRefPreview} alt="New reference" className="w-16 h-16 rounded-xl object-cover border-2 border-[#FF6B35]/20" />
+                  <img src={newRefPreview} alt="New reference" className="w-16 h-16 rounded-xl object-cover border-2 border-[#89CFF0]/30" />
                   <div className="flex-1">
                     <p className="text-xs font-bold text-[#2D1B69]">New reference uploaded ✓</p>
                     <button
@@ -646,7 +646,7 @@ function PageCard({
                   </div>
                 </div>
               ) : (
-                <label className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#FF6B35]/30 px-4 py-3 cursor-pointer hover:border-[#FF6B35] hover:bg-[#FFF8F0] transition-all">
+                <label className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#89CFF0]/40 px-4 py-3 cursor-pointer hover:border-[#89CFF0] hover:bg-[#F0F4F8] transition-all">
                   <span className="text-sm font-bold text-[#FF6B35]">📸 Upload a clearer photo</span>
                   <input
                     type="file"

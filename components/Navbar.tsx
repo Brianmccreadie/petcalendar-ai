@@ -18,7 +18,7 @@ export default function Navbar() {
   const stepLabels = ['', 'Upload Photos', 'Pick a Theme', 'Preview & Edit']
 
   return (
-    <header className="sticky top-0 z-50 bg-[#FFFCFA]/95 backdrop-blur-md border-b border-[#89CFF0]/15">
+    <header className="sticky top-0 z-50 bg-[#FAFAF8]/95 backdrop-blur-md border-b border-[#89CFF0]/15">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -41,7 +41,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/create"
-                className="inline-flex items-center rounded-full bg-[#FF6B35] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#E55A2B] hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-[#FF6B35]/20"
+                className="inline-flex items-center rounded-full bg-[#FF6B35] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#E55A2B] hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-[#89CFF0]/20"
               >
                 Create Calendar 🎨
               </Link>
@@ -51,7 +51,7 @@ export default function Navbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden relative w-10 h-10 flex items-center justify-center text-[#2D1B69] hover:text-[#FF6B35] transition-colors"
+            className="md:hidden relative w-10 h-10 flex items-center justify-center text-[#2D1B69] hover:text-[#5B8EC9] transition-colors"
             aria-label="Toggle menu"
           >
             <div className="flex flex-col gap-1.5">
@@ -81,7 +81,7 @@ export default function Navbar() {
           mobileOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="border-t border-[#89CFF0]/15 bg-[#FFFCFA] px-4 pb-4 pt-3 space-y-2">
+        <div className="border-t border-[#89CFF0]/15 bg-[#FAFAF8] px-4 pb-4 pt-3 space-y-2">
           {isInCreateFlow ? (
             <span className="block text-center rounded-xl px-3 py-2.5 text-base font-medium text-[#2D1B69] bg-[#89CFF0]/15">
               Step {currentStep}: {stepLabels[currentStep]} ✨

@@ -20,7 +20,7 @@ interface PetEntry {
 }
 
 const petTypes: { value: PetType; label: string; emoji: string; bg: string }[] = [
-  { value: 'dog', label: 'Dog', emoji: '🐕', bg: 'bg-[#FFF0E8] border-[#FF6B35]' },
+  { value: 'dog', label: 'Dog', emoji: '🐕', bg: 'bg-[#E8F0FA] border-[#89CFF0]' },
   { value: 'cat', label: 'Cat', emoji: '🐱', bg: 'bg-[#E8FFF7] border-[#06D6A0]' },
   { value: 'other', label: 'Other Pet', emoji: '🐾', bg: 'bg-[#F3EEFF] border-[#7C3AED]' },
 ]
@@ -128,7 +128,7 @@ export default function CreatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFFBF5]">
+    <div className="min-h-screen bg-[#FAFAF8]">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <StepProgress currentStep={1} />
 
@@ -148,7 +148,7 @@ export default function CreatePage() {
           {pets.map((pet, index) => (
             <div
               key={pet.id}
-              className="rounded-3xl border-2 border-[#FF6B35]/10 bg-white p-6 sm:p-8 shadow-sm"
+              className="rounded-3xl border-2 border-[#89CFF0]/20 bg-white p-6 sm:p-8 shadow-sm"
             >
               {/* Pet header */}
               <div className="flex items-center justify-between mb-6">
@@ -179,7 +179,7 @@ export default function CreatePage() {
                   value={pet.name}
                   onChange={(e) => updatePet(pet.id, { name: e.target.value })}
                   placeholder="e.g., Buddy, Luna, Mr. Whiskers..."
-                  className="w-full rounded-2xl border-2 border-[#FF6B35]/20 bg-white px-5 py-3.5 text-[#2D1B69] placeholder:text-[#2D1B69]/30 focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20 focus:bg-white outline-none transition-all text-lg"
+                  className="w-full rounded-2xl border-2 border-[#89CFF0]/30 bg-white px-5 py-3.5 text-[#2D1B69] placeholder:text-[#2D1B69]/30 focus:border-[#89CFF0] focus:ring-2 focus:ring-[#89CFF0]/20 focus:bg-white outline-none transition-all text-lg"
                 />
               </div>
 
@@ -196,7 +196,7 @@ export default function CreatePage() {
                       className={`flex flex-col items-center gap-2 rounded-2xl border-3 px-4 py-6 font-bold transition-all duration-200 hover-wiggle ${
                         pet.type === type.value
                           ? `${type.bg} shadow-md`
-                          : 'border-gray-200 bg-white text-[#2D1B69]/60 hover:border-[#FF6B35]/30 hover:bg-[#FFF0E8]/30'
+                          : 'border-gray-200 bg-white text-[#2D1B69]/60 hover:border-[#89CFF0]/40 hover:bg-[#E8F0FA]/30'
                       }`}
                     >
                       <span className="text-4xl">{type.emoji}</span>
@@ -226,7 +226,7 @@ export default function CreatePage() {
           <button
             onClick={() => setPets((prev) => [...prev, createEmptyPet()])}
             disabled={isUploading}
-            className="inline-flex items-center gap-2 rounded-full border-2 border-dashed border-[#FF6B35]/30 px-6 py-3 text-sm font-bold text-[#FF6B35] hover:border-[#FF6B35] hover:bg-[#FFF0E8] transition-all"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-dashed border-[#89CFF0]/40 px-6 py-3 text-sm font-bold text-[#FF6B35] hover:border-[#89CFF0] hover:bg-[#E8F0FA] transition-all"
           >
             + Add Another Pet
           </button>
@@ -234,7 +234,7 @@ export default function CreatePage() {
 
         {/* Multi-pet mode selector — only shows with 2+ pets */}
         {pets.length > 1 && (
-          <div className="mt-8 mx-auto max-w-md rounded-3xl bg-white border-2 border-[#FF6B35]/10 p-6 sm:p-8 shadow-sm">
+          <div className="mt-8 mx-auto max-w-md rounded-3xl bg-white border-2 border-[#89CFF0]/20 p-6 sm:p-8 shadow-sm">
             <h2 className="font-bold text-[#2D1B69] mb-2 flex items-center gap-2">
               🐾 How should your pets appear?
             </h2>
@@ -246,8 +246,8 @@ export default function CreatePage() {
                 onClick={() => setMultiPetMode('alternate')}
                 className={`text-left rounded-2xl border-3 p-4 transition-all duration-200 ${
                   multiPetMode === 'alternate'
-                    ? 'border-[#FF6B35] bg-[#FFF0E8] shadow-md'
-                    : 'border-gray-200 bg-white hover:border-[#FF6B35]/30'
+                    ? 'border-[#89CFF0] bg-[#E8F0FA] shadow-md'
+                    : 'border-gray-200 bg-white hover:border-[#89CFF0]/40'
                 }`}
               >
                 <div className="text-2xl mb-2">🔄</div>
@@ -260,8 +260,8 @@ export default function CreatePage() {
                 onClick={() => setMultiPetMode('together')}
                 className={`text-left rounded-2xl border-3 p-4 transition-all duration-200 ${
                   multiPetMode === 'together'
-                    ? 'border-[#FF6B35] bg-[#FFF0E8] shadow-md'
-                    : 'border-gray-200 bg-white hover:border-[#FF6B35]/30'
+                    ? 'border-[#89CFF0] bg-[#E8F0FA] shadow-md'
+                    : 'border-gray-200 bg-white hover:border-[#89CFF0]/40'
                 }`}
               >
                 <div className="text-2xl mb-2">🤝</div>
@@ -274,7 +274,7 @@ export default function CreatePage() {
           </div>
         )}
 
-        <p className="text-center text-xs text-[#FF6B35]/70 mt-4 font-medium">
+        <p className="text-center text-xs text-[#5B8EC9]/70 mt-4 font-medium">
           💡 Pro tip: Front face, side profile, and a full body shot give the best results!
         </p>
 
@@ -293,7 +293,7 @@ export default function CreatePage() {
             disabled={!canContinue || isUploading}
             className={`rounded-full px-8 py-4 text-lg font-bold text-white transition-all duration-300 order-1 sm:order-2 ${
               canContinue && !isUploading
-                ? 'bg-[#FF6B35] hover:bg-[#E55A2B] shadow-lg shadow-[#FF6B35]/20 hover:shadow-xl hover:-translate-y-0.5'
+                ? 'bg-[#FF6B35] hover:bg-[#E55A2B] shadow-lg shadow-[#89CFF0]/20 hover:shadow-xl hover:-translate-y-0.5'
                 : 'bg-gray-300 cursor-not-allowed'
             }`}
           >

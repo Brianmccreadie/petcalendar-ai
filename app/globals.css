@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FFFCFA;
+  --background: #FAFAF8;
   --foreground: #2D1B69;
-  --cream: #FFF5EE;
+  --cream: #F0F4F8;
   --cream-dark: #FAF0E6;
   --sky-blue: #89CFF0;
   --sky-blue-light: #B8DCEF;
@@ -11,7 +11,7 @@
   --sky-blue-tint: #D4ECFA;
   --orange: #FF6B35;
   --orange-hover: #E55A2B;
-  --orange-light: #FFF0E8;
+  --orange-light: #E8F0FA;
   --yellow: #FFD166;
   --yellow-light: #FFF8E8;
   --teal: #06D6A0;
@@ -25,7 +25,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-cream: #FFF5EE;
+  --color-cream: #F0F4F8;
   --color-cream-dark: #FAF0E6;
   --color-sky-blue: #89CFF0;
   --color-sky-blue-light: #B8DCEF;

@@ -1,5 +1,5 @@
 const steps = [
-  { label: 'Snap', color: 'bg-[#FF6B35]', ring: 'ring-[#FF6B35]/30' },
+  { label: 'Snap', color: 'bg-[#FF6B35]', ring: 'ring-[#89CFF0]/30' },
   { label: 'Style', color: 'bg-[#FFD166]', ring: 'ring-[#FFD166]/30' },
   { label: 'Magic', color: 'bg-[#06D6A0]', ring: 'ring-[#06D6A0]/30' },
   { label: 'Order', color: 'bg-[#7C3AED]', ring: 'ring-[#7C3AED]/30' },

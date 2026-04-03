@@ -102,14 +102,14 @@ export default function Home() {
       <HowItWorks />
 
       {/* Doodle divider */}
-      <div className="flex items-center justify-center gap-4 py-2 bg-[#FFFCFA]">
+      <div className="flex items-center justify-center gap-4 py-2 bg-[#FAFAF8]">
         <PawDoodle className="w-5 h-5 text-[#2D1B69] opacity-40" />
         <SquigglyDoodle className="w-16 h-3 text-[#2D1B69] opacity-40" />
         <SparkDoodle className="w-4 h-4 text-[#2D1B69] opacity-35" />
       </div>
 
       {/* Featured Themes */}
-      <section className="relative bg-[#FFFCFA] py-20 sm:py-28">
+      <section className="relative bg-[#FAFAF8] py-20 sm:py-28">
         <BoneDoodle className="absolute top-10 left-[6%] text-[#2D1B69] opacity-35 w-9 h-5 rotate-[-15deg] animate-doodle" />
         <SparkDoodle className="absolute bottom-14 right-[8%] text-[#2D1B69] opacity-30 w-5 h-5 animate-doodle" />
 
@@ -154,7 +154,7 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link
               href="/create"
-              className="inline-flex items-center justify-center rounded-full bg-[#FF6B35] px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-[#FF6B35]/20 hover:bg-[#E55A2B] hover:-translate-y-0.5 transition-all duration-300"
+              className="inline-flex items-center justify-center rounded-full bg-[#FF6B35] px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-[#89CFF0]/20 hover:bg-[#E55A2B] hover:-translate-y-0.5 transition-all duration-300"
             >
               See All 50 Themes →
             </Link>
@@ -201,7 +201,7 @@ export default function Home() {
       </section>
 
       {/* Product Details */}
-      <section className="relative bg-[#FFFCFA] py-20 sm:py-28">
+      <section className="relative bg-[#FAFAF8] py-20 sm:py-28">
         <BoneDoodle className="absolute top-8 right-[12%] text-[#2D1B69] opacity-35 w-8 h-4 rotate-[30deg] animate-doodle" />
         <SparkDoodle className="absolute bottom-20 left-[10%] text-[#2D1B69] opacity-30 w-5 h-5 animate-doodle" />
 
@@ -246,7 +246,7 @@ export default function Home() {
       <FAQ />
 
       {/* Doodle divider above CTA */}
-      <div className="flex items-center justify-center gap-4 py-2 bg-[#FFFCFA]">
+      <div className="flex items-center justify-center gap-4 py-2 bg-[#FAFAF8]">
         <SparkDoodle className="w-4 h-4 text-[#2D1B69] opacity-45" />
         <BoneDoodle className="w-8 h-4 text-[#2D1B69] opacity-35" />
         <HeartDoodle className="w-4 h-4 text-[#2D1B69] opacity-40" />
@@ -268,7 +268,7 @@ export default function Home() {
           </p>
           <Link
             href="/create"
-            className="inline-flex items-center justify-center rounded-full bg-[#FF6B35] px-10 py-4 text-lg font-bold text-white shadow-xl shadow-[#FF6B35]/25 hover:bg-[#E55A2B] hover:-translate-y-1 transition-all duration-300"
+            className="inline-flex items-center justify-center rounded-full bg-[#FF6B35] px-10 py-4 text-lg font-bold text-white shadow-xl shadow-[#89CFF0]/25 hover:bg-[#E55A2B] hover:-translate-y-1 transition-all duration-300"
           >
             Start Creating Now →
           </Link>

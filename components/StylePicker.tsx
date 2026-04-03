@@ -76,7 +76,7 @@ export default function StylePicker({
     return `/previews/${styleId}-${petType}.jpg`
   }
   return (
-    <section id="styles" className={showcase ? 'bg-[#FFF8F0] py-20 sm:py-28' : ''}>
+    <section id="styles" className={showcase ? 'bg-[#F0F4F8] py-20 sm:py-28' : ''}>
       <div className={showcase ? 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8' : ''}>
         {showcase && (
           <div className="text-center mb-16">
@@ -95,7 +95,7 @@ export default function StylePicker({
             {CALENDAR_STYLES.map((style) => (
               <div
                 key={style.id}
-                className="snap-start shrink-0 w-64 rounded-3xl overflow-hidden bg-white shadow-md hover:shadow-xl hover-tilt transition-all duration-300 border border-[#FF6B35]/8"
+                className="snap-start shrink-0 w-64 rounded-3xl overflow-hidden bg-white shadow-md hover:shadow-xl hover-tilt transition-all duration-300 border border-[#89CFF0]/20"
               >
                 <div
                   className="h-44 flex flex-col items-center justify-center relative"
@@ -126,8 +126,8 @@ export default function StylePicker({
                   onClick={() => onSelect?.(style.id)}
                   className={`group relative text-left rounded-3xl overflow-hidden transition-all duration-300 hover-wiggle ${
                     isSelected
-                      ? 'ring-4 ring-[#FF6B35] shadow-xl -translate-y-1'
-                      : 'hover:shadow-lg hover:-translate-y-1 cursor-pointer border border-[#FF6B35]/8'
+                      ? 'ring-4 ring-[#89CFF0] shadow-xl -translate-y-1'
+                      : 'hover:shadow-lg hover:-translate-y-1 cursor-pointer border border-[#89CFF0]/20'
                   }`}
                 >
                   {/* Preview image */}

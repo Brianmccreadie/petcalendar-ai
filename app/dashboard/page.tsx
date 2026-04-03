@@ -3,7 +3,7 @@ import Link from 'next/link'
 const statusConfig: Record<string, { label: string; emoji: string; color: string }> = {
   draft: { label: 'Draft', emoji: '📝', color: 'bg-gray-100 text-gray-600' },
   uploading: { label: 'Uploading', emoji: '📤', color: 'bg-[#FFF8E8] text-[#FFD166]' },
-  generating: { label: 'Creating...', emoji: '✨', color: 'bg-[#FFF0E8] text-[#FF6B35]' },
+  generating: { label: 'Creating...', emoji: '✨', color: 'bg-[#E8F0FA] text-[#FF6B35]' },
   preview: { label: 'Ready to Order', emoji: '✅', color: 'bg-[#E8FFF7] text-[#06D6A0]' },
   ordered: { label: 'Ordered', emoji: '📦', color: 'bg-blue-50 text-blue-600' },
   shipped: { label: 'On Its Way!', emoji: '🚚', color: 'bg-[#E8FFF7] text-[#06D6A0]' },
@@ -44,7 +44,7 @@ function getResumeHref(project: { id: string; status: string }): string {
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-[#FFFBF5]">
+    <div className="min-h-screen bg-[#FAFAF8]">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
@@ -53,7 +53,7 @@ export default function DashboardPage() {
           </h1>
           <Link
             href="/create"
-            className="inline-flex items-center rounded-full bg-[#FF6B35] px-6 py-3 text-sm font-bold text-white hover:bg-[#E55A2B] transition-all duration-300 shadow-md shadow-[#FF6B35]/20 hover:-translate-y-0.5"
+            className="inline-flex items-center rounded-full bg-[#FF6B35] px-6 py-3 text-sm font-bold text-white hover:bg-[#E55A2B] transition-all duration-300 shadow-md shadow-[#89CFF0]/20 hover:-translate-y-0.5"
           >
             Create New Calendar 🎨
           </Link>
@@ -61,7 +61,7 @@ export default function DashboardPage() {
 
         {/* Project cards */}
         {demoProjects.length === 0 ? (
-          <div className="text-center py-20 rounded-3xl bg-white border-2 border-dashed border-[#FF6B35]/20">
+          <div className="text-center py-20 rounded-3xl bg-white border-2 border-dashed border-[#89CFF0]/30">
             <span className="text-7xl block mb-4">🐾</span>
             <h2 className="text-2xl font-extrabold text-[#2D1B69] mb-2">
               No calendars yet!
@@ -86,7 +86,7 @@ export default function DashboardPage() {
               return (
                 <div
                   key={project.id}
-                  className="group rounded-3xl bg-white border-2 border-[#FF6B35]/8 overflow-hidden hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+                  className="group rounded-3xl bg-white border-2 border-[#89CFF0]/20 overflow-hidden hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
                 >
                   {/* Preview thumbnail */}
                   <Link href={href}>
