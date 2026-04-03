@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FDF8F5;
+  --background: #FFFCFA;
   --foreground: #2D1B69;
   --cream: #FFF5EE;
   --cream-dark: #FAF0E6;
@@ -53,7 +53,7 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 /* ===== Paw print pattern background ===== */
@@ -220,7 +220,7 @@ body {
 
 /* ===== Playful heading style ===== */
 .heading-playful {
-  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-family: var(--font-playfair), Georgia, 'Times New Roman', serif;
   letter-spacing: -0.02em;
   line-height: 1.1;
 }

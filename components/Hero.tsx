@@ -80,7 +80,7 @@ function DotCluster({ className }: { className?: string }) {
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[#FDF8F5] paw-pattern">
+    <section className="relative overflow-hidden bg-[#FFFCFA] paw-pattern">
       {/* Scattered doodle decorations */}
       <PawDoodle className="absolute top-12 left-[8%] text-[#2D1B69] opacity-40 animate-doodle w-8 h-8 rotate-[-15deg]" />
       <BoneDoodle className="absolute top-32 right-[5%] text-[#2D1B69] opacity-35 animate-doodle w-10 h-5 rotate-[25deg]" />

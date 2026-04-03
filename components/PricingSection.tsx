@@ -12,7 +12,7 @@ const features = [
 
 export default function PricingSection() {
   return (
-    <section id="pricing" className="bg-gradient-to-br from-[#E8F4FD] to-[#FDF8F5] py-20 sm:py-28">
+    <section id="pricing" className="bg-gradient-to-br from-[#E8F4FD] to-[#FFFCFA] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-lg mx-auto">
           {/* Pricing card */}
