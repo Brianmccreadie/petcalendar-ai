@@ -25,6 +25,8 @@ export default function StylePage() {
       const data = JSON.parse(stored)
       if (data.pets?.[0]?.name) setPetName(data.pets[0].name)
       else if (data.petName) setPetName(data.petName)
+      if (data.pets?.[0]?.type) setPetType(data.pets[0].type)
+      else if (data.petType) setPetType(data.petType)
       if (data.projectId) setProjectId(data.projectId)
     }
   }, [])
