@@ -68,10 +68,10 @@ function PawDoodle({ className }: { className?: string }) {
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative bg-[#FFF5EE] py-20 sm:py-28">
+    <section id="how-it-works" className="relative bg-[#FDF8F5] py-20 sm:py-28">
       {/* Decorative doodles */}
-      <BoneDoodle className="absolute top-12 right-[10%] text-[#89CFF0] opacity-15 w-10 h-5 rotate-[20deg] animate-doodle" />
-      <PawDoodle className="absolute bottom-16 left-[8%] text-[#89CFF0] opacity-15 w-7 h-7 rotate-[-10deg] animate-doodle" />
+      <BoneDoodle className="absolute top-12 right-[10%] text-[#2D1B69] opacity-35 w-10 h-5 rotate-[20deg] animate-doodle" />
+      <PawDoodle className="absolute bottom-16 left-[8%] text-[#2D1B69] opacity-35 w-7 h-7 rotate-[-10deg] animate-doodle" />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">

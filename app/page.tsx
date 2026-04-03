@@ -102,16 +102,16 @@ export default function Home() {
       <HowItWorks />
 
       {/* Doodle divider */}
-      <div className="flex items-center justify-center gap-4 py-2 bg-[#FFF5EE]">
-        <PawDoodle className="w-5 h-5 text-[#89CFF0] opacity-20" />
-        <SquigglyDoodle className="w-16 h-3 text-[#89CFF0] opacity-20" />
-        <SparkDoodle className="w-4 h-4 text-[#FFD166] opacity-25" />
+      <div className="flex items-center justify-center gap-4 py-2 bg-[#FDF8F5]">
+        <PawDoodle className="w-5 h-5 text-[#2D1B69] opacity-40" />
+        <SquigglyDoodle className="w-16 h-3 text-[#2D1B69] opacity-40" />
+        <SparkDoodle className="w-4 h-4 text-[#2D1B69] opacity-35" />
       </div>
 
       {/* Featured Themes */}
-      <section className="relative bg-[#FFF5EE] py-20 sm:py-28">
-        <BoneDoodle className="absolute top-10 left-[6%] text-[#89CFF0] opacity-15 w-9 h-5 rotate-[-15deg] animate-doodle" />
-        <SparkDoodle className="absolute bottom-14 right-[8%] text-[#FFD166] opacity-20 w-5 h-5 animate-doodle" />
+      <section className="relative bg-[#FDF8F5] py-20 sm:py-28">
+        <BoneDoodle className="absolute top-10 left-[6%] text-[#2D1B69] opacity-35 w-9 h-5 rotate-[-15deg] animate-doodle" />
+        <SparkDoodle className="absolute bottom-14 right-[8%] text-[#2D1B69] opacity-30 w-5 h-5 animate-doodle" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -164,15 +164,15 @@ export default function Home() {
 
       {/* Doodle divider */}
       <div className="flex items-center justify-center gap-4 py-2 bg-white">
-        <HeartDoodle className="w-4 h-4 text-[#89CFF0] opacity-20" />
-        <SquigglyDoodle className="w-16 h-3 text-[#89CFF0] opacity-15" />
-        <PawDoodle className="w-5 h-5 text-[#89CFF0] opacity-20" />
+        <HeartDoodle className="w-4 h-4 text-[#2D1B69] opacity-40" />
+        <SquigglyDoodle className="w-16 h-3 text-[#2D1B69] opacity-35" />
+        <PawDoodle className="w-5 h-5 text-[#2D1B69] opacity-40" />
       </div>
 
       {/* Testimonials */}
       <section className="relative bg-white py-20 sm:py-28">
-        <PawDoodle className="absolute top-12 right-[10%] text-[#89CFF0] opacity-15 w-7 h-7 rotate-[20deg] animate-doodle" />
-        <HeartDoodle className="absolute bottom-16 left-[6%] text-[#89CFF0] opacity-15 w-6 h-5 rotate-[-10deg] animate-doodle" />
+        <PawDoodle className="absolute top-12 right-[10%] text-[#2D1B69] opacity-35 w-7 h-7 rotate-[20deg] animate-doodle" />
+        <HeartDoodle className="absolute bottom-16 left-[6%] text-[#2D1B69] opacity-35 w-6 h-5 rotate-[-10deg] animate-doodle" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -201,9 +201,9 @@ export default function Home() {
       </section>
 
       {/* Product Details */}
-      <section className="relative bg-[#FFF5EE] py-20 sm:py-28">
-        <BoneDoodle className="absolute top-8 right-[12%] text-[#89CFF0] opacity-15 w-8 h-4 rotate-[30deg] animate-doodle" />
-        <SparkDoodle className="absolute bottom-20 left-[10%] text-[#FFD166] opacity-20 w-5 h-5 animate-doodle" />
+      <section className="relative bg-[#FDF8F5] py-20 sm:py-28">
+        <BoneDoodle className="absolute top-8 right-[12%] text-[#2D1B69] opacity-35 w-8 h-4 rotate-[30deg] animate-doodle" />
+        <SparkDoodle className="absolute bottom-20 left-[10%] text-[#2D1B69] opacity-30 w-5 h-5 animate-doodle" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -246,10 +246,10 @@ export default function Home() {
       <FAQ />
 
       {/* Doodle divider above CTA */}
-      <div className="flex items-center justify-center gap-4 py-2 bg-[#FFF5EE]">
-        <SparkDoodle className="w-4 h-4 text-[#89CFF0] opacity-25" />
-        <BoneDoodle className="w-8 h-4 text-[#89CFF0] opacity-15" />
-        <HeartDoodle className="w-4 h-4 text-[#89CFF0] opacity-20" />
+      <div className="flex items-center justify-center gap-4 py-2 bg-[#FDF8F5]">
+        <SparkDoodle className="w-4 h-4 text-[#2D1B69] opacity-45" />
+        <BoneDoodle className="w-8 h-4 text-[#2D1B69] opacity-35" />
+        <HeartDoodle className="w-4 h-4 text-[#2D1B69] opacity-40" />
       </div>
 
       {/* Final CTA */}

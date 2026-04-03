@@ -80,16 +80,16 @@ function DotCluster({ className }: { className?: string }) {
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[#FFF5EE] paw-pattern">
+    <section className="relative overflow-hidden bg-[#FDF8F5] paw-pattern">
       {/* Scattered doodle decorations */}
-      <PawDoodle className="absolute top-12 left-[8%] text-[#89CFF0] opacity-20 animate-doodle w-8 h-8 rotate-[-15deg]" />
-      <BoneDoodle className="absolute top-32 right-[5%] text-[#89CFF0] opacity-15 animate-doodle w-10 h-5 rotate-[25deg]" />
-      <SparkDoodle className="absolute bottom-24 left-[12%] text-[#FFD166] opacity-20 animate-doodle w-6 h-6" />
-      <HeartDoodle className="absolute top-20 left-[45%] text-[#89CFF0] opacity-15 animate-doodle w-5 h-5 rotate-[10deg]" />
-      <DotCluster className="absolute bottom-16 right-[15%] text-[#89CFF0] opacity-20 animate-doodle w-5 h-5" />
-      <SquigglyDoodle className="absolute bottom-40 left-[30%] text-[#89CFF0] opacity-15 w-20 h-3" />
-      <PawDoodle className="absolute top-[60%] right-[8%] text-[#FFD166] opacity-15 animate-doodle w-6 h-6 rotate-[30deg]" />
-      <SparkDoodle className="absolute top-8 right-[35%] text-[#89CFF0] opacity-20 animate-doodle w-5 h-5" />
+      <PawDoodle className="absolute top-12 left-[8%] text-[#2D1B69] opacity-40 animate-doodle w-8 h-8 rotate-[-15deg]" />
+      <BoneDoodle className="absolute top-32 right-[5%] text-[#2D1B69] opacity-35 animate-doodle w-10 h-5 rotate-[25deg]" />
+      <SparkDoodle className="absolute bottom-24 left-[12%] text-[#2D1B69] opacity-30 animate-doodle w-6 h-6" />
+      <HeartDoodle className="absolute top-20 left-[45%] text-[#2D1B69] opacity-35 animate-doodle w-5 h-5 rotate-[10deg]" />
+      <DotCluster className="absolute bottom-16 right-[15%] text-[#2D1B69] opacity-40 animate-doodle w-5 h-5" />
+      <SquigglyDoodle className="absolute bottom-40 left-[30%] text-[#2D1B69] opacity-35 w-20 h-3" />
+      <PawDoodle className="absolute top-[60%] right-[8%] text-[#2D1B69] opacity-30 animate-doodle w-6 h-6 rotate-[30deg]" />
+      <SparkDoodle className="absolute top-8 right-[35%] text-[#2D1B69] opacity-40 animate-doodle w-5 h-5" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -136,10 +136,15 @@ export default function Hero() {
 
           {/* Right: 7 Floating calendar preview cards */}
           <div className="relative h-[420px] sm:h-[500px] hidden lg:block">
+            {/* Sky blue blob shape behind cards */}
+            <svg className="absolute inset-0 w-full h-full" style={{zIndex: 0}} viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M250,20 C350,10 450,80 470,180 C490,280 450,380 380,440 C310,500 200,490 120,430 C40,370 10,260 30,160 C50,60 150,30 250,20 Z" fill="#89CFF0" fillOpacity="0.25" stroke="#2D1B69" strokeWidth="2" strokeOpacity="0.15" strokeDasharray="8 6" />
+            </svg>
+
             {/* Doodles around the cards */}
-            <BoneDoodle className="absolute -top-6 left-[20%] text-[#89CFF0] opacity-20 w-8 h-4 rotate-[-20deg] animate-doodle" />
-            <PawDoodle className="absolute bottom-4 right-[10%] text-[#89CFF0] opacity-20 w-7 h-7 rotate-[15deg] animate-doodle" />
-            <SparkDoodle className="absolute top-[40%] -left-4 text-[#FFD166] opacity-25 w-5 h-5 animate-doodle" />
+            <BoneDoodle className="absolute -top-6 left-[20%] text-[#2D1B69] opacity-40 w-8 h-4 rotate-[-20deg] animate-doodle" />
+            <PawDoodle className="absolute bottom-4 right-[10%] text-[#2D1B69] opacity-40 w-7 h-7 rotate-[15deg] animate-doodle" />
+            <SparkDoodle className="absolute top-[40%] -left-4 text-[#2D1B69] opacity-35 w-5 h-5 animate-doodle" />
 
             {heroCards.map((card, i) => (
               <div
