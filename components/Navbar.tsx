@@ -18,7 +18,7 @@ export default function Navbar() {
   const stepLabels = ['', 'Upload Photos', 'Pick a Theme', 'Preview & Edit']
 
   return (
-    <header className="sticky top-0 z-50 bg-[#FAFAF8]/95 backdrop-blur-md border-b border-[#89CFF0]/15">
+    <header className="sticky top-0 z-50 bg-[#F5EDE8]/95 backdrop-blur-md border-b border-[#1A1A2E]/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -26,7 +26,7 @@ export default function Navbar() {
             <span className="text-3xl transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
               🐾
             </span>
-            <span className="text-xl font-extrabold text-[#2D1B69] tracking-tight heading-playful">
+            <span className="text-xl font-extrabold text-[#1A1A2E] tracking-tight heading-playful">
               PetCalendar
               <span className="text-[#FF6B35]">.ai</span>
             </span>
@@ -35,13 +35,13 @@ export default function Navbar() {
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-5">
             {isInCreateFlow ? (
-              <span className="inline-flex items-center gap-2 rounded-full bg-[#89CFF0]/15 px-5 py-2.5 text-sm font-bold text-[#2D1B69]">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#B8DCEF]/25 px-5 py-2.5 text-sm font-bold text-[#1A1A2E] border-2 border-[#1A1A2E]/15">
                 Step {currentStep}: {stepLabels[currentStep]} ✨
               </span>
             ) : (
               <Link
                 href="/create"
-                className="inline-flex items-center rounded-full bg-[#FF6B35] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#E55A2B] hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-[#89CFF0]/20"
+                className="inline-flex items-center rounded-full bg-[#FF6B35] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#E55A2B] hover:-translate-y-0.5 transition-all duration-300 shadow-md"
               >
                 Create Calendar 🎨
               </Link>
@@ -51,7 +51,7 @@ export default function Navbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden relative w-10 h-10 flex items-center justify-center text-[#2D1B69] hover:text-[#5B8EC9] transition-colors"
+            className="md:hidden relative w-10 h-10 flex items-center justify-center text-[#1A1A2E] hover:text-[#A8D4F0] transition-colors"
             aria-label="Toggle menu"
           >
             <div className="flex flex-col gap-1.5">
@@ -81,9 +81,9 @@ export default function Navbar() {
           mobileOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="border-t border-[#89CFF0]/15 bg-[#FAFAF8] px-4 pb-4 pt-3 space-y-2">
+        <div className="border-t border-[#1A1A2E]/10 bg-[#F5EDE8] px-4 pb-4 pt-3 space-y-2">
           {isInCreateFlow ? (
-            <span className="block text-center rounded-xl px-3 py-2.5 text-base font-medium text-[#2D1B69] bg-[#89CFF0]/15">
+            <span className="block text-center rounded-xl px-3 py-2.5 text-base font-medium text-[#1A1A2E] bg-[#B8DCEF]/25">
               Step {currentStep}: {stepLabels[currentStep]} ✨
             </span>
           ) : (

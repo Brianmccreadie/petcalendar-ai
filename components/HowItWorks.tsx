@@ -44,12 +44,12 @@ const steps = [
 
 function BoneDoodle({ className }: { className?: string }) {
   return (
-    <svg className={className} width="40" height="20" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="8" y="7" width="24" height="6" rx="3" fill="currentColor"/>
-      <circle cx="7" cy="5" r="4" fill="currentColor"/>
-      <circle cx="7" cy="15" r="4" fill="currentColor"/>
-      <circle cx="33" cy="5" r="4" fill="currentColor"/>
-      <circle cx="33" cy="15" r="4" fill="currentColor"/>
+    <svg className={className} width="44" height="22" viewBox="0 0 44 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="8" width="24" height="6" rx="3" stroke="currentColor" strokeWidth="2.5" fill="none"/>
+      <circle cx="9" cy="5" r="4" stroke="currentColor" strokeWidth="2.5" fill="none"/>
+      <circle cx="9" cy="17" r="4" stroke="currentColor" strokeWidth="2.5" fill="none"/>
+      <circle cx="35" cy="5" r="4" stroke="currentColor" strokeWidth="2.5" fill="none"/>
+      <circle cx="35" cy="17" r="4" stroke="currentColor" strokeWidth="2.5" fill="none"/>
     </svg>
   )
 }
@@ -68,17 +68,17 @@ function PawDoodle({ className }: { className?: string }) {
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative bg-[#FAFAF8] py-20 sm:py-28">
-      {/* Decorative doodles */}
-      <BoneDoodle className="absolute top-12 right-[10%] text-[#2D1B69] opacity-35 w-10 h-5 rotate-[20deg] animate-doodle" />
-      <PawDoodle className="absolute bottom-16 left-[8%] text-[#2D1B69] opacity-35 w-7 h-7 rotate-[-10deg] animate-doodle" />
+    <section id="how-it-works" className="relative bg-[#F5EDE8] py-20 sm:py-28">
+      {/* Decorative doodles — black */}
+      <BoneDoodle className="absolute top-12 right-[10%] text-black w-12 h-6 rotate-[20deg] animate-doodle" />
+      <PawDoodle className="absolute bottom-16 left-[8%] text-black w-7 h-7 rotate-[-10deg] animate-doodle" />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#2D1B69]">
+          <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#1A1A2E]">
             How It Works
           </h2>
-          <p className="mt-4 text-lg text-[#2D1B69]/50 max-w-md mx-auto">
+          <p className="mt-4 text-lg text-[#1A1A2E]/50 max-w-md mx-auto">
             Four steps. Five minutes. One calendar your fridge will be proud of.
           </p>
         </div>
@@ -86,33 +86,29 @@ export default function HowItWorks() {
         {/* Timeline layout */}
         <div className="relative">
           {/* Connecting line */}
-          <div className="hidden lg:block absolute top-16 left-[calc(12.5%+24px)] right-[calc(12.5%+24px)] h-[2px] bg-gradient-to-r from-[#89CFF0]/40 via-[#89CFF0]/30 to-[#89CFF0]/40" />
+          <div className="hidden lg:block absolute top-16 left-[calc(12.5%+24px)] right-[calc(12.5%+24px)] h-[3px] border-t-[3px] border-dashed border-[#1A1A2E]/20" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
             {steps.map((step) => (
               <div key={step.number} className="relative flex flex-col items-center text-center group">
                 {/* Number + Icon circle */}
                 <div
-                  className="relative w-[72px] h-[72px] rounded-full flex items-center justify-center mb-6 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(137,207,240,0.15), rgba(137,207,240,0.3))',
-                    border: '2px solid rgba(137,207,240,0.4)',
-                  }}
+                  className="relative w-[72px] h-[72px] rounded-full flex items-center justify-center mb-6 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl bg-[#D4E8F7] border-3 border-[#1A1A2E]"
                 >
-                  <div className="text-[#89CFF0]">{step.icon}</div>
+                  <div className="text-[#1A1A2E]">{step.icon}</div>
                   {/* Number badge */}
                   <div
-                    className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md bg-[#89CFF0]"
+                    className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md bg-[#1A1A2E]"
                   >
                     {step.number}
                   </div>
                 </div>
 
                 {/* Title */}
-                <h3 className="heading-playful text-lg font-extrabold text-[#2D1B69] mb-1">{step.title}</h3>
+                <h3 className="heading-playful text-lg font-extrabold text-[#1A1A2E] mb-1">{step.title}</h3>
 
                 {/* Description */}
-                <p className="text-sm text-[#2D1B69]/50 leading-relaxed max-w-[200px]">
+                <p className="text-sm text-[#1A1A2E]/50 leading-relaxed max-w-[200px]">
                   {step.description}
                 </p>
               </div>

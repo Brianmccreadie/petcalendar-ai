@@ -44,16 +44,16 @@ function getResumeHref(project: { id: string; status: string }): string {
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-[#FAFAF8]">
+    <div className="min-h-screen bg-[#F5EDE8]">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
-          <h1 className="heading-playful text-3xl sm:text-4xl font-extrabold text-[#2D1B69]">
+          <h1 className="heading-playful text-3xl sm:text-4xl font-extrabold text-[#1A1A2E]">
             My Calendars 📚
           </h1>
           <Link
             href="/create"
-            className="inline-flex items-center rounded-full bg-[#FF6B35] px-6 py-3 text-sm font-bold text-white hover:bg-[#E55A2B] transition-all duration-300 shadow-md shadow-[#89CFF0]/20 hover:-translate-y-0.5"
+            className="inline-flex items-center rounded-full bg-[#FF6B35] px-6 py-3 text-sm font-bold text-white hover:bg-[#E55A2B] transition-all duration-300 shadow-md shadow-[#A8D4F0]/20 hover:-translate-y-0.5"
           >
             Create New Calendar 🎨
           </Link>
@@ -61,12 +61,12 @@ export default function DashboardPage() {
 
         {/* Project cards */}
         {demoProjects.length === 0 ? (
-          <div className="text-center py-20 rounded-3xl bg-white border-2 border-dashed border-[#89CFF0]/30">
+          <div className="text-center py-20 rounded-3xl bg-white border-2 border-dashed border-[#A8D4F0]/30">
             <span className="text-7xl block mb-4">🐾</span>
-            <h2 className="text-2xl font-extrabold text-[#2D1B69] mb-2">
+            <h2 className="text-2xl font-extrabold text-[#1A1A2E] mb-2">
               No calendars yet!
             </h2>
-            <p className="text-[#2D1B69]/50 mb-6 text-lg">
+            <p className="text-[#1A1A2E]/50 mb-6 text-lg">
               Your pet deserves to be a calendar star ⭐
             </p>
             <Link
@@ -86,7 +86,7 @@ export default function DashboardPage() {
               return (
                 <div
                   key={project.id}
-                  className="group rounded-3xl bg-white border-2 border-[#89CFF0]/20 overflow-hidden hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+                  className="group rounded-3xl bg-white border-2 border-[#A8D4F0]/20 overflow-hidden hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
                 >
                   {/* Preview thumbnail */}
                   <Link href={href}>
@@ -101,7 +101,7 @@ export default function DashboardPage() {
 
                   <div className="p-5">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-extrabold text-[#2D1B69] text-lg flex items-center gap-1.5">
+                      <h3 className="font-extrabold text-[#1A1A2E] text-lg flex items-center gap-1.5">
                         {petEmojis[project.pet_type] ?? '🐾'} {project.pet_name}
                       </h3>
                       <span
@@ -110,8 +110,8 @@ export default function DashboardPage() {
                         {status.emoji} {status.label}
                       </span>
                     </div>
-                    <p className="text-sm text-[#2D1B69]/50 font-medium">{project.style}</p>
-                    <p className="text-xs text-[#2D1B69]/30 mt-2">
+                    <p className="text-sm text-[#1A1A2E]/50 font-medium">{project.style}</p>
+                    <p className="text-xs text-[#1A1A2E]/30 mt-2">
                       {new Date(project.created_at).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',

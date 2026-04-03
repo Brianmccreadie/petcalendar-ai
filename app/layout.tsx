@@ -17,6 +17,7 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#FAFAF8]">
+      <body className="min-h-full flex flex-col bg-[#F5EDE8]">
         <Navbar />
         <main className="flex-1">{children}</main>
       </body>

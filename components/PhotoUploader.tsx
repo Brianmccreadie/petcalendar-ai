@@ -116,18 +116,18 @@ export default function PhotoUploader({
         onClick={() => fileInputRef.current?.click()}
         className={`relative flex flex-col items-center justify-center rounded-3xl border-3 border-dashed p-12 cursor-pointer transition-all duration-300 ${
           isDragOver
-            ? 'border-[#89CFF0] bg-[#E8F0FA] scale-[1.02]'
-            : 'border-[#89CFF0]/50 bg-white hover:border-[#89CFF0] hover:bg-[#E8F0FA]/50'
+            ? 'border-[#A8D4F0] bg-[#E8F0FA] scale-[1.02]'
+            : 'border-[#A8D4F0]/50 bg-white hover:border-[#A8D4F0] hover:bg-[#E8F0FA]/50'
         } ${photos.length >= maxPhotos ? 'opacity-50 pointer-events-none' : ''}`}
       >
         <span className="text-5xl mb-4">🐾</span>
-        <p className="text-[#2D1B69] font-bold text-lg mb-1">
+        <p className="text-[#1A1A2E] font-bold text-lg mb-1">
           Drop your pet photos here
         </p>
-        <p className="text-sm text-[#2D1B69]/50">
+        <p className="text-sm text-[#1A1A2E]/50">
           or click to browse ({photos.length}/{maxPhotos} photos)
         </p>
-        <p className="text-xs text-[#2D1B69]/30 mt-3">
+        <p className="text-xs text-[#1A1A2E]/30 mt-3">
           JPG, PNG, HEIC up to 10MB each
         </p>
         {converting && (
@@ -158,7 +158,7 @@ export default function PhotoUploader({
           {photos.map((photo) => (
             <div
               key={photo.id}
-              className="group relative aspect-square rounded-2xl overflow-hidden border-2 border-[#89CFF0]/25 shadow-sm hover:shadow-md transition-all duration-300"
+              className="group relative aspect-square rounded-2xl overflow-hidden border-2 border-[#A8D4F0]/25 shadow-sm hover:shadow-md transition-all duration-300"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

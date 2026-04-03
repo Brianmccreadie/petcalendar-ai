@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2D1B69] text-white">
+    <footer className="bg-[#1A1A2E] text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
           {/* Logo */}
@@ -10,7 +10,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-2">
               <span className="text-2xl">🐾</span>
               <span className="text-xl font-extrabold tracking-tight heading-playful">
-                PetCalendar<span className="text-[#89CFF0]">.ai</span>
+                PetCalendar<span className="text-[#A8D4F0]">.ai</span>
               </span>
             </Link>
             <p className="mt-3 text-white/50 text-sm">
@@ -20,16 +20,16 @@ export default function Footer() {
 
           {/* Links */}
           <div className="flex flex-wrap gap-6 text-sm text-white/50">
-            <Link href="#faq" className="hover:text-[#89CFF0] transition-colors">
+            <Link href="#faq" className="hover:text-[#A8D4F0] transition-colors">
               FAQ
             </Link>
-            <Link href="/privacy" className="hover:text-[#89CFF0] transition-colors">
+            <Link href="/privacy" className="hover:text-[#A8D4F0] transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-[#89CFF0] transition-colors">
+            <Link href="/terms" className="hover:text-[#A8D4F0] transition-colors">
               Terms
             </Link>
-            <a href="mailto:hello@petcalendar.ai" className="hover:text-[#89CFF0] transition-colors">
+            <a href="mailto:hello@petcalendar.ai" className="hover:text-[#A8D4F0] transition-colors">
               Contact
             </a>
           </div>

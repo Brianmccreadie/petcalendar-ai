@@ -46,7 +46,7 @@ const productFeatures = [
   { emoji: '❤️', text: 'Satisfaction guaranteed' },
 ]
 
-/* Doodle SVG components for section dividers */
+/* Doodle SVG components */
 function PawDoodle({ className }: { className?: string }) {
   return (
     <svg className={className} width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -61,20 +61,23 @@ function PawDoodle({ className }: { className?: string }) {
 
 function BoneDoodle({ className }: { className?: string }) {
   return (
-    <svg className={className} width="40" height="20" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="8" y="7" width="24" height="6" rx="3" fill="currentColor"/>
-      <circle cx="7" cy="5" r="4" fill="currentColor"/>
-      <circle cx="7" cy="15" r="4" fill="currentColor"/>
-      <circle cx="33" cy="5" r="4" fill="currentColor"/>
-      <circle cx="33" cy="15" r="4" fill="currentColor"/>
+    <svg className={className} width="44" height="22" viewBox="0 0 44 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="8" width="24" height="6" rx="3" stroke="currentColor" strokeWidth="2.5" fill="none"/>
+      <circle cx="9" cy="5" r="4" stroke="currentColor" strokeWidth="2.5" fill="none"/>
+      <circle cx="9" cy="17" r="4" stroke="currentColor" strokeWidth="2.5" fill="none"/>
+      <circle cx="35" cy="5" r="4" stroke="currentColor" strokeWidth="2.5" fill="none"/>
+      <circle cx="35" cy="17" r="4" stroke="currentColor" strokeWidth="2.5" fill="none"/>
     </svg>
   )
 }
 
-function SparkDoodle({ className }: { className?: string }) {
+function BurstDoodle({ className }: { className?: string }) {
   return (
-    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2L13.5 9.5L20 12L13.5 14.5L12 22L10.5 14.5L4 12L10.5 9.5L12 2Z" fill="currentColor"/>
+    <svg className={className} width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="15" y1="2" x2="15" y2="8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="24" y1="6" x2="20" y2="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="28" y1="15" x2="22" y2="15" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="24" y1="24" x2="20" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
     </svg>
   )
 }
@@ -82,7 +85,7 @@ function SparkDoodle({ className }: { className?: string }) {
 function HeartDoodle({ className }: { className?: string }) {
   return (
     <svg className={className} width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 21C12 21 2 14 2 7.5C2 4 4.5 2 7.5 2C9.5 2 11 3.5 12 4.5C13 3.5 14.5 2 16.5 2C19.5 2 22 4 22 7.5C22 14 12 21 12 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M12 21C12 21 2 14 2 7.5C2 4 4.5 2 7.5 2C9.5 2 11 3.5 12 4.5C13 3.5 14.5 2 16.5 2C19.5 2 22 4 22 7.5C22 14 12 21 12 21Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   )
 }
@@ -90,7 +93,7 @@ function HeartDoodle({ className }: { className?: string }) {
 function SquigglyDoodle({ className }: { className?: string }) {
   return (
     <svg className={className} width="80" height="12" viewBox="0 0 80 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M2 6C10 2 14 10 22 6C30 2 34 10 42 6C50 2 54 10 62 6C70 2 74 10 78 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M2 6C10 2 14 10 22 6C30 2 34 10 42 6C50 2 54 10 62 6C70 2 74 10 78 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
     </svg>
   )
 }
@@ -102,23 +105,23 @@ export default function Home() {
       <HowItWorks />
 
       {/* Doodle divider */}
-      <div className="flex items-center justify-center gap-4 py-2 bg-[#FAFAF8]">
-        <PawDoodle className="w-5 h-5 text-[#2D1B69] opacity-40" />
-        <SquigglyDoodle className="w-16 h-3 text-[#2D1B69] opacity-40" />
-        <SparkDoodle className="w-4 h-4 text-[#2D1B69] opacity-35" />
+      <div className="flex items-center justify-center gap-4 py-2 bg-[#F5EDE8]">
+        <PawDoodle className="w-5 h-5 text-black" />
+        <SquigglyDoodle className="w-16 h-3 text-black" />
+        <BurstDoodle className="w-5 h-5 text-black" />
       </div>
 
       {/* Featured Themes */}
-      <section className="relative bg-[#FAFAF8] py-20 sm:py-28">
-        <BoneDoodle className="absolute top-10 left-[6%] text-[#2D1B69] opacity-35 w-9 h-5 rotate-[-15deg] animate-doodle" />
-        <SparkDoodle className="absolute bottom-14 right-[8%] text-[#2D1B69] opacity-30 w-5 h-5 animate-doodle" />
+      <section className="relative bg-[#F5EDE8] py-20 sm:py-28">
+        <BoneDoodle className="absolute top-10 left-[6%] text-black w-10 h-5 rotate-[-15deg] animate-doodle" />
+        <BurstDoodle className="absolute bottom-14 right-[8%] text-black w-6 h-6 animate-doodle" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#2D1B69]">
+            <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#1A1A2E]">
               50 Themes to Choose From
             </h2>
-            <p className="mt-4 text-lg text-[#2D1B69]/60">Here are a few of our favorites</p>
+            <p className="mt-4 text-lg text-[#1A1A2E]/60">Here are a few of our favorites</p>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {featuredThemes.map((theme) => {
@@ -127,9 +130,9 @@ export default function Home() {
               return (
                 <div
                   key={style.id}
-                  className="group rounded-2xl overflow-hidden bg-white border border-[#89CFF0]/15 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                  className="group overflow-hidden sketchy-card"
                 >
-                  <div className="relative aspect-[3/2] bg-gradient-to-br from-[#89CFF0]/15 to-[#B8DCEF]/20">
+                  <div className="relative aspect-[3/2] bg-[#B8DCEF]/30">
                     <Image
                       src={`/previews/${theme.id}-${theme.pet}.jpg`}
                       alt={style.name}
@@ -139,11 +142,11 @@ export default function Home() {
                     />
                   </div>
                   <div className="p-3 sm:p-4">
-                    <p className="font-bold text-[#2D1B69] text-sm sm:text-base flex items-center gap-1.5">
+                    <p className="font-bold text-[#1A1A2E] text-sm sm:text-base flex items-center gap-1.5">
                       <span>{theme.emoji}</span>
                       {style.name}
                     </p>
-                    <p className="text-xs sm:text-sm text-[#2D1B69]/60 mt-1 line-clamp-1">
+                    <p className="text-xs sm:text-sm text-[#1A1A2E]/60 mt-1 line-clamp-1">
                       {style.description}
                     </p>
                   </div>
@@ -154,7 +157,7 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link
               href="/create"
-              className="inline-flex items-center justify-center rounded-full bg-[#FF6B35] px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-[#89CFF0]/20 hover:bg-[#E55A2B] hover:-translate-y-0.5 transition-all duration-300"
+              className="btn-primary"
             >
               See All 50 Themes →
             </Link>
@@ -163,20 +166,20 @@ export default function Home() {
       </section>
 
       {/* Doodle divider */}
-      <div className="flex items-center justify-center gap-4 py-2 bg-white">
-        <HeartDoodle className="w-4 h-4 text-[#2D1B69] opacity-40" />
-        <SquigglyDoodle className="w-16 h-3 text-[#2D1B69] opacity-35" />
-        <PawDoodle className="w-5 h-5 text-[#2D1B69] opacity-40" />
+      <div className="flex items-center justify-center gap-4 py-2 bg-[#F5EDE8]">
+        <HeartDoodle className="w-5 h-5 text-black" />
+        <SquigglyDoodle className="w-16 h-3 text-black" />
+        <PawDoodle className="w-5 h-5 text-black" />
       </div>
 
       {/* Testimonials */}
-      <section className="relative bg-white py-20 sm:py-28">
-        <PawDoodle className="absolute top-12 right-[10%] text-[#2D1B69] opacity-35 w-7 h-7 rotate-[20deg] animate-doodle" />
-        <HeartDoodle className="absolute bottom-16 left-[6%] text-[#2D1B69] opacity-35 w-6 h-5 rotate-[-10deg] animate-doodle" />
+      <section className="relative bg-[#F5EDE8] py-20 sm:py-28">
+        <PawDoodle className="absolute top-12 right-[10%] text-black w-7 h-7 rotate-[20deg] animate-doodle" />
+        <HeartDoodle className="absolute bottom-16 left-[6%] text-black w-6 h-5 rotate-[-10deg] animate-doodle" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#2D1B69]">
+            <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#1A1A2E]">
               Pet Parents Love Us
             </h2>
           </div>
@@ -184,13 +187,13 @@ export default function Home() {
             {testimonials.map((t, i) => (
               <div
                 key={i}
-                className="rounded-3xl bg-[#E8F4FD] p-8 relative border border-[#89CFF0]/20"
+                className="sketchy-card p-8 relative"
               >
-                <span className="text-5xl text-[#89CFF0]/30 font-serif absolute top-4 left-6">&ldquo;</span>
-                <p className="text-[#2D1B69]/70 leading-relaxed mt-6 mb-6 relative z-10">
+                <span className="text-5xl text-[#A8D4F0]/40 font-serif absolute top-4 left-6">&ldquo;</span>
+                <p className="text-[#1A1A2E]/70 leading-relaxed mt-6 mb-6 relative z-10">
                   {t.quote}
                 </p>
-                <p className="text-sm font-bold text-[#2D1B69] flex items-center gap-2">
+                <p className="text-sm font-bold text-[#1A1A2E] flex items-center gap-2">
                   <span>{t.emoji}</span>
                   — {t.name}
                 </p>
@@ -201,20 +204,20 @@ export default function Home() {
       </section>
 
       {/* Product Details */}
-      <section className="relative bg-[#FAFAF8] py-20 sm:py-28">
-        <BoneDoodle className="absolute top-8 right-[12%] text-[#2D1B69] opacity-35 w-8 h-4 rotate-[30deg] animate-doodle" />
-        <SparkDoodle className="absolute bottom-20 left-[10%] text-[#2D1B69] opacity-30 w-5 h-5 animate-doodle" />
+      <section className="relative bg-[#F5EDE8] py-20 sm:py-28">
+        <BoneDoodle className="absolute top-8 right-[12%] text-black w-10 h-5 rotate-[30deg] animate-doodle" />
+        <BurstDoodle className="absolute bottom-20 left-[10%] text-black w-6 h-6 animate-doodle" />
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#2D1B69]">
+            <h2 className="heading-playful text-3xl sm:text-5xl font-extrabold text-[#1A1A2E]">
               What You Get
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-12 items-center max-w-4xl mx-auto">
             {/* Tilted calendar mockup */}
             <div className="relative flex justify-center">
-              <div className="w-72 h-80 rounded-3xl bg-gradient-to-br from-[#89CFF0]/15 via-[#B8DCEF]/15 to-[#FFD166]/10 border-4 border-white shadow-2xl rotate-[-4deg] hover:rotate-0 transition-transform duration-500 overflow-hidden relative">
+              <div className="w-72 h-80 rounded-3xl bg-gradient-to-br from-[#B8DCEF]/30 via-[#A8D4F0]/20 to-[#FFD166]/10 border-4 border-white shadow-2xl rotate-[-4deg] hover:rotate-0 transition-transform duration-500 overflow-hidden relative">
                 <Image
                   src="/calendar-hero-mockup.png"
                   alt="Pet calendar mockup"
@@ -224,7 +227,7 @@ export default function Home() {
                 />
               </div>
               {/* Shadow card behind */}
-              <div className="absolute -bottom-3 -right-3 w-72 h-80 rounded-3xl bg-[#89CFF0]/10 border-4 border-white rotate-[4deg] -z-10" />
+              <div className="absolute -bottom-3 -right-3 w-72 h-80 rounded-3xl bg-[#B8DCEF]/15 border-4 border-white rotate-[4deg] -z-10" />
             </div>
 
             {/* Feature list */}
@@ -233,7 +236,7 @@ export default function Home() {
                 {productFeatures.map((feature) => (
                   <li key={feature.text} className="flex items-center gap-4">
                     <span className="text-2xl">{feature.emoji}</span>
-                    <span className="text-lg font-medium text-[#2D1B69]/80">{feature.text}</span>
+                    <span className="text-lg font-medium text-[#1A1A2E]/80">{feature.text}</span>
                   </li>
                 ))}
               </ul>
@@ -246,29 +249,29 @@ export default function Home() {
       <FAQ />
 
       {/* Doodle divider above CTA */}
-      <div className="flex items-center justify-center gap-4 py-2 bg-[#FAFAF8]">
-        <SparkDoodle className="w-4 h-4 text-[#2D1B69] opacity-45" />
-        <BoneDoodle className="w-8 h-4 text-[#2D1B69] opacity-35" />
-        <HeartDoodle className="w-4 h-4 text-[#2D1B69] opacity-40" />
+      <div className="flex items-center justify-center gap-4 py-2 bg-[#F5EDE8]">
+        <BurstDoodle className="w-5 h-5 text-black" />
+        <BoneDoodle className="w-10 h-5 text-black" />
+        <HeartDoodle className="w-5 h-5 text-black" />
       </div>
 
       {/* Final CTA */}
-      <section className="bg-gradient-to-br from-[#FAF0E6] via-[#E8F4FD] to-[#89CFF0] py-16 sm:py-20 text-center relative overflow-hidden">
+      <section className="bg-gradient-to-br from-[#F0E6E0] via-[#D4E8F7] to-[#A8D4F0] py-16 sm:py-20 text-center relative overflow-hidden">
         {/* Subtle doodles on CTA */}
-        <PawDoodle className="absolute top-6 left-[10%] text-white opacity-15 w-8 h-8 rotate-[-15deg]" />
-        <BoneDoodle className="absolute bottom-8 right-[8%] text-white opacity-10 w-10 h-5 rotate-[20deg]" />
-        <SparkDoodle className="absolute top-10 right-[20%] text-white opacity-15 w-6 h-6" />
+        <PawDoodle className="absolute top-6 left-[10%] text-[#1A1A2E] opacity-15 w-8 h-8 rotate-[-15deg]" />
+        <BoneDoodle className="absolute bottom-8 right-[8%] text-[#1A1A2E] opacity-10 w-12 h-6 rotate-[20deg]" />
+        <BurstDoodle className="absolute top-10 right-[20%] text-[#1A1A2E] opacity-15 w-6 h-6" />
 
         <div className="mx-auto max-w-2xl px-4 relative z-10">
-          <h2 className="heading-playful text-3xl sm:text-4xl font-extrabold text-[#2D1B69] mb-4">
+          <h2 className="heading-playful text-3xl sm:text-4xl font-extrabold text-[#1A1A2E] mb-4">
             Ready to Make Your Pet a Star?
           </h2>
-          <p className="text-[#2D1B69]/60 text-lg mb-8">
+          <p className="text-[#1A1A2E]/60 text-lg mb-8">
             It only takes 5 minutes. Your pet deserves this.
           </p>
           <Link
             href="/create"
-            className="inline-flex items-center justify-center rounded-full bg-[#FF6B35] px-10 py-4 text-lg font-bold text-white shadow-xl shadow-[#89CFF0]/25 hover:bg-[#E55A2B] hover:-translate-y-1 transition-all duration-300"
+            className="btn-primary"
           >
             Start Creating Now →
           </Link>
