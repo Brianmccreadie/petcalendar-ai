@@ -1,67 +1,75 @@
 import { NextResponse } from 'next/server'
+import { clientHash, jsonError, readJson } from '@/lib/api'
+import { LIMITS, defaultCalendarYear } from '@/lib/config'
 import { createAdminSupabaseClient } from '@/lib/supabase-admin'
+import { cleanPetName, isPetType } from '@/lib/validate'
 
-export const maxDuration = 300
-
-// Step 1: Create project + pets (no photos — those come separately)
+// Step 1 of the flow: create the project and its pets. Photos follow one by one.
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const { pets, multiPetMode } = body as {
-      pets: { name: string; type: string }[]
-      multiPetMode?: string
-    }
+    const body = await readJson<{ pets?: unknown; multiPetMode?: unknown }>(request)
+    const rawPets = Array.isArray(body?.pets) ? body!.pets : []
+    if (rawPets.length === 0) return jsonError('Add at least one pet.', 400)
+    if (rawPets.length > LIMITS.maxPets) return jsonError(`A calendar can feature up to ${LIMITS.maxPets} pets.`, 400)
 
-    if (!pets || pets.length === 0) {
-      return NextResponse.json({ error: 'At least one pet is required' }, { status: 400 })
-    }
+    const pets = rawPets.map((p) => {
+      const pet = (p ?? {}) as { name?: unknown; type?: unknown }
+      return { name: cleanPetName(pet.name, LIMITS.maxPetNameLength), type: isPetType(pet.type) ? pet.type : 'dog' }
+    })
+    if (pets.some((p) => !p.name)) return jsonError('Every pet needs a name.', 400)
 
     const supabase = createAdminSupabaseClient()
+    const hash = clientHash(request)
 
-    // Create project
-    const { data: project, error: projError } = await supabase
+    if (hash) {
+      const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      const { count, error } = await supabase
+        .from('projects')
+        .select('id', { count: 'exact', head: true })
+        .eq('client_hash', hash)
+        .gte('created_at', since)
+      if (!error && (count ?? 0) >= LIMITS.maxProjectsPerDay) {
+        return jsonError('You have started several calendars today. Please finish one of those, or try again tomorrow.', 429)
+      }
+    }
+
+    const base = {
+      name: 'My Pet Calendar',
+      pet_name: pets[0].name,
+      pet_type: pets[0].type,
+      style: 'mythical-quest',
+      status: 'uploading',
+      multi_pet_mode: body?.multiPetMode === 'together' ? 'together' : 'alternate',
+      start_year: defaultCalendarYear(),
+    }
+    let { data: project, error: projectError } = await supabase
       .from('projects')
-      .insert({
-        name: 'My Pet Calendar',
-        pet_name: pets[0].name,
-        pet_type: pets[0].type,
-        style: 'mythical-quest',
-        status: 'uploading',
-        multi_pet_mode: multiPetMode || 'alternate',
-        start_year: new Date().getFullYear(),
-      })
+      .insert({ ...base, client_hash: hash })
       .select('id')
       .single()
-
-    if (projError || !project) {
-      console.error('Failed to create project:', projError)
-      return NextResponse.json({ error: 'Failed to create project' }, { status: 500 })
+    if (projectError && /client_hash/.test(projectError.message)) {
+      // Migration not applied yet — create the project without the rate-limit column.
+      ;({ data: project, error: projectError } = await supabase.from('projects').insert(base).select('id').single())
+    }
+    if (projectError || !project) {
+      console.error('create-project: insert failed', projectError)
+      return jsonError('Could not start your calendar. Please try again.', 500)
     }
 
-    // Create pet entries
-    const petIds: string[] = []
-    for (let i = 0; i < pets.length; i++) {
-      const { data: pet, error: petError } = await supabase
-        .from('pets')
-        .insert({
-          project_id: project.id,
-          name: pets[i].name,
-          pet_type: pets[i].type,
-          sort_order: i,
-        })
-        .select('id')
-        .single()
-
-      if (petError || !pet) {
-        console.error(`Failed to create pet ${i}:`, petError)
-        continue
-      }
-      petIds.push(pet.id)
+    const { data: petRows, error: petError } = await supabase
+      .from('pets')
+      .insert(pets.map((p, i) => ({ project_id: project!.id, name: p.name, pet_type: p.type, sort_order: i })))
+      .select('id, sort_order')
+    if (petError || !petRows || petRows.length !== pets.length) {
+      console.error('create-project: pets insert failed', petError)
+      await supabase.from('projects').delete().eq('id', project.id)
+      return jsonError('Could not save your pets. Please try again.', 500)
     }
 
+    const petIds = [...petRows].sort((a, b) => a.sort_order - b.sort_order).map((p) => p.id)
     return NextResponse.json({ projectId: project.id, petIds })
   } catch (error) {
-    console.error('Create project error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('create-project error:', error)
+    return jsonError('Something went wrong. Please try again.', 500)
   }
 }

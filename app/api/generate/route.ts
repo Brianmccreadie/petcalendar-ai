@@ -1,95 +1,78 @@
-import { NextResponse } from 'next/server'
-import { after } from 'next/server'
+import { NextResponse, after } from 'next/server'
+import { jsonError, readJson } from '@/lib/api'
+import { calendarYearOptions } from '@/lib/config'
+import { generateCalendar } from '@/lib/generation'
 import { createAdminSupabaseClient } from '@/lib/supabase-admin'
-import { generateCalendarImages } from '@/lib/gemini'
-import type { PetWithPhotos } from '@/lib/gemini'
-import type { StyleId } from '@/lib/types'
+import { isStyleId, isUuid } from '@/lib/validate'
+
+// Generation continues in after() once the response is sent, so give it room.
+export const maxDuration = 800
+
+const ACTIVE_WINDOW_MS = 12 * 60 * 1000
 
 export async function POST(request: Request) {
   try {
-    const { project_id, style, startYear } = await request.json()
-    if (!project_id) {
-      return NextResponse.json(
-        { error: 'project_id is required' },
-        { status: 400 }
-      )
-    }
+    const body = await readJson<{ project_id?: unknown; style?: unknown; startYear?: unknown; retryFailed?: unknown }>(request)
+    const projectId = body?.project_id
+    if (!isUuid(projectId)) return jsonError('project_id is required.', 400)
+    if (body?.style !== undefined && !isStyleId(body.style)) return jsonError('Unknown theme.', 400)
 
     const supabase = createAdminSupabaseClient()
+    const { data: project } = await supabase.from('projects').select('*').eq('id', projectId).maybeSingle()
+    if (!project) return jsonError('Calendar not found.', 404)
+    if (project.status === 'ordered') return jsonError('This calendar has already been ordered.', 409)
 
-    // Update style/year if provided (called from the style page)
-    if (style || startYear) {
-      const updates: Record<string, unknown> = { updated_at: new Date().toISOString() }
-      if (style) updates.style = style
-      if (startYear) updates.start_year = startYear
-      await supabase.from('projects').update(updates).eq('id', project_id)
+    // A run is already in flight — don't start (and pay for) a second one.
+    const recentlyActive = Date.now() - new Date(project.updated_at).getTime() < ACTIVE_WINDOW_MS
+    if (project.status === 'generating' && recentlyActive) {
+      return NextResponse.json({ status: 'generating', project_id: projectId })
     }
 
-    const { data: project, error: projError } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('id', project_id)
-      .single()
+    const { count: photoCount } = await supabase
+      .from('pet_photos')
+      .select('id', { count: 'exact', head: true })
+      .eq('project_id', projectId)
+    if (!photoCount) return jsonError('Upload at least one photo first.', 400)
 
-    if (projError || !project) {
-      return NextResponse.json(
-        { error: 'Project not found' },
-        { status: 404 }
-      )
-    }
+    const year = Number(body?.startYear)
+    const updates: Record<string, unknown> = { updated_at: new Date().toISOString() }
+    const styleChanged = isStyleId(body?.style) && body.style !== project.style
+    if (isStyleId(body?.style)) updates.style = body.style
+    if (calendarYearOptions().includes(year)) updates.start_year = year
 
-    // Fetch pets for this project
-    const { data: pets } = await supabase
-      .from('pets')
-      .select('*')
-      .eq('project_id', project_id)
-      .order('sort_order', { ascending: true })
+    const { count: pageCount } = await supabase
+      .from('calendar_pages')
+      .select('id', { count: 'exact', head: true })
+      .eq('project_id', projectId)
 
-    if (!pets || pets.length === 0) {
-      return NextResponse.json(
-        { error: 'No pets found for this project' },
-        { status: 400 }
-      )
-    }
-
-    // Fetch photos for each pet
-    const petsWithPhotos: PetWithPhotos[] = []
-    for (const pet of pets) {
-      const { data: photos } = await supabase
-        .from('pet_photos')
-        .select('*')
-        .eq('pet_id', pet.id)
-        .order('created_at', { ascending: true })
-
-      if (photos && photos.length > 0) {
-        petsWithPhotos.push({ pet, photos })
+    // Same theme and pages already exist → only fill in what's missing or failed.
+    const onlyIncomplete = !styleChanged && (pageCount ?? 0) > 0
+    if (onlyIncomplete && !body?.retryFailed) {
+      const { count: unfinished } = await supabase
+        .from('calendar_pages')
+        .select('id', { count: 'exact', head: true })
+        .eq('project_id', projectId)
+        .neq('status', 'complete')
+      if (!unfinished && (pageCount ?? 0) >= 13) {
+        await supabase.from('projects').update(updates).eq('id', projectId)
+        return NextResponse.json({ status: 'preview', project_id: projectId })
       }
     }
 
-    if (petsWithPhotos.length === 0) {
-      return NextResponse.json(
-        { error: 'No photos found for any pet' },
-        { status: 400 }
-      )
-    }
+    await supabase.from('projects').update({ ...updates, status: 'generating' }).eq('id', projectId)
 
-    // Use after() to keep the serverless function alive after responding.
-    // This lets us return immediately so the user sees the preview page,
-    // while generation continues in the background with the full 800s timeout.
     after(async () => {
       try {
-        await generateCalendarImages(project, petsWithPhotos, project.style as StyleId)
-      } catch (err) {
-        console.error('Generation failed:', err)
+        await generateCalendar(projectId, { onlyIncomplete })
+      } catch (error) {
+        console.error('[generate] run failed:', error)
+        await supabase.from('projects').update({ status: 'preview', updated_at: new Date().toISOString() }).eq('id', projectId)
       }
     })
 
-    return NextResponse.json({ status: 'generating', project_id })
+    return NextResponse.json({ status: 'generating', project_id: projectId })
   } catch (error) {
-    console.error('Generate API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('generate error:', error)
+    return jsonError('Could not start generation. Please try again.', 500)
   }
 }

@@ -919,13 +919,22 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
 // ============================================================
 
 /**
- * Build a detailed image-generation prompt for a given month.
+ * "Luna the dog", "Kiwi the pet", "Luna the dog and Milo the cat together".
+ */
+export function describeSubjects(pets: { name: string; petType: string }[]): string {
+  const parts = pets.map((p) => `${p.name} the ${p.petType === 'other' ? 'pet' : p.petType}`)
+  if (parts.length <= 1) return parts[0] ?? 'the pet'
+  return `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]} together`
+}
+
+/**
+ * Build the scene brief for a given month. Identity and format rules are
+ * appended by lib/ai so they stay consistent across providers.
  */
 export function getPromptForMonth(
   style: StyleId,
   monthNumber: number,
-  petName: string,
-  petType: string
+  subject: string
 ): string {
   const baseDescription = STYLE_DESCRIPTIONS[style]
   const monthTheme = MONTH_THEMES.find((m) => m.month === monthNumber)!
@@ -933,9 +942,8 @@ export function getPromptForMonth(
 
   return [
     `${baseDescription}`,
-    `Create a realistic, photographic-quality portrait of ${petName} the ${petType} ${sceneDetail}`,
+    `Create a realistic, photographic-quality portrait of ${subject} ${sceneDetail}`,
     `Monthly theme: ${monthTheme.theme}.`,
-    'IMPORTANT: The image must be realistic and photographic — NOT an illustration, painting, or cartoon. Think cinematic movie still.',
   ].join('\n\n')
 }
 
@@ -944,116 +952,115 @@ export function getPromptForMonth(
  */
 export function getCoverPrompt(
   style: StyleId,
-  petName: string,
-  petType: string
+  subject: string
 ): string {
   const baseDescription = STYLE_DESCRIPTIONS[style]
 
   const coverScenes: Record<StyleId, string> = {
-    'mythical-quest': `A stunning hero portrait of ${petName} the ${petType}, wearing epic fantasy armor and a flowing cloak, standing on a cliff overlooking a vast magical kingdom. Golden hour light, dramatic clouds, and a glowing enchanted sword. Cinematic, realistic, photographic quality.`,
+    'mythical-quest': `A stunning hero portrait of ${subject}, wearing epic fantasy armor and a flowing cloak, standing on a cliff overlooking a vast magical kingdom. Golden hour light, dramatic clouds, and a glowing enchanted sword. Cinematic, realistic, photographic quality.`,
 
-    'wizarding-world': `A magical portrait of ${petName} the ${petType} in full wizard regalia — pointed hat, flowing robes, and a glowing wand — standing in the entrance hall of a magnificent magical school. Floating candles, moving staircases, and enchanted light. Cinematic, realistic, photographic quality.`,
+    'wizarding-world': `A magical portrait of ${subject} in full wizard regalia — pointed hat, flowing robes, and a glowing wand — standing in the entrance hall of a magnificent magical school. Floating candles, moving staircases, and enchanted light. Cinematic, realistic, photographic quality.`,
 
-    'space-explorer': `An epic portrait of ${petName} the ${petType} in a sleek astronaut suit, standing on an alien world with a stunning nebula filling the sky. A spacecraft landed behind them. Dramatic cosmic lighting, photographic realism, cinematic scale.`,
+    'space-explorer': `An epic portrait of ${subject} in a sleek astronaut suit, standing on an alien world with a stunning nebula filling the sky. A spacecraft landed behind them. Dramatic cosmic lighting, photographic realism, cinematic scale.`,
 
-    'secret-agent': `A suave, cinematic portrait of ${petName} the ${petType} in a tailored tuxedo/evening gown, leaning against a luxury sports car in front of a glamorous casino at night. City lights, neon reflections, and sophisticated atmosphere. Photographic quality, Bond-style cinematography.`,
+    'secret-agent': `A suave, cinematic portrait of ${subject} in a tailored tuxedo/evening gown, leaning against a luxury sports car in front of a glamorous casino at night. City lights, neon reflections, and sophisticated atmosphere. Photographic quality, Bond-style cinematography.`,
 
-    'prehistoric-adventure': `An adventurous portrait of ${petName} the ${petType} wearing an explorer hat and vest, standing beside a friendly baby T-Rex in a lush prehistoric jungle. Volcanic mountains in the distance, pterodactyls soaring overhead. Cinematic, realistic, Jurassic Park vibes.`,
+    'prehistoric-adventure': `An adventurous portrait of ${subject} wearing an explorer hat and vest, standing beside a friendly baby T-Rex in a lush prehistoric jungle. Volcanic mountains in the distance, pterodactyls soaring overhead. Cinematic, realistic, Jurassic Park vibes.`,
 
-    'pirate-life': `A swashbuckling portrait of ${petName} the ${petType} as a pirate captain at the wheel of a magnificent ship, wearing a tricorn hat and captain's coat. Caribbean sunset, billowing sails, and adventure on the horizon. Cinematic, realistic, photographic quality.`,
+    'pirate-life': `A swashbuckling portrait of ${subject} as a pirate captain at the wheel of a magnificent ship, wearing a tricorn hat and captain's coat. Caribbean sunset, billowing sails, and adventure on the horizon. Cinematic, realistic, photographic quality.`,
 
-    'superhero-origin': `A dramatic superhero portrait of ${petName} the ${petType} in a custom super suit with a flowing cape, standing on a rooftop overlooking a glittering city at night. Wind in the cape, city lights below, heroic pose. Cinematic, realistic, photographic quality.`,
+    'superhero-origin': `A dramatic superhero portrait of ${subject} in a custom super suit with a flowing cape, standing on a rooftop overlooking a glittering city at night. Wind in the cape, city lights below, heroic pose. Cinematic, realistic, photographic quality.`,
 
-    'royal-portrait': `A regal, cinematic portrait of ${petName} the ${petType} seated on an ornate golden throne, wearing a jeweled crown and royal robes. A grand palace hall with chandeliers, tapestries, and warm candlelight. Photographic quality with historical grandeur.`,
+    'royal-portrait': `A regal, cinematic portrait of ${subject} seated on an ornate golden throne, wearing a jeweled crown and royal robes. A grand palace hall with chandeliers, tapestries, and warm candlelight. Photographic quality with historical grandeur.`,
 
-    'detective-noir': `A moody noir portrait of ${petName} the ${petType} in a fedora and trench coat, silhouetted in a rain-slicked alley under a single streetlamp. Fog, neon reflections, and city shadows. Cinematic, realistic, classic detective film atmosphere.`,
+    'detective-noir': `A moody noir portrait of ${subject} in a fedora and trench coat, silhouetted in a rain-slicked alley under a single streetlamp. Fog, neon reflections, and city shadows. Cinematic, realistic, classic detective film atmosphere.`,
 
-    'wild-west': `A heroic western portrait of ${petName} the ${petType} as a frontier sheriff, standing in the main street of a dusty frontier town at golden hour. Cowboy hat, sheriff badge, boots, and a dramatic western sky. Cinematic, realistic, photographic quality.`,
+    'wild-west': `A heroic western portrait of ${subject} as a frontier sheriff, standing in the main street of a dusty frontier town at golden hour. Cowboy hat, sheriff badge, boots, and a dramatic western sky. Cinematic, realistic, photographic quality.`,
 
-    'underwater-odyssey': `A breathtaking underwater portrait of ${petName} the ${petType} wearing a pearl crown, surrounded by a coral kingdom glowing with bioluminescent light. Schools of colorful fish, ancient ruins, and magical deep-sea atmosphere. Cinematic, realistic, photographic quality.`,
+    'underwater-odyssey': `A breathtaking underwater portrait of ${subject} wearing a pearl crown, surrounded by a coral kingdom glowing with bioluminescent light. Schools of colorful fish, ancient ruins, and magical deep-sea atmosphere. Cinematic, realistic, photographic quality.`,
 
-    'high-school-yearbook': `A hilarious, classic yearbook photo of ${petName} the ${petType} — perfectly posed against the classic blue-grey gradient backdrop, wearing a slightly too-big blazer and a goofy-charming smile. Laser background option visible. Photographic quality, genuinely funny, peak yearbook energy.`,
+    'high-school-yearbook': `A hilarious, classic yearbook photo of ${subject} — perfectly posed against the classic blue-grey gradient backdrop, wearing a slightly too-big blazer and a goofy-charming smile. Laser background option visible. Photographic quality, genuinely funny, peak yearbook energy.`,
 
-    'professional-headshot': `A stunning, magazine-cover-quality studio portrait of ${petName} the ${petType} with perfect three-point lighting, a clean seamless backdrop, and editorial sharpness. Polished, sophisticated, and utterly flattering. Photographic quality, Vanity Fair energy.`,
+    'professional-headshot': `A stunning, magazine-cover-quality studio portrait of ${subject} with perfect three-point lighting, a clean seamless backdrop, and editorial sharpness. Polished, sophisticated, and utterly flattering. Photographic quality, Vanity Fair energy.`,
 
-    'pet-photoshoot': `A gorgeous lifestyle portrait of ${petName} the ${petType} in a sun-drenched natural setting — warm golden-hour light, shallow depth of field, and candid charm. The kind of image a talented pet photographer captures on the perfect afternoon. Photographic quality.`,
+    'pet-photoshoot': `A gorgeous lifestyle portrait of ${subject} in a sun-drenched natural setting — warm golden-hour light, shallow depth of field, and candid charm. The kind of image a talented pet photographer captures on the perfect afternoon. Photographic quality.`,
 
-    'cozy-vibes': `A warm, intimate portrait of ${petName} the ${petType} curled up in the coziest spot imaginable — golden window light, soft blankets, and the quiet beauty of a perfect ordinary moment. Hygge perfection. Photographic quality.`,
+    'cozy-vibes': `A warm, intimate portrait of ${subject} curled up in the coziest spot imaginable — golden window light, soft blankets, and the quiet beauty of a perfect ordinary moment. Hygge perfection. Photographic quality.`,
 
-    'cooking-show': `A vibrant portrait of ${petName} the ${petType} as a celebrity chef in a gleaming kitchen, wearing a chef hat and apron, surrounded by beautiful ingredients and copper pots. Food Network energy. Photographic quality.`,
+    'cooking-show': `A vibrant portrait of ${subject} as a celebrity chef in a gleaming kitchen, wearing a chef hat and apron, surrounded by beautiful ingredients and copper pots. Food Network energy. Photographic quality.`,
 
-    'rock-star': `A dramatic concert portrait of ${petName} the ${petType} on a massive stage, guitar in paw, spotlight blazing, smoke machine haze, and a sold-out arena crowd. Rock legend energy. Photographic quality.`,
+    'rock-star': `A dramatic concert portrait of ${subject} on a massive stage, guitar in paw, spotlight blazing, smoke machine haze, and a sold-out arena crowd. Rock legend energy. Photographic quality.`,
 
-    'fashion-week': `A high-fashion editorial portrait of ${petName} the ${petType} on a stark white runway in a stunning haute couture outfit, flashbulbs popping, Vogue energy. Photographic quality, no text.`,
+    'fashion-week': `A high-fashion editorial portrait of ${subject} on a stark white runway in a stunning haute couture outfit, flashbulbs popping, Vogue energy. Photographic quality, no text.`,
 
-    'office-life': `A deadpan corporate portrait of ${petName} the ${petType} seated at a desk with a nameplate and a coffee mug, wearing a business suit. Motivational poster on the wall. The Office energy. Photographic quality.`,
+    'office-life': `A deadpan corporate portrait of ${subject} seated at a desk with a nameplate and a coffee mug, wearing a business suit. Motivational poster on the wall. The Office energy. Photographic quality.`,
 
-    'sports-mvp': `A triumphant sports portrait of ${petName} the ${petType} holding a championship trophy overhead in a packed stadium, confetti raining down, wearing a team jersey. Peak athletic glory. Photographic quality.`,
+    'sports-mvp': `A triumphant sports portrait of ${subject} holding a championship trophy overhead in a packed stadium, confetti raining down, wearing a team jersey. Peak athletic glory. Photographic quality.`,
 
-    'around-the-world': `A stunning travel portrait of ${petName} the ${petType} at a breathtaking world landmark, wearing a sun hat and a look of wonder. Golden-hour light, epic scenery, National Geographic energy. Photographic quality.`,
+    'around-the-world': `A stunning travel portrait of ${subject} at a breathtaking world landmark, wearing a sun hat and a look of wonder. Golden-hour light, epic scenery, National Geographic energy. Photographic quality.`,
 
-    'fairy-tale': `A magical portrait of ${petName} the ${petType} in an enchanted forest clearing, wearing a flowing cape, surrounded by dappled magical light, woodland creatures, and an ancient castle in the background. Cinematic fairy-tale beauty. Photographic quality.`,
+    'fairy-tale': `A magical portrait of ${subject} in an enchanted forest clearing, wearing a flowing cape, surrounded by dappled magical light, woodland creatures, and an ancient castle in the background. Cinematic fairy-tale beauty. Photographic quality.`,
 
-    'zombie-apocalypse': `A gritty, cinematic portrait of ${petName} the ${petType} standing atop an abandoned car in a post-apocalyptic cityscape, wearing tactical survival gear and looking fearlessly into the distance. Dramatic lighting, photographic quality.`,
+    'zombie-apocalypse': `A gritty, cinematic portrait of ${subject} standing atop an abandoned car in a post-apocalyptic cityscape, wearing tactical survival gear and looking fearlessly into the distance. Dramatic lighting, photographic quality.`,
 
-    'renaissance-pet': `A sumptuous Renaissance portrait of ${petName} the ${petType} in the style of a Flemish Old Master — rich velvet robes, a jeweled collar, warm candlelight, and a gilded frame implied by the composition. Photographic quality.`,
+    'renaissance-pet': `A sumptuous Renaissance portrait of ${subject} in the style of a Flemish Old Master — rich velvet robes, a jeweled collar, warm candlelight, and a gilded frame implied by the composition. Photographic quality.`,
 
-    'sitcom-star': `A warm, colorful portrait of ${petName} the ${petType} on an iconic sitcom living room set, sitting on the famous couch with the whole cast implied. Bright studio lighting, laugh-track energy. Photographic quality.`,
+    'sitcom-star': `A warm, colorful portrait of ${subject} on an iconic sitcom living room set, sitting on the famous couch with the whole cast implied. Bright studio lighting, laugh-track energy. Photographic quality.`,
 
-    'mad-scientist': `A dramatic portrait of ${petName} the ${petType} in a wild laboratory, wearing a lab coat and goggles, a bubbling experiment casting eerie glow across the scene. Tesla coils spark in the background. Photographic quality.`,
+    'mad-scientist': `A dramatic portrait of ${subject} in a wild laboratory, wearing a lab coat and goggles, a bubbling experiment casting eerie glow across the scene. Tesla coils spark in the background. Photographic quality.`,
 
-    'movie-poster': `A cinematic portrait of ${petName} the ${petType} in a dramatic action-movie pose — lens flare, epic background, and the unmistakable energy of a Hollywood blockbuster one-sheet. Photographic quality, no text.`,
+    'movie-poster': `A cinematic portrait of ${subject} in a dramatic action-movie pose — lens flare, epic background, and the unmistakable energy of a Hollywood blockbuster one-sheet. Photographic quality, no text.`,
 
-    'baby-photos': `An adorable newborn-style portrait of ${petName} the ${petType} wrapped in a soft knit blanket in a woven basket, surrounded by plush toys and soft studio light. Precious, heartwarming, boutique baby photography quality.`,
+    'baby-photos': `An adorable newborn-style portrait of ${subject} wrapped in a soft knit blanket in a woven basket, surrounded by plush toys and soft studio light. Precious, heartwarming, boutique baby photography quality.`,
 
-    'fitness-journey': `A dynamic fitness portrait of ${petName} the ${petType} mid-workout in a sunlit gym, wearing athletic gear, muscles engaged, determination on the face. Premium athletic brand campaign energy. Photographic quality.`,
+    'fitness-journey': `A dynamic fitness portrait of ${subject} mid-workout in a sunlit gym, wearing athletic gear, muscles engaged, determination on the face. Premium athletic brand campaign energy. Photographic quality.`,
 
-    'art-museum': `A stunning conceptual portrait of ${petName} the ${petType} standing inside a famous painting that has come to life around them — museum-quality lighting, fine-art atmosphere. Photographic quality.`,
+    'art-museum': `A stunning conceptual portrait of ${subject} standing inside a famous painting that has come to life around them — museum-quality lighting, fine-art atmosphere. Photographic quality.`,
 
-    'holiday-card': `A polished family-portrait-style photo of ${petName} the ${petType} in a warm, perfectly lit studio setup with festive decorations, wearing a charming outfit. Send-to-grandma quality. Photographic quality.`,
+    'holiday-card': `A polished family-portrait-style photo of ${subject} in a warm, perfectly lit studio setup with festive decorations, wearing a charming outfit. Send-to-grandma quality. Photographic quality.`,
 
-    'camping-adventures': `An adventurous portrait of ${petName} the ${petType} at a scenic campsite — tent pitched, campfire glowing, mountains behind, and a sky full of stars. Golden-hour outdoor photography quality.`,
+    'camping-adventures': `An adventurous portrait of ${subject} at a scenic campsite — tent pitched, campfire glowing, mountains behind, and a sky full of stars. Golden-hour outdoor photography quality.`,
 
-    'noir-detective': `A moody black-and-white portrait of ${petName} the ${petType} in a fedora and trench coat, standing in a rain-slicked alley under a single streetlamp. Deep shadows, stark contrast, classic 1940s noir atmosphere. Photographic quality.`,
+    'noir-detective': `A moody black-and-white portrait of ${subject} in a fedora and trench coat, standing in a rain-slicked alley under a single streetlamp. Deep shadows, stark contrast, classic 1940s noir atmosphere. Photographic quality.`,
 
-    'tropical-paradise': `A sun-drenched portrait of ${petName} the ${petType} lounging on a white sand beach, turquoise water stretching to the horizon, a coconut drink nearby. Vibrant tropical paradise, travel-magazine quality.`,
+    'tropical-paradise': `A sun-drenched portrait of ${subject} lounging on a white sand beach, turquoise water stretching to the horizon, a coconut drink nearby. Vibrant tropical paradise, travel-magazine quality.`,
 
-    'horror-movie': `A fun, spooky-cute portrait of ${petName} the ${petType} in a classic horror movie setting — fog, candlelight, vampire cape, and a playful grin. Halloween energy all year. Photographic quality.`,
+    'horror-movie': `A fun, spooky-cute portrait of ${subject} in a classic horror movie setting — fog, candlelight, vampire cape, and a playful grin. Halloween energy all year. Photographic quality.`,
 
-    'dating-profile': `A warm, flattering portrait of ${petName} the ${petType} looking charming and approachable — golden-hour light, natural smile, the kind of photo that gets all the right swipes. Lifestyle photography quality.`,
+    'dating-profile': `A warm, flattering portrait of ${subject} looking charming and approachable — golden-hour light, natural smile, the kind of photo that gets all the right swipes. Lifestyle photography quality.`,
 
-    'true-crime': `A dramatic portrait of ${petName} the ${petType} as a determined detective, standing before a case board covered in evidence photos and red string. Moody interrogation-room lighting. Photographic quality.`,
+    'true-crime': `A dramatic portrait of ${subject} as a determined detective, standing before a case board covered in evidence photos and red string. Moody interrogation-room lighting. Photographic quality.`,
 
-    'reality-tv': `A polished portrait of ${petName} the ${petType} in a reality TV confessional booth, dramatic lighting, looking directly at the camera with main-character energy. Broadcast production quality.`,
+    'reality-tv': `A polished portrait of ${subject} in a reality TV confessional booth, dramatic lighting, looking directly at the camera with main-character energy. Broadcast production quality.`,
 
-    'influencer': `A meticulously styled portrait of ${petName} the ${petType} in a perfectly curated lifestyle setting — aesthetic coffee, golden-hour light, immaculate outfit coordination. Top-tier social media influencer energy. Photographic quality.`,
+    'influencer': `A meticulously styled portrait of ${subject} in a perfectly curated lifestyle setting — aesthetic coffee, golden-hour light, immaculate outfit coordination. Top-tier social media influencer energy. Photographic quality.`,
 
-    'nap-champion': `A blissful portrait of ${petName} the ${petType} in the most supremely comfortable sleeping position imaginable — luxurious blankets, perfect lighting, and an expression of pure, uninterrupted peace. Photographic quality.`,
+    'nap-champion': `A blissful portrait of ${subject} in the most supremely comfortable sleeping position imaginable — luxurious blankets, perfect lighting, and an expression of pure, uninterrupted peace. Photographic quality.`,
 
-    'time-traveler': `A cinematic portrait of ${petName} the ${petType} stepping through a glowing time portal, one foot in the past and one in the future. Historical and futuristic elements collide. Photographic quality.`,
+    'time-traveler': `A cinematic portrait of ${subject} stepping through a glowing time portal, one foot in the past and one in the future. Historical and futuristic elements collide. Photographic quality.`,
 
-    'video-game-hero': `An epic portrait of ${petName} the ${petType} in detailed fantasy armor, standing in a richly atmospheric video-game world — dramatic lighting, heroic pose, and next-gen cinematic quality. Photographic realism.`,
+    'video-game-hero': `An epic portrait of ${subject} in detailed fantasy armor, standing in a richly atmospheric video-game world — dramatic lighting, heroic pose, and next-gen cinematic quality. Photographic realism.`,
 
-    'broadway-star': `A theatrical portrait of ${petName} the ${petType} center stage under a dramatic spotlight, arms outstretched in a showstopping finale pose. Velvet curtains, orchestra pit, standing ovation energy. Photographic quality.`,
+    'broadway-star': `A theatrical portrait of ${subject} center stage under a dramatic spotlight, arms outstretched in a showstopping finale pose. Velvet curtains, orchestra pit, standing ovation energy. Photographic quality.`,
 
-    'garden-party': `An elegant portrait of ${petName} the ${petType} at a beautiful garden party — floral arrangements, fine china, dappled sunlight through a canopy of blooms. English countryside garden elegance. Photographic quality.`,
+    'garden-party': `An elegant portrait of ${subject} at a beautiful garden party — floral arrangements, fine china, dappled sunlight through a canopy of blooms. English countryside garden elegance. Photographic quality.`,
 
-    'snow-day': `A charming winter portrait of ${petName} the ${petType} playing in fresh snowfall — rosy cheeks, scarf flying, snowflakes in the air, and the quiet magic of a perfect snow day. Photographic quality.`,
+    'snow-day': `A charming winter portrait of ${subject} playing in fresh snowfall — rosy cheeks, scarf flying, snowflakes in the air, and the quiet magic of a perfect snow day. Photographic quality.`,
 
-    'national-park': `An epic landscape portrait of ${petName} the ${petType} at the edge of a breathtaking national park vista — dramatic natural light, vast wilderness, and a sense of awe. Ansel Adams meets pet photography. Photographic quality.`,
+    'national-park': `An epic landscape portrait of ${subject} at the edge of a breathtaking national park vista — dramatic natural light, vast wilderness, and a sense of awe. Ansel Adams meets pet photography. Photographic quality.`,
 
-    'tiny-human': `A hilarious, photorealistic portrait of ${petName} the ${petType} doing a completely ordinary human task — sitting at a desk, reading a newspaper, commuting — with total seriousness. Candid lifestyle comedy. Photographic quality.`,
+    'tiny-human': `A hilarious, photorealistic portrait of ${subject} doing a completely ordinary human task — sitting at a desk, reading a newspaper, commuting — with total seriousness. Candid lifestyle comedy. Photographic quality.`,
 
-    'anime-world': `A cinematic portrait of ${petName} the ${petType} on a Tokyo street at golden hour, cherry blossoms falling, neon signs glowing in the background. Makoto Shinkai atmosphere, photographic quality.`,
+    'anime-world': `A cinematic portrait of ${subject} on a Tokyo street at golden hour, cherry blossoms falling, neon signs glowing in the background. Makoto Shinkai atmosphere, photographic quality.`,
 
-    'galactic-emperor': `An epic portrait of ${petName} the ${petType} seated on a massive space throne in an imperial throne room, wearing a crown of stars and imperial robes. Vast galactic vista through towering windows. Photographic quality.`,
+    'galactic-emperor': `An epic portrait of ${subject} seated on a massive space throne in an imperial throne room, wearing a crown of stars and imperial robes. Vast galactic vista through towering windows. Photographic quality.`,
 
-    'cottage-core': `A warm, pastoral portrait of ${petName} the ${petType} in a wildflower meadow beside a rustic cottage, wearing a linen outfit. Golden afternoon light, bees and butterflies, fresh-baked bread visible through the open door. Photographic quality.`,
+    'cottage-core': `A warm, pastoral portrait of ${subject} in a wildflower meadow beside a rustic cottage, wearing a linen outfit. Golden afternoon light, bees and butterflies, fresh-baked bread visible through the open door. Photographic quality.`,
   }
 
   return [
     baseDescription,
     coverScenes[style],
-    'IMPORTANT: The image must be realistic and photographic — NOT an illustration, painting, or cartoon. Think cinematic movie still.',
+    'This is the calendar cover: make it the most striking, poster-worthy image of the set.',
   ].join('\n\n')
 }
