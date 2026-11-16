@@ -186,8 +186,8 @@ export const CALENDAR_STYLES: CalendarStyle[] = [
   },
   {
     id: 'wizarding-world',
-    name: 'Wizarding World',
-    description: 'Magical school of witchcraft and wizardry',
+    name: 'Wizard Academy',
+    description: 'Spells, potions and a castle full of magic',
     accentColor: '#5856D6',
     preview: '/previews/wizarding-world-dog.jpg',
   },

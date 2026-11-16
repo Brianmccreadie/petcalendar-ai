@@ -67,6 +67,7 @@ const FORMAT_RULES = [
   'Format: a single landscape image in 4:3, composed for a wall calendar page.',
   'Keep the pet’s whole head and the key action inside the central 85% of the frame — the outer edge is trimmed at print.',
   'Photorealistic, like a still from a well-lit film: natural fur detail, believable anatomy (four legs, one tail, correct paws), no extra limbs.',
+  'No logos or branding anywhere: no brand names, trademarks, company or agency insignia, mission patches, team crests, sports-league marks, or logos on clothing, vehicles, instruments, equipment or signage. No recognisable copyrighted characters, costumes or emblems — keep every outfit and prop generic and original.',
   'Absolutely no text of any kind in the image: no letters, numbers, captions, signs with readable words, logos, watermarks, borders or frames. Titles and dates are typeset separately.',
 ].join('\n')
 

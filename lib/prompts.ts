@@ -15,16 +15,16 @@ const STYLE_DESCRIPTIONS: Record<StyleId, string> = {
     'A photorealistic sci-fi scene with dramatic cosmic lighting — alien skies, nebulae, futuristic spacecraft interiors, and strange new worlds. Cinematic quality resembling a big-budget space film. Sharp focus, rich color grading, realistic textures.',
 
   'secret-agent':
-    'A sleek, photorealistic cinematic scene with James Bond-style cinematography — dramatic lighting, exotic international locations, high-tech gadgetry, and sophisticated atmosphere. Cool color grading, sharp focus, glamorous production design.',
+    'A sleek, photorealistic cinematic scene with classic spy-thriller cinematography — dramatic lighting, exotic international locations, high-tech gadgetry, and sophisticated atmosphere. Cool color grading, sharp focus, glamorous production design.',
 
   'prehistoric-adventure':
-    'A photorealistic scene reminiscent of a Jurassic Park film — lush prehistoric jungles, towering dinosaurs, volcanic landscapes, and dramatic natural lighting. Cinematic quality with rich greens, warm earth tones, and a sense of epic adventure.',
+    'A photorealistic scene reminiscent of a blockbuster dinosaur-adventure film — lush prehistoric jungles, towering dinosaurs, volcanic landscapes, and dramatic natural lighting. Cinematic quality with rich greens, warm earth tones, and a sense of epic adventure.',
 
   'pirate-life':
-    'A photorealistic cinematic scene with Pirates of the Caribbean vibes — weathered wooden ships, turquoise Caribbean seas, tropical islands, and dramatic storm lighting. Rich, saturated colors with golden-hour warmth and adventurous atmosphere.',
+    'A photorealistic cinematic scene with swashbuckling high-seas adventure vibes — weathered wooden ships, turquoise Caribbean seas, tropical islands, and dramatic storm lighting. Rich, saturated colors with golden-hour warmth and adventurous atmosphere.',
 
   'superhero-origin':
-    'A photorealistic superhero movie scene with dramatic lighting, dynamic composition, and epic scale. Think Marvel/DC film stills — city skylines, dramatic capes, lens flares, and heroic poses. Cinematic color grading and sharp detail.',
+    'A photorealistic superhero movie scene with dramatic lighting, dynamic composition, and epic scale. Think big-budget superhero film stills — city skylines, dramatic capes, lens flares, and heroic poses. Cinematic color grading and sharp detail.',
 
   'royal-portrait':
     'A photorealistic cinematic portrait with historical grandeur — ornate palaces, rich fabrics, golden crowns, and dramatic Rembrandt-style lighting. Resembles a high-end period drama. Sharp detail, rich color, and regal atmosphere.',
@@ -42,7 +42,7 @@ const STYLE_DESCRIPTIONS: Record<StyleId, string> = {
     'A photorealistic, genuinely funny scene set in a classic American high school — lockers, gyms, cafeterias, and classrooms. Bright, warm lighting with a comedic, nostalgic quality. Think a teen comedy film still — sharp focus, vivid colors, hilarious scenarios.',
 
   'professional-headshot':
-    'A stunning, studio-quality photographic portrait with perfect three-point lighting, a clean seamless background, and crisp editorial sharpness. The look evokes a Vanity Fair cover shoot or high-end corporate headshot session — polished, sophisticated, and utterly flattering. Photographic quality only, no illustration or painterly effects.',
+    'A stunning, studio-quality photographic portrait with perfect three-point lighting, a clean seamless background, and crisp editorial sharpness. The look evokes a glossy magazine cover shoot or high-end corporate headshot session — polished, sophisticated, and utterly flattering. Photographic quality only, no illustration or painterly effects.',
 
   'pet-photoshoot':
     'A natural-light lifestyle photography session with authentic, candid energy — the kind of images shot by a talented pet photographer on location. Warm tones, shallow depth of field, and magazine-quality composition. Think editorial pet photography for a glossy lifestyle publication.',
@@ -51,25 +51,25 @@ const STYLE_DESCRIPTIONS: Record<StyleId, string> = {
     'A warm, intimate documentary-style photograph that feels like it was taken in the moment — golden hour window light, soft shadows, and rich earthy tones. The aesthetic is hygge-inspired home photography: authentic, unhurried, and beautifully ordinary. Realistic and photographic, never staged or illustrated.',
 
   'cooking-show':
-    'A vibrant, professional food-television photography style — bright studio lighting, commercial kitchen or set design, and dynamic composition that captures action and personality. Think a cross between a Food Network set and a glossy cookbook shoot. Realistic and photographic, with rich, saturated food-friendly colors.',
+    'A vibrant, professional food-television photography style — bright studio lighting, commercial kitchen or set design, and dynamic composition that captures action and personality. Think a cross between a TV cooking-show set and a glossy cookbook shoot. Realistic and photographic, with rich, saturated food-friendly colors.',
 
   'rock-star':
     'A dramatic, high-contrast concert and music photography style — stage lighting, atmospheric smoke, lens flares, and the raw energy of a sold-out arena. Each month captures a different genre and era through authentic photographic treatment: moody grunge, glitzy glam rock, neon-lit pop. Realistic photographic quality throughout.',
 
   'fashion-week':
-    'A high-fashion editorial and runway photography style — stark white or dramatic backstage settings, stark directional lighting, and the clean aesthetic of Vogue or Harper\'s Bazaar. Each scene captures the precise moment a look is at its most striking. Photographic quality, no illustration, no text.',
+    'A high-fashion editorial and runway photography style — stark white or dramatic backstage settings, stark directional lighting, and the clean aesthetic of a top fashion magazine. Each scene captures the precise moment a look is at its most striking. Photographic quality, no illustration, no text.',
 
   'office-life':
-    'A photorealistic corporate office photography style with the visual sensibility of a stock photo agency that actually has a sense of humor — fluorescent-lit conference rooms, open-plan desks, and breakroom settings shot with sharp detail and deadpan realism. Think The Office meets a professional business headshot photographer.',
+    'A photorealistic corporate office photography style with the visual sensibility of a stock photo agency that actually has a sense of humor — fluorescent-lit conference rooms, open-plan desks, and breakroom settings shot with sharp detail and deadpan realism. Think a mockumentary workplace comedy meets a professional business headshot photographer.',
 
   'sports-mvp':
-    'A high-octane sports photography style — fast shutter speeds that freeze peak action, dramatic stadium lighting, shallow depth of field, and the visceral energy of Getty Sports imagery. Every month is a different sport captured at the defining moment of victory. Realistic and photographic throughout.',
+    'A high-octane sports photography style — fast shutter speeds that freeze peak action, dramatic stadium lighting, shallow depth of field, and the visceral energy of professional sports photography. Every month is a different sport captured at the defining moment of victory. Realistic and photographic throughout.',
 
   'around-the-world':
-    'A travel editorial photography style — the kind of images that appear in National Geographic Traveler or Conde Nast Traveler. Iconic landmarks photographed in beautiful ambient light with authentic sense of place. Wide establishing shots, warm golden-hour tones, and genuine wonder. Realistic photographic quality only.',
+    'A travel editorial photography style — the kind of images that appear in premium travel magazines. Iconic landmarks photographed in beautiful ambient light with authentic sense of place. Wide establishing shots, warm golden-hour tones, and genuine wonder. Realistic photographic quality only.',
 
   'fairy-tale':
-    'A cinematic photographic style that recalls the visual language of a prestige fairy-tale film — enchanted forests lit with dappled magic light, misty castle courtyards, and sun-drenched meadows that feel genuinely otherworldly. Think Pan\'s Labyrinth meets A Midsummer Night\'s Dream with photorealistic detail and rich, saturated color grading.',
+    'A cinematic photographic style that recalls the visual language of a prestige fairy-tale film — enchanted forests lit with dappled magic light, misty castle courtyards, and sun-drenched meadows that feel genuinely otherworldly. Think a dark storybook fantasy meets a midsummer woodland dream, with photorealistic detail and rich, saturated color grading.',
 
   'zombie-apocalypse':
     'Cinematic, gritty photorealistic style inspired by prestige post-apocalyptic television. Dramatic low-key lighting, desaturated color grading with warm amber and cool shadow tones, shallow depth of field with environmental storytelling in the background. No text, no illustrations — every image looks like a production still from an award-winning survival drama.',
@@ -138,19 +138,19 @@ const STYLE_DESCRIPTIONS: Record<StyleId, string> = {
     'A photorealistic lifestyle photograph with the warmth and elegance of a luxury editorial shoot — soft natural light, lush botanical backdrops, fine china, and impeccably arranged seasonal florals. Crisp detail, warm golden tones, and the airy pastoral beauty of an English countryside garden in peak bloom.',
 
   'snow-day':
-    'A photorealistic winter scene with the cozy, cinematic quality of a holiday greeting card or a Hallmark film still — pristine snow, warm lamplight, woolen textures, and the quiet magic of a world blanketed in white. Rich cool tones offset by warm amber glows, sharp focus, and dreamlike wintry atmosphere.',
+    'A photorealistic winter scene with the cozy, cinematic quality of a holiday greeting card or a cozy made-for-TV holiday movie still — pristine snow, warm lamplight, woolen textures, and the quiet magic of a world blanketed in white. Rich cool tones offset by warm amber glows, sharp focus, and dreamlike wintry atmosphere.',
 
   'national-park':
-    'A photorealistic landscape photograph in the tradition of iconic National Geographic and Ansel Adams-inspired imagery — vast epic vistas, dramatic natural light, and the overwhelming scale of America\'s most breathtaking wilderness. Sharp focus, rich natural color grading, and a cinematic sense of awe and adventure.',
+    'A photorealistic landscape photograph in the tradition of classic large-format wilderness photography — vast epic vistas, dramatic natural light, and the overwhelming scale of America\'s most breathtaking wilderness. Sharp focus, rich natural color grading, and a cinematic sense of awe and adventure.',
 
   'tiny-human':
     'A photorealistic, genuinely funny scene showing a pet performing completely ordinary human tasks with total seriousness — commuting, shopping, filing paperwork. Shot in the style of a candid lifestyle photograph or a clever commercial ad — bright, natural light, realistic settings, and deadpan comedy.',
 
   'anime-world':
-    'A photorealistic scene set in richly detailed environments inspired by beloved anime aesthetics — neon-lit Tokyo streets, serene mountain shrines, cozy ramen bars, and cherry blossom parks. Cinematic quality with warm, evocative lighting, fine architectural detail, and a lush atmospheric depth reminiscent of a Makoto Shinkai film.',
+    'A photorealistic scene set in richly detailed environments inspired by beloved anime aesthetics — neon-lit Tokyo streets, serene mountain shrines, cozy ramen bars, and cherry blossom parks. Cinematic quality with warm, evocative lighting, fine architectural detail, and a lush atmospheric depth reminiscent of a modern anime feature film.',
 
   'galactic-emperor':
-    'A photorealistic, cinematic sci-fi scene combining the epic grandeur of Star Wars with the absurd comedy of a pet in an enormous space throne room — dramatic backlighting, vast galactic vistas through towering windows, ornate imperial architecture, and the unmistakable weight of absolute intergalactic power. Rich dark tones, lens flares, and theatrical scale.',
+    'A photorealistic, cinematic sci-fi scene combining the epic grandeur of a classic space opera with the absurd comedy of a pet in an enormous space throne room — dramatic backlighting, vast galactic vistas through towering windows, ornate imperial architecture, and the unmistakable weight of absolute intergalactic power. Rich dark tones, lens flares, and theatrical scale.',
 
   'cottage-core':
     'A photorealistic scene with the warm, romantic quality of a lifestyle editorial set in the English countryside — golden afternoon light, wildflower meadows, rough-hewn wooden surfaces, fresh-baked goods, and overflowing herb gardens. Soft natural tones, rich botanical textures, and the deeply cozy atmosphere of a beloved storybook cottage.',
@@ -167,7 +167,7 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
     1: 'wearing a fur-lined cloak and tiny crown, standing atop a snowy mountain pass with a frozen kingdom stretching below. Northern lights dance across the sky. A magical ice sword glows at their side. New Year quest beginning.',
     2: 'in an enchanted rose garden within a hidden elven valley, wearing a delicate flower crown. Heart-shaped gemstones glow among the blooming vines. Valentine magic fills the misty air.',
     3: 'crossing a stone bridge over a rushing spring river, carrying a tiny enchanted staff. Cherry blossoms drift through the air as a mystical tower rises in the distance through morning mist.',
-    4: 'sheltering in a mossy hobbit-hole doorway during a magical rain, wearing a green adventurer cloak. Glowing mushrooms and spring wildflowers surround the round door. Rain creates rainbow prisms.',
+    4: 'sheltering in a mossy round-doored hillside burrow during a magical rain, wearing a green adventurer cloak. Glowing mushrooms and spring wildflowers surround the round door. Rain creates rainbow prisms.',
     5: 'riding through a sunlit meadow of wildflowers on the back of a friendly miniature dragon. Butterflies and golden pollen fill the warm spring air. A castle gleams on a distant hilltop.',
     6: 'wading through a shallow crystal-clear river in an ancient forest, wearing a leather adventurer vest. Sunbeams pierce the emerald canopy. Fireflies drift in the warm summer air.',
     7: 'standing victorious atop a castle battlement during a fireworks celebration, wearing gleaming miniature armor. Banners flutter as colorful explosions light the night sky over the kingdom.',
@@ -181,7 +181,7 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
   'wizarding-world': {
     1: 'in the great hall of a magical school during a New Year feast, wearing wizard robes and a tiny pointed hat. Floating candles illuminate the enchanted ceiling showing a snowy night sky.',
     2: 'in a potions classroom brewing a love potion, pink steam rising in heart shapes. Glass jars of colorful ingredients line the shelves. Valentine cards flutter magically through the air.',
-    3: 'on the school grounds during spring, chasing a golden winged ball through blooming cherry trees. Wearing quidditch robes, zooming on a tiny broomstick just above the flower-covered pitch.',
+    3: 'on the school grounds during spring, chasing a golden winged ball through blooming cherry trees. Wearing broomstick-sport robes, zooming on a tiny broomstick just above the flower-covered pitch.',
     4: 'in the magical greenhouse during a spring rain, surrounded by fantastical plants that move and glow. Raindrops create musical sounds on the glass roof. Enchanted watering cans float nearby.',
     5: 'studying in the school library with towering bookshelves, enchanted books floating and opening by themselves. Warm sunlight streams through stained glass windows onto a cozy reading nook.',
     6: 'at the edge of the great lake on a warm summer day, dangling paws in the water while a friendly giant squid waves a tentacle. The castle shimmers in the summer haze behind.',
@@ -212,7 +212,7 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
     1: 'at a glamorous New Year gala in a penthouse overlooking a glittering city skyline, wearing a tiny tuxedo/cocktail dress. Champagne, confetti, and sophisticated party-goers surround the suave pet spy.',
     2: 'at a candlelit dinner in a Venetian palazzo, wearing an elegant outfit with a hidden earpiece. Gondolas visible through arched windows. A mysterious valentine card contains a coded message.',
     3: 'parachuting over a blooming spring countryside, wearing a sleek tactical suit. Cherry blossoms swirl around the deployed chute. A hidden base is visible below in the rolling green hills.',
-    4: 'racing through rain-slicked London streets in a tiny Aston Martin-style car, wearing driving gloves and a determined expression. Big Ben and the Thames glow through the rainy night.',
+    4: 'racing through rain-slicked London streets in a tiny vintage British sports car, wearing driving gloves and a determined expression. Big Ben and the Thames glow through the rainy night.',
     5: 'at an outdoor cafe on the French Riviera in May sunshine, wearing designer sunglasses and a linen suit. Yachts in the harbor, flowers on the table, secretly photographing a target across the street.',
     6: 'scuba diving near a villain\'s underwater lair, wearing a sleek black wetsuit with gadgets. Tropical fish swim past as a secret submarine base glows in the deep blue water.',
     7: 'on a rooftop in Washington D.C. during a Fourth of July fireworks display, wearing a tactical outfit with night vision goggles pushed up. The Monument and Capitol glow below.',
@@ -451,11 +451,11 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
   'sports-mvp': {
     1: 'on a snowy ski slope mid-jump, wearing ski gear and goggles. Mountains behind, fresh powder spraying. Winter sports champion.',
     2: 'figure skating on an ice rink, wearing a sparkly skating outfit. Heart-shaped spotlight on the ice. Valentine exhibition performance.',
-    3: 'on a basketball court mid-dunk, wearing a jersey. March Madness energy, packed arena, dramatic freeze-frame action.',
+    3: 'on a basketball court mid-dunk, wearing a jersey. College tournament energy, packed arena, dramatic freeze-frame action.',
     4: 'swinging a baseball bat at a spring training game, cherry blossoms beyond the outfield fence. Opening day energy.',
     5: 'crossing a marathon finish line with arms raised, wearing a race bib. Cheering crowd, spring sunshine, victory moment.',
     6: 'surfing a massive wave, wearing board shorts and a rash guard. Summer ocean, blue sky, athletic grace frozen in time.',
-    7: 'swimming in an Olympic-style pool, mid-stroke, water splashing dramatically. Lane markers, starting blocks, summer competition.',
+    7: 'swimming in a championship competition pool, mid-stroke, water splashing dramatically. Lane markers, starting blocks, summer competition.',
     8: 'at a tennis match mid-serve on a pristine court, wearing whites. Summer tournament, packed stands, athletic intensity.',
     9: 'on a football field catching a perfect spiral, wearing a full uniform. Friday night lights, autumn atmosphere, crowd roaring.',
     10: 'in a boxing ring under dramatic lights, wearing gloves and a robe. Halloween fight night energy, fog machine, dramatic entrance.',
@@ -471,7 +471,7 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
     5: 'at the tulip fields of the Netherlands, endless rows of colorful flowers stretching to the horizon. Windmills in the background.',
     6: 'on a Greek island with white-washed buildings and blue domes, turquoise sea below. Wearing a linen outfit in summer sunshine.',
     7: 'at the Great Wall of China at golden hour, the wall snaking over green mountain ridges. Wearing a sun hat, taking in the view.',
-    8: 'on an African safari, a jeep in the background and a giraffe nearby. Golden savanna, acacia trees, warm summer light.',
+    8: 'on an African safari, an open safari truck in the background and a giraffe nearby. Golden savanna, acacia trees, warm summer light.',
     9: 'at the Colosseum in Rome in warm autumn light, wearing a stylish jacket. Ancient arches and golden Italian sunshine.',
     10: 'in the streets of Mexico City during Día de los Muertos, surrounded by marigolds and painted skulls. Festive and colorful.',
     11: 'at a Moroccan souk, surrounded by spices, lanterns, and colorful textiles. Warm golden light filters through the market canopy.',
@@ -550,7 +550,7 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
     9: 'at a science fair presenting a volcano that actually erupts with real tiny lava. Other contestants backing away. Judges impressed and terrified.',
     10: 'in a spooky lab on Halloween, reanimating a friendly pumpkin monster. Tesla coils spark, green fog rolls, and the creation lives!',
     11: 'in the lab cooking Thanksgiving dinner using only science equipment — beakers of gravy, Bunsen-burner turkey. Surprisingly it works.',
-    12: 'building an elaborate Rube Goldberg machine to light the Christmas tree. Dominoes, pulleys, and a final spark that illuminates the lab.',
+    12: 'building an elaborate chain-reaction contraption to light the Christmas tree. Dominoes, pulleys, and a final spark that illuminates the lab.',
   },
 
   'movie-poster': {
@@ -561,10 +561,10 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
     5: 'in a feel-good summer indie film pose, sitting on a porch in golden light. Warm, hopeful, coming-of-age vibes.',
     6: 'in a summer blockbuster pose — emerging from ocean water, sunglasses on, explosion behind. Action-hero beach movie.',
     7: 'in a patriotic war drama pose, saluting in front of a flag with fireworks. Heroic, dramatic, July release energy.',
-    8: 'in a summer adventure-film pose, hanging from a cliff edge with a sunset behind. Indiana Jones meets summer blockbuster.',
+    8: 'in a summer adventure-film pose, hanging from a cliff edge with a sunset behind. Classic treasure-hunter adventure meets summer blockbuster.',
     9: 'in a coming-of-age film pose, walking down a tree-lined autumn road with a backpack. Nostalgic, warm September drama.',
     10: 'in a horror-movie poster pose, looking scared in a haunted hallway. Jack-o-lantern light, Halloween slasher film energy.',
-    11: 'in a family drama poster pose, at a dinner table with warm Thanksgiving light. Emotional, Oscar-season prestige film.',
+    11: 'in a family drama poster pose, at a dinner table with warm Thanksgiving light. Emotional, awards-season prestige film.',
     12: 'in a holiday film poster pose, standing in falling snow with arms wide. Twinkling lights, feel-good December release.',
   },
 
@@ -604,13 +604,13 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
     3: 'in Van Gogh\'s "Almond Blossoms," spring branches blooming around in 3D. Soft gallery spotlight.',
     4: 'walking into Hokusai\'s "The Great Wave," spray and foam becoming real. Dramatic gallery installation.',
     5: 'in Renoir\'s "Dance at Le Moulin de la Galette," a sunlit spring garden party. Impressionist dappled light.',
-    6: 'lounging inside Hockney\'s "A Bigger Splash," poolside summer sunshine. Bold colors, clean gallery presentation.',
+    6: 'lounging inside a sunlit modernist swimming-pool painting, poolside summer sunshine. Bold colors, clean gallery presentation.',
     7: 'in Leutze\'s "Washington Crossing the Delaware," standing heroically in the boat. Patriotic July tribute.',
     8: 'inside a Rousseau jungle painting, tropical plants towering overhead. Summer heat, naive art come to life.',
     9: 'in Seurat\'s "A Sunday Afternoon on the Island of La Grande Jatte," pointillist autumn light. Parasols and park.',
     10: 'in Munch\'s "The Scream," but with a comedic Halloween expression. Swirling orange and red sky.',
-    11: 'in Rockwell\'s "Freedom from Want," at the Thanksgiving table. Classic American art, warm tones.',
-    12: 'in a Rockwell holiday scene, decorating a Christmas tree in a cozy American living room. Nostalgic and warm.',
+    11: 'inside a mid-century American illustration of a family Thanksgiving dinner. Classic Americana, warm tones.',
+    12: 'in a mid-century American magazine-illustration holiday scene, decorating a Christmas tree in a cozy American living room. Nostalgic and warm.',
   },
 
   'holiday-card': {
@@ -726,7 +726,7 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
     5: 'in a talent show audition, center stage with a spotlight. Judges at their table, golden buzzer within reach.',
     6: 'on a survival show on a tropical island, building a shelter from bamboo. Summer sun, tribe flag, competition gear.',
     7: 'hosting a Fourth of July backyard competition episode, patriotic decorations. Obstacle course, cheering neighbors.',
-    8: 'on a travel show exploring a new city in summer, GoPro and a map. Street food, hidden gems, adventure content.',
+    8: 'on a travel show exploring a new city in summer, action camera and a map. Street food, hidden gems, adventure content.',
     9: 'in a fashion competition, sewing frantically at a workstation. Fabric, mannequins, and a ticking clock.',
     10: 'on a paranormal investigation show on Halloween, night vision camera. Creepy location, electromagnetic detector.',
     11: 'in a Thanksgiving baking competition, decorating a pie with elaborate lattice. Flour-dusted and focused.',
@@ -768,8 +768,8 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
     2: 'at a 1920s Valentine\'s speakeasy, wearing a flapper/dapper outfit. Jazz band, art deco decor, secret password.',
     3: 'in feudal Japan during cherry blossom season, wearing a kimono. Temple gardens, koi ponds, peaceful spring.',
     4: 'in Victorian London in the rain, wearing a top hat and coat. Gas lamps, cobblestones, horse-drawn carriages.',
-    5: 'in a 1960s flower-power scene, wearing tie-dye and peace signs. VW van, Woodstock energy, spring love.',
-    6: 'in Ancient Greece at the original Olympics, wearing a toga. Marble columns, olive wreath, Mediterranean summer.',
+    5: 'in a 1960s flower-power scene, wearing tie-dye and peace signs. painted camper van, 1969 music-festival energy, spring love.',
+    6: 'in Ancient Greece at the first ancient athletic games, wearing a toga. Marble columns, olive wreath, Mediterranean summer.',
     7: 'at the first Fourth of July in 1776, wearing colonial attire. Founding-era celebration, historical fireworks.',
     8: 'in the 1980s, wearing neon and leg warmers. Arcade, boombox, roller rink. Synthwave summer.',
     9: 'in Medieval times as a student at a monastery school, wearing a monk\'s robe. Autumn courtyard, illuminated manuscripts.',
@@ -963,9 +963,9 @@ export function getCoverPrompt(
 
     'space-explorer': `An epic portrait of ${subject} in a sleek astronaut suit, standing on an alien world with a stunning nebula filling the sky. A spacecraft landed behind them. Dramatic cosmic lighting, photographic realism, cinematic scale.`,
 
-    'secret-agent': `A suave, cinematic portrait of ${subject} in a tailored tuxedo/evening gown, leaning against a luxury sports car in front of a glamorous casino at night. City lights, neon reflections, and sophisticated atmosphere. Photographic quality, Bond-style cinematography.`,
+    'secret-agent': `A suave, cinematic portrait of ${subject} in a tailored tuxedo/evening gown, leaning against a luxury sports car in front of a glamorous casino at night. City lights, neon reflections, and sophisticated atmosphere. Photographic quality, spy-thriller cinematography.`,
 
-    'prehistoric-adventure': `An adventurous portrait of ${subject} wearing an explorer hat and vest, standing beside a friendly baby T-Rex in a lush prehistoric jungle. Volcanic mountains in the distance, pterodactyls soaring overhead. Cinematic, realistic, Jurassic Park vibes.`,
+    'prehistoric-adventure': `An adventurous portrait of ${subject} wearing an explorer hat and vest, standing beside a friendly baby T-Rex in a lush prehistoric jungle. Volcanic mountains in the distance, pterodactyls soaring overhead. Cinematic, realistic, dinosaur-adventure vibes.`,
 
     'pirate-life': `A swashbuckling portrait of ${subject} as a pirate captain at the wheel of a magnificent ship, wearing a tricorn hat and captain's coat. Caribbean sunset, billowing sails, and adventure on the horizon. Cinematic, realistic, photographic quality.`,
 
@@ -981,23 +981,23 @@ export function getCoverPrompt(
 
     'high-school-yearbook': `A hilarious, classic yearbook photo of ${subject} — perfectly posed against the classic blue-grey gradient backdrop, wearing a slightly too-big blazer and a goofy-charming smile. Laser background option visible. Photographic quality, genuinely funny, peak yearbook energy.`,
 
-    'professional-headshot': `A stunning, magazine-cover-quality studio portrait of ${subject} with perfect three-point lighting, a clean seamless backdrop, and editorial sharpness. Polished, sophisticated, and utterly flattering. Photographic quality, Vanity Fair energy.`,
+    'professional-headshot': `A stunning, magazine-cover-quality studio portrait of ${subject} with perfect three-point lighting, a clean seamless backdrop, and editorial sharpness. Polished, sophisticated, and utterly flattering. Photographic quality, magazine-cover energy.`,
 
     'pet-photoshoot': `A gorgeous lifestyle portrait of ${subject} in a sun-drenched natural setting — warm golden-hour light, shallow depth of field, and candid charm. The kind of image a talented pet photographer captures on the perfect afternoon. Photographic quality.`,
 
     'cozy-vibes': `A warm, intimate portrait of ${subject} curled up in the coziest spot imaginable — golden window light, soft blankets, and the quiet beauty of a perfect ordinary moment. Hygge perfection. Photographic quality.`,
 
-    'cooking-show': `A vibrant portrait of ${subject} as a celebrity chef in a gleaming kitchen, wearing a chef hat and apron, surrounded by beautiful ingredients and copper pots. Food Network energy. Photographic quality.`,
+    'cooking-show': `A vibrant portrait of ${subject} as a celebrity chef in a gleaming kitchen, wearing a chef hat and apron, surrounded by beautiful ingredients and copper pots. TV-chef energy. Photographic quality.`,
 
     'rock-star': `A dramatic concert portrait of ${subject} on a massive stage, guitar in paw, spotlight blazing, smoke machine haze, and a sold-out arena crowd. Rock legend energy. Photographic quality.`,
 
-    'fashion-week': `A high-fashion editorial portrait of ${subject} on a stark white runway in a stunning haute couture outfit, flashbulbs popping, Vogue energy. Photographic quality, no text.`,
+    'fashion-week': `A high-fashion editorial portrait of ${subject} on a stark white runway in a stunning haute couture outfit, flashbulbs popping, high-fashion magazine energy. Photographic quality, no text.`,
 
-    'office-life': `A deadpan corporate portrait of ${subject} seated at a desk with a nameplate and a coffee mug, wearing a business suit. Motivational poster on the wall. The Office energy. Photographic quality.`,
+    'office-life': `A deadpan corporate portrait of ${subject} seated at a desk with a nameplate and a coffee mug, wearing a business suit. Motivational poster on the wall. workplace-comedy energy. Photographic quality.`,
 
     'sports-mvp': `A triumphant sports portrait of ${subject} holding a championship trophy overhead in a packed stadium, confetti raining down, wearing a team jersey. Peak athletic glory. Photographic quality.`,
 
-    'around-the-world': `A stunning travel portrait of ${subject} at a breathtaking world landmark, wearing a sun hat and a look of wonder. Golden-hour light, epic scenery, National Geographic energy. Photographic quality.`,
+    'around-the-world': `A stunning travel portrait of ${subject} at a breathtaking world landmark, wearing a sun hat and a look of wonder. Golden-hour light, epic scenery, travel-magazine energy. Photographic quality.`,
 
     'fairy-tale': `A magical portrait of ${subject} in an enchanted forest clearing, wearing a flowing cape, surrounded by dappled magical light, woodland creatures, and an ancient castle in the background. Cinematic fairy-tale beauty. Photographic quality.`,
 
@@ -1047,11 +1047,11 @@ export function getCoverPrompt(
 
     'snow-day': `A charming winter portrait of ${subject} playing in fresh snowfall — rosy cheeks, scarf flying, snowflakes in the air, and the quiet magic of a perfect snow day. Photographic quality.`,
 
-    'national-park': `An epic landscape portrait of ${subject} at the edge of a breathtaking national park vista — dramatic natural light, vast wilderness, and a sense of awe. Ansel Adams meets pet photography. Photographic quality.`,
+    'national-park': `An epic landscape portrait of ${subject} at the edge of a breathtaking national park vista — dramatic natural light, vast wilderness, and a sense of awe. Classic wilderness photography meets pet portraiture. Photographic quality.`,
 
     'tiny-human': `A hilarious, photorealistic portrait of ${subject} doing a completely ordinary human task — sitting at a desk, reading a newspaper, commuting — with total seriousness. Candid lifestyle comedy. Photographic quality.`,
 
-    'anime-world': `A cinematic portrait of ${subject} on a Tokyo street at golden hour, cherry blossoms falling, neon signs glowing in the background. Makoto Shinkai atmosphere, photographic quality.`,
+    'anime-world': `A cinematic portrait of ${subject} on a Tokyo street at golden hour, cherry blossoms falling, neon signs glowing in the background. modern anime-film atmosphere, photographic quality.`,
 
     'galactic-emperor': `An epic portrait of ${subject} seated on a massive space throne in an imperial throne room, wearing a crown of stars and imperial robes. Vast galactic vista through towering windows. Photographic quality.`,
 
