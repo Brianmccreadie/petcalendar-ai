@@ -9,7 +9,7 @@ const slides = [
   { src: '/previews/space-explorer-dog.jpg', styleId: 'space-explorer', month: 1, alt: 'A labrador in an astronaut suit' },
   { src: '/previews/royal-portrait-cat.jpg', styleId: 'royal-portrait', month: 2, alt: 'A grey cat in royal dress on a throne' },
   { src: '/previews/hero-1.jpg', styleId: 'wizarding-world', month: 3, alt: 'A golden retriever dressed as a wizard' },
-  { src: '/previews/cozy-vibes-dog.jpg', styleId: 'cozy-vibes', month: 12, alt: 'A samoyed by a fireplace with string lights' },
+  { src: '/previews/cozy-vibes-dog.jpg', styleId: 'cozy-vibes', month: 12, alt: 'A samoyed curled up on knitted blankets' },
 ] as const
 
 /** The hero's hanging calendar. Cycles themes; the dates below are live SVG. */
