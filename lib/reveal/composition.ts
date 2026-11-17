@@ -1,0 +1,217 @@
+import { MONTH_NAMES } from '../calendar/layout'
+
+// ---------------------------------------------------------------------------
+// HyperFrames composition for the calendar "reveal" film.
+//
+// HyperFrames (https://github.com/heygen-com/hyperframes) renders plain HTML +
+// a paused GSAP timeline to video. This module returns that HTML, so the same
+// film can be:
+//   • played in the browser with <hyperframes-player>  (app/reveal/[projectId])
+//   • rendered to MP4 with `npx hyperframes render`     (scripts/render-reveal.mjs)
+//
+// All text here is real type, animated — the artwork itself never has text.
+// ---------------------------------------------------------------------------
+
+export interface RevealInput {
+  title: string // "Luna’s 2027"
+  subtitle: string // "The Space Explorer edition"
+  year: number
+  accent: string
+  coverUrl: string
+  monthUrls: string[] // 12, January first
+  /** Where fraunces.woff2 / dm-sans.woff2 live (URL or relative path, no trailing slash). */
+  fontBase: string
+  /** URL of gsap.min.js (self-hosted at /vendor/gsap.min.js). */
+  gsapUrl: string
+  siteLabel?: string
+}
+
+export const REVEAL = {
+  width: 1920,
+  height: 1080,
+  fps: 30,
+  titleSeconds: 2.8,
+  coverSeconds: 2.4,
+  monthSeconds: 1.25,
+  outroSeconds: 3.6,
+}
+
+export function revealDuration(): number {
+  return REVEAL.titleSeconds + REVEAL.coverSeconds + 12 * REVEAL.monthSeconds + REVEAL.outroSeconds
+}
+
+function esc(value: string): string {
+  return value.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
+}
+
+function safeColor(value: string, fallback: string): string {
+  return /^#[0-9a-f]{3,8}$/i.test(value) ? value : fallback
+}
+
+export function buildRevealComposition(input: RevealInput): string {
+  const { titleSeconds: T, coverSeconds: C, monthSeconds: M, outroSeconds: O } = REVEAL
+  const total = revealDuration()
+  const monthsStart = T + C
+  const outroStart = monthsStart + 12 * M
+  const accent = safeColor(input.accent, '#e2512a')
+  const months = input.monthUrls.slice(0, 12)
+  const titleWords = input.title.split(/\s+/).filter(Boolean)
+
+  const monthScenes = months
+    .map((url, i) => {
+      const start = monthsStart + i * M
+      return `
+      <section class="clip scene month" id="m${i}" data-start="${start.toFixed(3)}" data-duration="${M}" data-track-index="2">
+        <div class="month-art" id="m${i}-art"><img src="${esc(url)}" alt="" /></div>
+        <div class="month-copy">
+          <div class="month-num" id="m${i}-num">${String(i + 1).padStart(2, '0')}</div>
+          <div class="mask"><div class="month-name" id="m${i}-name">${MONTH_NAMES[i]}</div></div>
+          <div class="month-year" id="m${i}-year">${input.year}</div>
+        </div>
+      </section>`
+    })
+    .join('\n')
+
+  const thumbs = months.map((url, i) => `<img class="thumb" id="t${i}" src="${esc(url)}" alt="" />`).join('')
+
+  const monthTweens = months
+    .map((_, i) => {
+      const at = (monthsStart + i * M).toFixed(3)
+      const tilt = i % 2 === 0 ? -1.5 : 1.5
+      return `
+      tl.fromTo("#m${i}-art", { opacity: 0, y: 70, rotation: ${tilt * 2}, scale: 0.94 }, { opacity: 1, y: 0, rotation: ${tilt}, scale: 1, duration: 0.42, ease: "power3.out" }, ${at});
+      tl.fromTo("#m${i}-name", { y: 150 }, { y: 0, duration: 0.42, ease: "power4.out" }, ${at} + 0.08);
+      tl.fromTo("#m${i}-num", { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" }, ${at} + 0.05);
+      tl.fromTo("#m${i}-year", { opacity: 0 }, { opacity: 1, duration: 0.3 }, ${at} + 0.22);
+      tl.to("#m${i}-art", { scale: 1.025, duration: ${(M - 0.42).toFixed(2)}, ease: "none" }, ${at} + 0.42);`
+    })
+    .join('\n')
+
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=${REVEAL.width}, height=${REVEAL.height}" />
+    <title>${esc(input.title)} — reveal</title>
+    <script src="${esc(input.gsapUrl)}"></script>
+    <style>
+      @font-face { font-family: "Fraunces"; src: url("${esc(input.fontBase)}/fraunces.woff2") format("woff2"); font-weight: 100 900; font-display: block; }
+      @font-face { font-family: "DM Sans"; src: url("${esc(input.fontBase)}/dm-sans.woff2") format("woff2"); font-weight: 100 1000; font-display: block; }
+      :root { --paper: #fbf6ec; --ink: #1d1a16; --muted: #857c70; --accent: ${accent}; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: ${REVEAL.width}px; height: ${REVEAL.height}px; overflow: hidden; background: var(--paper); }
+      #root { position: relative; width: 100%; height: 100%; color: var(--ink); font-family: "DM Sans", sans-serif; }
+      .scene { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
+      .display { font-family: "Fraunces", Georgia, serif; font-weight: 900; font-variation-settings: "SOFT" 100, "WONK" 1; letter-spacing: -0.02em; line-height: 1; }
+      .mask { overflow: hidden; padding-bottom: 0.14em; }
+      .eyebrow { font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; font-size: 26px; }
+      img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+      /* Title card */
+      #title-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; text-align: center; padding: 0 140px;
+        background-image: radial-gradient(rgba(29, 26, 22, 0.05) 2px, transparent 2px); background-size: 34px 34px; }
+      #title-card .eyebrow { color: var(--accent); }
+      #title-words { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 0.24em; font-size: ${titleWords.join(' ').length > 22 ? 150 : 210}px; }
+      #title-rule { width: 520px; height: 8px; border-radius: 8px; background: var(--accent); transform-origin: center; }
+      #title-sub { font-size: 40px; font-weight: 500; color: #4a443c; }
+
+      /* Cover */
+      #cover-art { position: absolute; inset: 0; }
+      #cover-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15, 13, 10, 0.82), rgba(15, 13, 10, 0.3) 38%, transparent 62%); }
+      #cover-copy { position: absolute; left: 110px; right: 110px; bottom: 100px; color: #fff; }
+      #cover-copy .display { font-size: ${input.title.length > 22 ? 130 : 180}px; }
+      #cover-copy .eyebrow { margin-top: 22px; opacity: 0.9; }
+
+      /* Months */
+      .month { background: var(--paper); }
+      .month-art { position: absolute; left: 110px; top: 105px; width: 1125px; height: 870px; border-radius: 6px; overflow: hidden;
+        box-shadow: 0 50px 90px -40px rgba(29, 26, 22, 0.55), 0 4px 10px rgba(29, 26, 22, 0.12); }
+      .month-copy { position: absolute; left: 1320px; right: 80px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+      .month-num { font-weight: 700; font-size: 34px; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 18px; }
+      .month-name { font-family: "Fraunces", Georgia, serif; font-weight: 900; font-variation-settings: "SOFT" 100, "WONK" 1; letter-spacing: -0.02em; line-height: 1.05; font-size: 104px; }
+      .month-year { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-style: normal; font-size: 54px; color: var(--muted); margin-top: 10px; }
+
+      /* Outro */
+      #outro { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 44px; background: var(--ink); color: var(--paper); }
+      #outro-grid { display: grid; grid-template-columns: repeat(6, 250px); gap: 18px; }
+      .thumb { width: 250px; height: 193px; border-radius: 4px; }
+      #outro-title { font-size: 120px; }
+      #outro-site { font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; font-size: 26px; color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="reveal" data-start="0" data-duration="${total.toFixed(3)}" data-width="${REVEAL.width}" data-height="${REVEAL.height}" data-fps="${REVEAL.fps}">
+      <section class="clip scene" id="title-card" data-start="0" data-duration="${T}" data-track-index="0">
+        <div class="eyebrow" id="title-eyebrow">Now showing</div>
+        <div class="display" id="title-words">
+          ${titleWords.map((w, i) => `<span class="mask"><span class="word" id="w${i}" style="display:inline-block">${esc(w)}</span></span>`).join('')}
+        </div>
+        <div id="title-rule"></div>
+        <div id="title-sub">${esc(input.subtitle)}</div>
+      </section>
+
+      <section class="clip scene" id="cover" data-start="${T}" data-duration="${C}" data-track-index="1">
+        <div id="cover-art"><img src="${esc(input.coverUrl)}" alt="" /></div>
+        <div id="cover-scrim"></div>
+        <div id="cover-copy">
+          <div class="mask"><div class="display" id="cover-title">${esc(input.title)}</div></div>
+          <div class="eyebrow" id="cover-sub">${esc(input.subtitle)}</div>
+        </div>
+      </section>
+${monthScenes}
+
+      <section class="clip scene" id="outro" data-start="${outroStart.toFixed(3)}" data-duration="${O}" data-track-index="3">
+        <div id="outro-grid">${thumbs}</div>
+        <div class="display" id="outro-title">${esc(input.title)}</div>
+        <div id="outro-site">${esc(input.siteLabel ?? 'petcalendar.ai')}</div>
+      </section>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Scene visibility is driven by the timeline itself, so the film plays the
+      // same in <hyperframes-player>, the HyperFrames renderer, or a bare browser.
+      const scenes = ${JSON.stringify([
+        ['#title-card', 0, T],
+        ['#cover', T, T + C],
+        ...months.map((_, i) => [`#m${i}`, monthsStart + i * M, monthsStart + (i + 1) * M]),
+        ['#outro', outroStart, total],
+      ])};
+      scenes.forEach(([id, start, end], i) => {
+        tl.set(id, { visibility: "visible" }, start);
+        if (i < scenes.length - 1) tl.set(id, { visibility: "hidden" }, end);
+      });
+
+      // Title card
+      tl.fromTo("#title-eyebrow", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 0.1);
+      ${titleWords.map((_, i) => `tl.fromTo("#w${i}", { y: 260 }, { y: 0, duration: 0.7, ease: "power4.out" }, ${(0.25 + i * 0.12).toFixed(2)});`).join('\n      ')}
+      tl.fromTo("#title-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power3.out" }, 0.9);
+      tl.fromTo("#title-sub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 1.1);
+      tl.to("#title-card", { opacity: 0, duration: 0.3 }, ${(T - 0.3).toFixed(2)});
+
+      // Cover
+      tl.fromTo("#cover-art", { scale: 1.12 }, { scale: 1, duration: ${C}, ease: "power1.out" }, ${T});
+      tl.fromTo("#cover", { opacity: 0 }, { opacity: 1, duration: 0.35 }, ${T});
+      tl.fromTo("#cover-title", { y: 220 }, { y: 0, duration: 0.7, ease: "power4.out" }, ${T} + 0.3);
+      tl.fromTo("#cover-sub", { opacity: 0, y: 16 }, { opacity: 0.9, y: 0, duration: 0.45 }, ${T} + 0.75);
+
+      // Months
+${monthTweens}
+
+      // Outro
+      const O = ${outroStart.toFixed(3)};
+      ${months.map((_, i) => `tl.fromTo("#t${i}", { opacity: 0, y: 40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.6)" }, O + ${(0.1 + i * 0.07).toFixed(2)});`).join('\n      ')}
+      tl.fromTo("#outro-title", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, O + 1.0);
+      tl.fromTo("#outro-site", { opacity: 0 }, { opacity: 1, duration: 0.5 }, O + 1.5);
+
+      // Hold the final frame to the full duration.
+      tl.to("#outro-site", { opacity: 1, duration: 0.05 }, ${(total - 0.05).toFixed(3)});
+
+      window.__timelines["reveal"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
+`
+}

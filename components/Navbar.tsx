@@ -1,101 +1,116 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { Close, Paw } from './icons'
+
+const links = [
+  { href: '/#how-it-works', label: 'How it works' },
+  { href: '/#themes', label: 'Themes' },
+  { href: '/#pricing', label: 'Pricing' },
+  { href: '/#faq', label: 'FAQ' },
+]
+
+export function Logo({ className = '' }: { className?: string }) {
+  return (
+    <span className={`inline-flex items-center gap-2 ${className}`}>
+      <span className="grid h-9 w-9 place-items-center rounded-full bg-persimmon text-white">
+        <Paw size={20} />
+      </span>
+      <span className="font-display text-[1.3rem] font-extrabold tracking-tight">
+        PetCalendar<span className="text-persimmon">.ai</span>
+      </span>
+    </span>
+  )
+}
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false)
   const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
-  const isInCreateFlow = pathname.startsWith('/create')
-  const currentStep = pathname === '/create' ? 1
-    : pathname === '/create/style' ? 2
-    : pathname === '/create/preview' ? 3
-    : 0
+  // The builder and checkout get a quiet header so nothing competes with the task.
+  const focused = pathname.startsWith('/create') || pathname.startsWith('/checkout')
 
-  const stepLabels = ['', 'Upload Photos', 'Pick a Theme', 'Preview & Edit']
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <header className="sticky top-0 z-50 bg-transparent" style={{ paddingTop: 20, paddingBottom: 20 }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-3xl transition-transform duration-300 group-hover:scale-110">
-              🐾
-            </span>
-            <span className="text-xl font-bold text-[var(--ebony)] tracking-tight">
-              PetCalendar
-              <span className="text-[var(--purple)]">.ai</span>
-            </span>
+    <header
+      className={`sticky top-0 z-50 transition-[background-color,box-shadow] duration-200 ${
+        scrolled || open ? 'bg-paper/90 shadow-[0_1px_0_var(--color-rule)] backdrop-blur-md' : 'bg-transparent'
+      }`}
+    >
+      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between px-5 sm:px-8">
+        <Link href="/" aria-label="PetCalendar.ai home" onClick={() => setOpen(false)}>
+          <Logo />
+        </Link>
+
+        {focused ? (
+          <Link href="/dashboard" className="btn btn-quiet btn-sm">
+            My calendars
           </Link>
-
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/#how-it-works" className="text-[var(--wenge)] font-semibold text-sm hover:text-[var(--ebony)] transition-colors capitalize">
-              How It Works
-            </Link>
-            <Link href="/#themes" className="text-[var(--wenge)] font-semibold text-sm hover:text-[var(--ebony)] transition-colors capitalize">
-              Themes
-            </Link>
-            <Link href="/#pricing" className="text-[var(--wenge)] font-semibold text-sm hover:text-[var(--ebony)] transition-colors capitalize">
-              Pricing
-            </Link>
-            <Link href="/#faq" className="text-[var(--wenge)] font-semibold text-sm hover:text-[var(--ebony)] transition-colors capitalize">
-              FAQ
-            </Link>
-          </div>
-
-          {/* CTA / Step indicator */}
-          <div className="hidden md:flex items-center gap-4">
-            {isInCreateFlow ? (
-              <span className="inline-flex items-center gap-2 rounded-full bg-[var(--purple)]/10 px-5 py-2.5 text-sm font-bold text-[var(--purple)]">
-                Step {currentStep}: {stepLabels[currentStep]} ✨
-              </span>
-            ) : (
-              <Link href="/create" className="btn-primary">
-                <span className="btn-text">Start Creating</span>
-                <span className="btn-arrow">→</span>
-                <span className="btn-circle"></span>
+        ) : (
+          <>
+            <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
+              {links.map((link) => (
+                <Link key={link.href} href={link.href} className="text-[0.95rem] font-semibold text-ink-soft transition-colors hover:text-ink">
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="hidden items-center gap-2 md:flex">
+              <Link href="/dashboard" className="btn btn-quiet btn-sm">
+                My calendars
               </Link>
-            )}
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden relative w-10 h-10 flex items-center justify-center text-[var(--ebony)]"
-            aria-label="Toggle menu"
-          >
-            <div className="flex flex-col gap-1.5">
-              <span className={`block h-0.5 w-6 bg-current transition-all duration-300 ${mobileOpen ? 'translate-y-2 rotate-45' : ''}`} />
-              <span className={`block h-0.5 w-6 bg-current transition-all duration-300 ${mobileOpen ? 'opacity-0' : ''}`} />
-              <span className={`block h-0.5 w-6 bg-current transition-all duration-300 ${mobileOpen ? '-translate-y-2 -rotate-45' : ''}`} />
+              <Link href="/create" className="btn btn-dark btn-sm">
+                Make my calendar
+              </Link>
             </div>
-          </button>
-        </div>
+            <button
+              type="button"
+              className="grid h-11 w-11 place-items-center rounded-full md:hidden"
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              aria-label={open ? 'Close menu' : 'Open menu'}
+              onClick={() => setOpen((v) => !v)}
+            >
+              {open ? (
+                <Close />
+              ) : (
+                <span className="flex flex-col gap-[5px]" aria-hidden="true">
+                  <span className="block h-0.5 w-6 bg-ink" />
+                  <span className="block h-0.5 w-6 bg-ink" />
+                  <span className="block h-0.5 w-4 bg-ink" />
+                </span>
+              )}
+            </button>
+          </>
+        )}
       </div>
 
-      {/* Mobile menu */}
-      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${mobileOpen ? 'max-h-72 opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="bg-white/95 backdrop-blur-md mx-4 mt-2 rounded-2xl p-4 space-y-3 shadow-lg border border-[var(--purple)]/10">
-          <Link href="/#how-it-works" onClick={() => setMobileOpen(false)} className="block px-4 py-2 text-[var(--wenge)] font-semibold hover:text-[var(--purple)] transition-colors">How It Works</Link>
-          <Link href="/#themes" onClick={() => setMobileOpen(false)} className="block px-4 py-2 text-[var(--wenge)] font-semibold hover:text-[var(--purple)] transition-colors">Themes</Link>
-          <Link href="/#pricing" onClick={() => setMobileOpen(false)} className="block px-4 py-2 text-[var(--wenge)] font-semibold hover:text-[var(--purple)] transition-colors">Pricing</Link>
-          <Link href="/#faq" onClick={() => setMobileOpen(false)} className="block px-4 py-2 text-[var(--wenge)] font-semibold hover:text-[var(--purple)] transition-colors">FAQ</Link>
-          {isInCreateFlow ? (
-            <span className="block text-center rounded-full px-3 py-2.5 text-sm font-bold text-[var(--purple)] bg-[var(--purple)]/10">
-              Step {currentStep}: {stepLabels[currentStep]} ✨
-            </span>
-          ) : (
-            <Link href="/create" onClick={() => setMobileOpen(false)} className="block text-center rounded-full bg-[var(--purple)] px-5 py-3 text-base font-bold text-white hover:bg-[var(--purple-dark)] transition-colors">
-              🎨 Start Creating
+      {!focused && open && (
+        <nav id="mobile-menu" className="border-t border-rule px-5 pb-6 pt-2 md:hidden" aria-label="Mobile">
+          {[...links, { href: '/dashboard', label: 'My calendars' }].map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className="block border-b border-rule py-4 font-display text-2xl font-bold"
+            >
+              {link.label}
             </Link>
-          )}
-        </div>
-      </div>
+          ))}
+          <Link href="/create" onClick={() => setOpen(false)} className="btn btn-primary btn-lg mt-6 w-full">
+            Make my calendar
+          </Link>
+        </nav>
+      )}
     </header>
   )
 }

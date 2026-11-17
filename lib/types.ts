@@ -82,7 +82,7 @@ export type MultiPetMode = 'alternate' | 'together'
 
 export interface Project {
   id: string
-  user_id: string
+  user_id: string | null
   name: string
   pet_name: string | null
   pet_type: PetType
@@ -143,9 +143,14 @@ export interface ShippingAddress {
 }
 
 export interface Order {
+  email?: string | null
+  quantity?: number
+  interior_pdf_url?: string | null
+  cover_pdf_url?: string | null
+  fulfilment_error?: string | null
   id: string
   project_id: string
-  user_id: string
+  user_id: string | null
   stripe_checkout_session_id: string | null
   stripe_payment_intent_id: string | null
   lulu_order_id: string | null
@@ -181,8 +186,8 @@ export const CALENDAR_STYLES: CalendarStyle[] = [
   },
   {
     id: 'wizarding-world',
-    name: 'Wizarding World',
-    description: 'Magical school of witchcraft and wizardry',
+    name: 'Wizard Academy',
+    description: 'Spells, potions and a castle full of magic',
     accentColor: '#5856D6',
     preview: '/previews/wizarding-world-dog.jpg',
   },

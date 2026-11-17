@@ -1,4 +1,5 @@
-import type { CalendarPage, Order, ShippingAddress } from './types'
+import { createHmac, timingSafeEqual } from 'crypto'
+import type { Order, ShippingAddress } from './types'
 
 // ---------------------------------------------------------------------------
 // Lulu xPress Print API Client
@@ -17,8 +18,15 @@ const LULU_AUTH_BASE = process.env.LULU_API_ENVIRONMENT === 'sandbox'
 // Generate your exact pod_package_id at https://developers.lulu.com/price-calculator
 const CALENDAR_POD_PACKAGE_ID = process.env.LULU_CALENDAR_POD_PACKAGE_ID || '1100X0850FCPREWI100CW444GXX'
 
-// Calendar interior is 28 pages (cover page + 12 months x 2 pages each + back page)
-// Lulu Wire-O calendars: cover is a separate file, interior is a multi-page PDF
+// Print files come from lib/print/pdf.ts: a 2-page cover PDF and a 24-page
+// interior PDF, each page 11.25 x 8.75 in (trim + 0.125 in bleed).
+// IMPORTANT: place one sandbox order (LULU_API_ENVIRONMENT=sandbox) and check
+// Lulu's file validation result before taking live orders — the pod_package_id
+// and page count must match the calendar product configured on your account.
+
+export function isLuluConfigured(): boolean {
+  return Boolean(process.env.LULU_CLIENT_KEY && process.env.LULU_CLIENT_SECRET)
+}
 
 // ---------------------------------------------------------------------------
 // Auth — OAuth 2.0 Client Credentials
@@ -32,8 +40,9 @@ async function getAccessToken(): Promise<string> {
     return cachedToken.token
   }
 
-  const clientKey = process.env.LULU_CLIENT_KEY!
-  const clientSecret = process.env.LULU_CLIENT_SECRET!
+  const clientKey = process.env.LULU_CLIENT_KEY
+  const clientSecret = process.env.LULU_CLIENT_SECRET
+  if (!clientKey || !clientSecret) throw new Error('Lulu is not configured (LULU_CLIENT_KEY / LULU_CLIENT_SECRET)')
   const credentials = Buffer.from(`${clientKey}:${clientSecret}`).toString('base64')
 
   const response = await fetch(
@@ -168,7 +177,7 @@ export async function createLuluOrder(
       {
         title: `PetCalendar - ${order.id.slice(0, 8)}`,
         pod_package_id: CALENDAR_POD_PACKAGE_ID,
-        quantity: 1,
+        quantity: Math.max(1, order.quantity ?? 1),
         interior: interiorPdfUrl,
         cover: coverPdfUrl,
       },
@@ -264,22 +273,19 @@ export async function subscribeWebhook(callbackUrl: string): Promise<void> {
 }
 
 /**
- * Verify a Lulu webhook HMAC signature.
+ * Verify a Lulu webhook HMAC (SHA-256 of the raw body, keyed with the API secret).
+ * Accepts hex or base64 digests and never throws on malformed input.
  */
-export function verifyWebhookSignature(
-  payload: string,
-  signature: string,
-): boolean {
-  const crypto = require('crypto')
-  const secret = process.env.LULU_CLIENT_SECRET!
-  const expectedSignature = crypto
-    .createHmac('sha256', secret)
-    .update(payload)
-    .digest('hex')
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expectedSignature)
-  )
+export function verifyWebhookSignature(payload: string, signature: string): boolean {
+  const secret = process.env.LULU_CLIENT_SECRET
+  if (!secret || !signature) return false
+  const digest = createHmac('sha256', secret).update(payload).digest()
+  const given = signature.trim()
+  for (const encoding of ['hex', 'base64'] as const) {
+    const candidate = Buffer.from(given, encoding)
+    if (candidate.length === digest.length && timingSafeEqual(candidate, digest)) return true
+  }
+  return false
 }
 
 // ---------------------------------------------------------------------------

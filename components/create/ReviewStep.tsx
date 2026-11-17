@@ -1,0 +1,450 @@
+'use client'
+
+/* eslint-disable @next/next/no-img-element */
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import CoverTitle from '@/components/calendar/CoverTitle'
+import WallCalendar from '@/components/calendar/WallCalendar'
+import { ArrowLeft, ArrowRight, Check, Pencil, Play, Refresh } from '@/components/icons'
+import { MONTH_NAMES, coverSubtitle, coverTitle, joinPetNames, possessive } from '@/lib/calendar/layout'
+import { calendarSlots, useCalendar, type CalendarSlot } from '@/lib/client/use-calendar'
+import { LIMITS, PRICING, formatPrice } from '@/lib/config'
+import { styleById } from '@/lib/style-meta'
+import MissingProject from './MissingProject'
+import StepHeader from './StepHeader'
+
+interface Version {
+  id: string
+  image_url: string
+  version_number: number
+  is_selected: boolean
+  custom_instructions: string | null
+}
+
+const slotLabel = (slot: CalendarSlot) => (slot.page_type === 'cover' ? 'Cover' : MONTH_NAMES[(slot.month_number ?? 1) - 1])
+
+function StatusArt({ slot, working }: { slot: CalendarSlot; working: boolean }) {
+  const generating = working || slot.status === 'generating'
+  if (slot.status === 'failed' && !working) {
+    return (
+      <div className="grid h-full w-full place-items-center bg-paper-deep p-6 text-center">
+        <div>
+          <p className="font-display text-xl font-bold">This page didn’t finish.</p>
+          <p className="mt-1 text-sm text-ink-soft">Use “Try again” — it won’t use up a revision.</p>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div className="skeleton grid h-full w-full place-items-center">
+      <p className="rounded-full bg-paper/85 px-4 py-2 text-sm font-bold" aria-live="polite">
+        {generating ? `Painting ${slotLabel(slot)}…` : 'In the queue'}
+      </p>
+    </div>
+  )
+}
+
+export default function ReviewStep() {
+  const projectId = useSearchParams().get('p')
+  const { data, state, reload } = useCalendar(projectId)
+  const [index, setIndex] = useState(0)
+  const [working, setWorking] = useState<Set<string>>(new Set())
+  const [notice, setNotice] = useState<string | null>(null)
+  const [editing, setEditing] = useState(false)
+  const [instructions, setInstructions] = useState('')
+  const [newPhoto, setNewPhoto] = useState<File | null>(null)
+  const [versionState, setVersionState] = useState<{ pageId: string; list: Version[] } | null>(null)
+  const [retrying, setRetrying] = useState(false)
+
+  const slots = useMemo(() => calendarSlots(data), [data])
+  const slot = slots[index]
+  const petNames = data?.pets.map((p) => p.name) ?? []
+  const names = joinPetNames(petNames.length ? petNames : [data?.project.pet_name ?? ''])
+  const style = styleById(data?.project.style)
+  const year = data?.project.start_year ?? new Date().getFullYear()
+
+  const done = slots.filter((s) => s.status === 'complete' && s.image_url).length
+  const failed = slots.filter((s) => s.status === 'failed').length
+  const running = data?.project.status === 'generating' || slots.some((s) => s.status === 'pending' || s.status === 'generating')
+  const allDone = done === slots.length
+  const ordered = data?.project.status === 'ordered'
+  const isWorking = Boolean(slot.id && working.has(slot.id))
+
+  const go = useCallback((delta: number) => {
+    setIndex((i) => (i + delta + 13) % 13)
+    setEditing(false)
+    setNotice(null)
+  }, [])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement)?.closest('input, textarea')) return
+      if (e.key === 'ArrowRight') go(1)
+      if (e.key === 'ArrowLeft') go(-1)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [go])
+
+  // Version history for the selected page.
+  useEffect(() => {
+    const pageId = slot.id
+    if (!pageId || slot.version_count < 2) return
+    let cancelled = false
+    fetch(`/api/pages/${pageId}/versions`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list: Version[]) => !cancelled && Array.isArray(list) && setVersionState({ pageId, list }))
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [slot.id, slot.version_count, slot.image_url])
+  const versions = versionState && versionState.pageId === slot.id && slot.version_count >= 2 ? versionState.list : []
+
+  async function regenerate(withChanges: boolean) {
+    if (!slot.id) return
+    const id = slot.id
+    setNotice(null)
+    setWorking((w) => new Set(w).add(id))
+    setEditing(false)
+    try {
+      let res: Response
+      if (withChanges && newPhoto) {
+        const form = new FormData()
+        form.append('calendar_page_id', id)
+        form.append('custom_instructions', instructions.trim())
+        form.append('new_reference', newPhoto)
+        res = await fetch('/api/regenerate', { method: 'POST', body: form })
+      } else {
+        res = await fetch('/api/regenerate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ calendar_page_id: id, custom_instructions: withChanges ? instructions.trim() : '' }),
+        })
+      }
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        setNotice(body.error || 'That didn’t work. Please try again.')
+      } else {
+        setInstructions('')
+        setNewPhoto(null)
+      }
+    } catch {
+      setNotice('Connection lost. Please try again.')
+    } finally {
+      await reload()
+      setWorking((w) => {
+        const next = new Set(w)
+        next.delete(id)
+        return next
+      })
+    }
+  }
+
+  async function chooseVersion(version: Version) {
+    if (!slot.id || version.is_selected) return
+    setVersionState((vs) => (vs ? { ...vs, list: vs.list.map((v) => ({ ...v, is_selected: v.id === version.id })) } : vs))
+    await fetch(`/api/pages/${slot.id}/versions`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ version_id: version.id }),
+    })
+    await reload()
+  }
+
+  async function retryFailed() {
+    setRetrying(true)
+    await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ project_id: projectId, retryFailed: true }),
+    }).catch(() => {})
+    await reload()
+    setRetrying(false)
+  }
+
+  if (state === 'missing') return <MissingProject />
+  if (state === 'loading' || !data) {
+    return (
+      <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+        <StepHeader current={3} />
+        <div className="skeleton mx-auto aspect-[11/8.5] max-w-xl rounded-[4px]" />
+        {state === 'error' && <p className="mt-6 text-center font-semibold text-persimmon-deep">We’re having trouble loading your calendar. Retrying…</p>}
+      </div>
+    )
+  }
+
+  const canRevise = !ordered && slot.id && slot.status === 'complete' && !isWorking
+  const canRetry = !ordered && slot.id && slot.status === 'failed' && !isWorking
+  const outOfRevisions = slot.status === 'complete' && slot.revisions_left <= 0
+
+  return (
+    <div className="mx-auto max-w-6xl px-5 pb-40 pt-8 sm:px-8 sm:pt-12">
+      <StepHeader current={3} />
+
+      <header className="text-center">
+        <h1 className="display text-4xl sm:text-5xl">
+          {allDone ? `${possessive(names)} calendar is ready.` : running ? `Making ${possessive(names)} calendar…` : `${possessive(names)} calendar`}
+        </h1>
+        <p className="lede mx-auto mt-4 max-w-xl">
+          {allDone
+            ? 'Flip through every page. Anything not quite right? Try it again or ask for a change.'
+            : running
+              ? 'Pages appear as they finish — usually a few minutes for all thirteen. You can leave this tab open or come back later.'
+              : 'Some pages still need attention before you can order.'}
+        </p>
+      </header>
+
+      {!allDone && (
+        <div className="mx-auto mt-8 max-w-xl" role="status">
+          <div className="flex justify-between text-sm font-bold">
+            <span>{done} of 13 pages ready</span>
+            {failed > 0 && <span className="text-persimmon-deep">{failed} didn’t finish</span>}
+          </div>
+          <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-rule">
+            <div className="h-full rounded-full bg-pine transition-[width] duration-700" style={{ width: `${(done / 13) * 100}%` }} />
+          </div>
+          {failed > 0 && !running && !ordered && (
+            <button type="button" className="btn btn-dark btn-sm mt-4" onClick={retryFailed} disabled={retrying}>
+              <Refresh size={16} /> {retrying ? 'Restarting…' : `Retry ${failed} unfinished page${failed > 1 ? 's' : ''}`}
+            </button>
+          )}
+        </div>
+      )}
+
+      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
+        {/* Viewer */}
+        <section aria-label={`${slotLabel(slot)} preview`} className="lg:sticky lg:top-24">
+          <div className="mx-auto max-w-[34rem]">
+            {slot.page_type === 'cover' ? (
+              <div className="relative aspect-[11/8.5] overflow-hidden rounded-[3px] shadow-lift">
+                {slot.status === 'complete' && slot.image_url && !isWorking ? (
+                  <>
+                    <img src={slot.image_url} alt={`Cover artwork for ${names}`} className="h-full w-full object-cover" />
+                    <CoverTitle title={coverTitle(petNames, year)} subtitle={coverSubtitle(style?.name ?? '')} />
+                  </>
+                ) : (
+                  <StatusArt slot={slot} working={isWorking} />
+                )}
+              </div>
+            ) : (
+              <WallCalendar
+                className="mt-5"
+                month={slot.month_number ?? 1}
+                year={year}
+                accent={style?.accentColor}
+                caption={`${names} · ${style?.name ?? ''}`}
+                imageUrl={slot.image_url}
+                imageAlt={`${slotLabel(slot)} artwork for ${names}`}
+                art={slot.status === 'complete' && slot.image_url && !isWorking ? undefined : <StatusArt slot={slot} working={isWorking} />}
+              />
+            )}
+
+            <div className="mt-6 flex items-center justify-between">
+              <button type="button" className="btn btn-ghost btn-sm" onClick={() => go(-1)} aria-label="Previous page">
+                <ArrowLeft size={18} />
+              </button>
+              <p className="font-display text-xl font-bold" aria-live="polite">
+                {slotLabel(slot)} {slot.page_type === 'month' && <span className="text-muted">{year}</span>}
+              </p>
+              <button type="button" className="btn btn-ghost btn-sm" onClick={() => go(1)} aria-label="Next page">
+                <ArrowRight size={18} />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Pages + actions */}
+        <aside className="space-y-6">
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-muted">All pages</h2>
+            <ol className="mt-3 grid grid-cols-6 gap-2 lg:grid-cols-4">
+              {slots.map((s, i) => {
+                const busy = Boolean(s.id && working.has(s.id)) || s.status === 'generating'
+                return (
+                  <li key={i} className={i === 0 ? 'col-span-full' : ''}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIndex(i)
+                        setEditing(false)
+                        setNotice(null)
+                      }}
+                      aria-label={`${slotLabel(s)} — ${busy ? 'in progress' : s.status}`}
+                      aria-current={i === index}
+                      className={`relative block overflow-hidden rounded-[4px] bg-paper-deep transition-shadow ${
+                        i === 0 ? 'aspect-[11/8.5] w-1/3 lg:w-1/2' : 'aspect-[11/8.5] w-full'
+                      } ${
+                        i === index ? 'shadow-[0_0_0_2px_var(--color-paper),0_0_0_4px_var(--color-ink)]' : 'hover:opacity-85'
+                      }`}
+                    >
+                      {s.image_url && s.status === 'complete' && !busy ? (
+                        <img src={s.image_url} alt="" className="h-full w-full object-cover" loading="lazy" />
+                      ) : s.status === 'failed' && !busy ? (
+                        <span className="grid h-full w-full place-items-center bg-persimmon/15 text-lg font-bold text-persimmon-deep">!</span>
+                      ) : (
+                        <span className={`block h-full w-full ${busy ? 'skeleton' : ''}`} />
+                      )}
+                      <span className="absolute inset-x-0 bottom-0 bg-ink/70 py-0.5 text-center text-[0.6rem] font-bold uppercase tracking-wide text-paper">
+                        {s.page_type === 'cover' ? 'Cover' : slotLabel(s).slice(0, 3)}
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
+
+          {!ordered && (
+            <div className="card p-5">
+              <h2 className="font-display text-xl font-bold">{slotLabel(slot)}</h2>
+
+              {slot.status === 'complete' && (
+                <p className="mt-1 text-sm text-ink-soft">
+                  {outOfRevisions
+                    ? `All ${LIMITS.maxRevisionsPerPage} revisions used for this page.`
+                    : `${slot.revisions_left} free revision${slot.revisions_left === 1 ? '' : 's'} left for this page.`}
+                </p>
+              )}
+
+              {versions.length > 1 && (
+                <div className="mt-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-muted">Versions — tap to choose</p>
+                  <div className="mt-2 flex gap-2">
+                    {versions.map((v) => (
+                      <button
+                        key={v.id}
+                        type="button"
+                        onClick={() => chooseVersion(v)}
+                        aria-pressed={v.is_selected}
+                        aria-label={`Version ${v.version_number}${v.is_selected ? ' (selected)' : ''}`}
+                        className={`relative aspect-[11/8.5] w-16 overflow-hidden rounded-[3px] ${
+                          v.is_selected ? 'shadow-[0_0_0_2px_var(--color-card),0_0_0_4px_var(--color-pine)]' : 'opacity-70 hover:opacity-100'
+                        }`}
+                      >
+                        <img src={v.image_url} alt="" className="h-full w-full object-cover" />
+                        {v.is_selected && (
+                          <span className="absolute right-0.5 top-0.5 grid h-4 w-4 place-items-center rounded-full bg-pine text-white">
+                            <Check size={10} strokeWidth={4} />
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {editing ? (
+                <form
+                  className="mt-4 space-y-3"
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    if (instructions.trim() || newPhoto) regenerate(true)
+                  }}
+                >
+                  <label className="label" htmlFor="changes">
+                    What should change?
+                  </label>
+                  <textarea
+                    id="changes"
+                    className="field resize-none"
+                    rows={3}
+                    maxLength={LIMITS.maxInstructionLength}
+                    value={instructions}
+                    onChange={(e) => setInstructions(e.target.value)}
+                    placeholder="e.g. Brighter background, remove the hat, make the ears floppier"
+                    autoFocus
+                  />
+                  <label className="block cursor-pointer rounded-xl border-[1.5px] border-dashed border-ink/30 px-3 py-2.5 text-sm font-semibold text-ink-soft hover:border-ink">
+                    {newPhoto ? `Using new photo: ${newPhoto.name}` : 'Doesn’t look like them? Add a clearer photo (optional)'}
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="sr-only"
+                      onChange={(e) => setNewPhoto(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                  <div className="flex gap-2">
+                    <button type="button" className="btn btn-ghost btn-sm flex-1" onClick={() => setEditing(false)}>
+                      Cancel
+                    </button>
+                    <button type="submit" className="btn btn-primary btn-sm flex-1" disabled={!instructions.trim() && !newPhoto}>
+                      Revise page
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-1">
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => regenerate(false)}
+                    disabled={!(canRetry || (canRevise && !outOfRevisions))}
+                  >
+                    <Refresh size={16} /> Try again
+                  </button>
+                  <button type="button" className="btn btn-dark btn-sm" onClick={() => setEditing(true)} disabled={!canRevise || outOfRevisions}>
+                    <Pencil size={16} /> Request a change
+                  </button>
+                </div>
+              )}
+
+              {isWorking && <p className="mt-3 text-sm font-semibold text-ink-soft">Working on it — about a minute.</p>}
+              {notice && (
+                <p role="alert" className="mt-3 text-sm font-semibold text-persimmon-deep">
+                  {notice}
+                </p>
+              )}
+            </div>
+          )}
+
+          {allDone && (
+            <Link href={`/reveal/${projectId}`} className="card flex items-center gap-4 p-4 transition-colors hover:border-ink">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-marigold">
+                <Play size={18} />
+              </span>
+              <span>
+                <span className="block font-bold">Watch the reveal</span>
+                <span className="block text-sm text-ink-soft">A short flip-through video of the whole year.</span>
+              </span>
+            </Link>
+          )}
+        </aside>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-paper/95 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
+          {ordered ? (
+            <>
+              <p className="text-sm font-semibold text-ink-soft">This calendar has been ordered.</p>
+              <Link href="/dashboard" className="btn btn-dark">
+                My calendars
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href={`/create/style?p=${projectId}`} className="btn btn-quiet btn-sm">
+                <ArrowLeft size={16} /> <span className="hidden sm:inline">Change theme</span>
+              </Link>
+              <div className="flex items-center gap-4">
+                <p className="hidden text-sm font-semibold text-ink-soft sm:block">
+                  {allDone ? 'Free shipping · printed in 3–5 days' : 'Ordering unlocks when all 13 pages are ready'}
+                </p>
+                {allDone ? (
+                  <Link href={`/checkout?p=${projectId}`} className="btn btn-primary">
+                    Order — {formatPrice(PRICING.firstCopyCents)} <ArrowRight />
+                  </Link>
+                ) : (
+                  <button type="button" className="btn btn-primary" disabled>
+                    Order — {formatPrice(PRICING.firstCopyCents)}
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
