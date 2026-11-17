@@ -17,7 +17,7 @@ export default async function RevealPage(props: PageProps<'/reveal/[projectId]'>
       <Link href={`/create/preview?p=${projectId}`} className="btn btn-quiet btn-sm -ml-3">
         <ArrowLeft size={16} /> Back to review
       </Link>
-      <h1 className="display mt-4 text-4xl sm:text-5xl">The reveal.</h1>
+      <h1 className="display mt-4 text-5xl sm:text-6xl">The reveal.</h1>
       <p className="lede mt-3 max-w-2xl">A short flip-through of the whole year — every title and month name is real type, animated over your artwork.</p>
 
       <div className="mt-8 overflow-hidden rounded-[6px] bg-ink shadow-lift">

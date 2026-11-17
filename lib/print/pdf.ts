@@ -78,10 +78,10 @@ async function loadFonts(doc: PDFDocument): Promise<Fonts> {
   const dir = path.join(process.cwd(), 'lib', 'print', 'fonts')
   const load = async (file: string) => doc.embedFont(await readFile(path.join(dir, file)), { subset: true })
   const [display, displaySemi, sans, sansBold] = await Promise.all([
-    load('fraunces-900.woff'),
-    load('fraunces-600.woff'),
-    load('dm-sans-400.woff'),
-    load('dm-sans-700.woff'),
+    load('instrument-serif-400.woff'),
+    load('instrument-serif-400.woff'),
+    load('geist-400.ttf'),
+    load('geist-600.ttf'),
   ])
   return { display, displaySemi, sans, sansBold }
 }
@@ -199,7 +199,7 @@ function drawGridPage(page: PDFPage, fonts: Fonts, month: number, input: PrintIn
       x: X(rect.x + L.dayInset),
       y: Y(rect.y + L.dayInset + L.daySize * 0.78),
       size: L.daySize * PT,
-      font: fonts.displaySemi,
+      font: fonts.sans,
       color: weekend ? accent : ink,
     })
     if (cell.holiday) {
@@ -225,11 +225,11 @@ function drawCoverTitle(page: PDFPage, fonts: Fonts, input: PrintInput) {
   page.drawText(safeText(fonts.sansBold, coverSubtitle(input.styleName).toUpperCase()), {
     x: X(C.left),
     y: Y(C.subtitleBaseline),
-    size: C.subtitleSize * PT * 0.72,
+    size: C.subtitleSize * PT * 0.8,
     font: fonts.sansBold,
     color: white,
     opacity: 0.85,
-    characterSpacing: 1.2,
+    characterSpacing: 2,
   } as Parameters<PDFPage['drawText']>[1])
 }
 
@@ -239,7 +239,7 @@ async function drawBackCover(doc: PDFDocument, page: PDFPage, fonts: Fonts, inpu
   page.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: PAGE_H, color: hex(PAPER) })
 
   const heading = safeText(fonts.display, `Twelve months of ${joinPetNames(input.petNames)}`)
-  const headingSize = fitSize(fonts.display, heading, 30, 10 * PT)
+  const headingSize = fitSize(fonts.display, heading, 40, 10 * PT)
   page.drawText(heading, { x: X(0.5), y: Y(0.95), size: headingSize, font: fonts.display, color: ink })
 
   // 4 × 3 index of the months

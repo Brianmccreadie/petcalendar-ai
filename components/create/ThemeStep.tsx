@@ -71,7 +71,7 @@ export default function ThemeStep() {
       <StepHeader current={2} />
 
       <header className="text-center">
-        <h1 className="display text-4xl sm:text-5xl">Pick {possessive(who)} theme.</h1>
+        <h1 className="display text-5xl sm:text-6xl">Pick {possessive(who)} theme.</h1>
         <p className="lede mx-auto mt-4 max-w-xl">One theme, twelve different scenes — one for each month, plus a cover.</p>
       </header>
 
@@ -109,7 +109,7 @@ export default function ThemeStep() {
                 >
                   <span
                     className={`relative block overflow-hidden rounded-[6px] bg-rule transition-shadow ${
-                      active ? 'shadow-[0_0_0_3px_var(--color-paper),0_0_0_6px_var(--color-persimmon)]' : ''
+                      active ? 'shadow-[0_0_0_3px_var(--color-paper),0_0_0_6px_var(--color-gold)]' : ''
                     }`}
                   >
                     <Image
@@ -121,12 +121,12 @@ export default function ThemeStep() {
                       className="aspect-[3/2] w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
                     />
                     {active && (
-                      <span className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-persimmon text-white">
+                      <span className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-ink text-ivory">
                         <Check size={18} strokeWidth={3} />
                       </span>
                     )}
                   </span>
-                  <span className="mt-2.5 block font-display text-lg font-bold leading-tight">{style.name}</span>
+                  <span className="mt-2.5 block font-display text-xl leading-tight">{style.name}</span>
                   <span className="mt-0.5 block text-sm text-ink-soft">{style.description}</span>
                 </button>
               </li>
@@ -155,7 +155,7 @@ export default function ThemeStep() {
           </div>
           <div className="flex items-center justify-between gap-4">
             <p className="text-sm font-semibold text-ink-soft" aria-live="polite">
-              {error ? <span className="text-persimmon-deep">{error}</span> : selectedStyle ? selectedStyle.name : 'Choose a theme to continue'}
+              {error ? <span className="text-signal">{error}</span> : selectedStyle ? selectedStyle.name : 'Choose a theme to continue'}
             </p>
             <button type="button" className="btn btn-primary" onClick={handleGenerate} disabled={!selected || submitting}>
               {submitting ? 'Starting…' : 'Create my calendar'} {!submitting && <ArrowRight />}

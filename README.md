@@ -115,6 +115,7 @@ Rendering needs headless Chrome + FFmpeg, so it runs on a workstation or worker,
 | `npm run lint` / `typecheck` | ESLint, TypeScript |
 | `npm run sample:print` | Sample print PDFs |
 | `npm run render:reveal` | Render a reveal film |
+| `npm run sample:year` | Generate the showcase calendar on the landing page (`public/year`) |
 | `npm run previews` | Regenerate the sample images in `public/previews` with the current model and prompts |
 
 ## Guard rails

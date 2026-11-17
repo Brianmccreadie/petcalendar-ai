@@ -21,11 +21,11 @@ function describe(entry: Entry): { label: string; tone: string; href: string; ac
   const data = entry.data
   if (!data) return { label: 'Loading…', tone: 'bg-rule text-ink-soft', href: `/create/preview?p=${id}`, action: 'Open' }
   const done = data.pages.filter((p) => p.status === 'complete').length
-  if (data.project.status === 'ordered') return { label: 'Ordered', tone: 'bg-pine text-white', href: `/create/preview?p=${id}`, action: 'View' }
-  if (data.project.status === 'generating') return { label: `Creating · ${done}/13`, tone: 'bg-marigold text-ink', href: `/create/preview?p=${id}`, action: 'Watch progress' }
+  if (data.project.status === 'ordered') return { label: 'Ordered', tone: 'bg-ink text-ivory', href: `/create/preview?p=${id}`, action: 'View' }
+  if (data.project.status === 'generating') return { label: `Creating · ${done}/13`, tone: 'bg-gold text-ink', href: `/create/preview?p=${id}`, action: 'Watch progress' }
   if (data.pages.length === 0) return { label: 'Needs a theme', tone: 'bg-rule text-ink-soft', href: `/create/style?p=${id}`, action: 'Pick a theme' }
-  if (done >= 13) return { label: 'Ready to order', tone: 'bg-persimmon text-white', href: `/create/preview?p=${id}`, action: 'Review & order' }
-  return { label: `${done}/13 pages`, tone: 'bg-marigold text-ink', href: `/create/preview?p=${id}`, action: 'Continue' }
+  if (done >= 13) return { label: 'Ready to order', tone: 'bg-ink text-ivory', href: `/create/preview?p=${id}`, action: 'Review & order' }
+  return { label: `${done}/13 pages`, tone: 'bg-gold text-ink', href: `/create/preview?p=${id}`, action: 'Continue' }
 }
 
 export default function MyCalendars() {
@@ -65,7 +65,7 @@ export default function MyCalendars() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Saved in this browser</p>
-          <h1 className="display mt-3 text-4xl sm:text-5xl">My calendars</h1>
+          <h1 className="display mt-3 text-5xl sm:text-6xl">My calendars</h1>
         </div>
         <Link href="/create" className="btn btn-primary">
           <Plus size={18} /> New calendar
@@ -105,13 +105,13 @@ export default function MyCalendars() {
                     <span className={`absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-bold ${info.tone}`}>{info.label}</span>
                   </div>
                   <div className="p-5">
-                    <h2 className="font-display text-xl font-bold">{names}</h2>
+                    <h2 className="font-display text-2xl">{names}</h2>
                     <p className="mt-0.5 text-sm text-ink-soft">
                       {entry.data && entry.data.pages.length > 0 && style ? `${style.name} · ${entry.data.project.start_year}` : 'Not started'}
                       {' · '}
                       {new Date(entry.saved.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </p>
-                    <span className="mt-4 inline-flex items-center gap-1.5 font-bold text-persimmon-deep">
+                    <span className="mt-4 inline-flex items-center gap-1.5 font-bold text-signal">
                       {info.action} <ArrowRight size={16} />
                     </span>
                   </div>
@@ -119,7 +119,7 @@ export default function MyCalendars() {
                 <button
                   type="button"
                   onClick={() => forget(entry.saved.id)}
-                  className="block w-full border-t border-rule py-2.5 text-xs font-bold text-muted hover:text-persimmon-deep"
+                  className="block w-full border-t border-rule py-2.5 text-xs font-bold text-muted hover:text-signal"
                 >
                   Remove from this list
                 </button>

@@ -59,7 +59,7 @@ export default function CheckoutStep() {
   return (
     <div className="mx-auto max-w-5xl px-5 pb-24 pt-8 sm:px-8 sm:pt-12">
       <StepHeader current={4} />
-      <h1 className="display text-center text-4xl sm:text-5xl">Send it to print.</h1>
+      <h1 className="display text-center text-5xl sm:text-6xl">Send it to print.</h1>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-start">
         <div>
@@ -79,7 +79,7 @@ export default function CheckoutStep() {
         </div>
 
         <div className="card p-6 sm:p-8">
-          <h2 className="font-display text-2xl font-bold">
+          <h2 className="font-display text-3xl">
             {names} — {data.project.start_year}
           </h2>
           <p className="mt-1 text-ink-soft">{style?.name} theme · 11 × 8.5 in wall calendar · cover + 12 months</p>
@@ -129,18 +129,18 @@ export default function CheckoutStep() {
             )}
             <div className="flex justify-between">
               <dt className="text-ink-soft">Shipping</dt>
-              <dd className="font-semibold text-pine">Free</dd>
+              <dd className="font-semibold text-ok">Free</dd>
             </div>
             <div className="flex justify-between border-t border-rule pt-3 text-lg">
               <dt className="font-bold">Total</dt>
-              <dd className="font-display text-2xl font-extrabold">{formatPrice(total)}</dd>
+              <dd className="font-display text-3xl">{formatPrice(total)}</dd>
             </div>
           </dl>
 
           {ordered ? (
-            <p className="mt-6 rounded-2xl bg-pine/10 px-4 py-3 font-semibold text-pine">This calendar has already been ordered.</p>
+            <p className="mt-6 rounded-2xl bg-ok/10 px-4 py-3 font-semibold text-ok">This calendar has already been ordered.</p>
           ) : !complete ? (
-            <p className="mt-6 rounded-2xl bg-marigold/25 px-4 py-3 font-semibold">
+            <p className="mt-6 rounded-2xl bg-gold/20 px-4 py-3 font-semibold">
               A few pages still need to finish.{' '}
               <Link className="underline underline-offset-4" href={`/create/preview?p=${projectId}`}>
                 Go back to review
@@ -153,7 +153,7 @@ export default function CheckoutStep() {
           )}
 
           {error && (
-            <p role="alert" className="mt-3 text-sm font-semibold text-persimmon-deep">
+            <p role="alert" className="mt-3 text-sm font-semibold text-signal">
               {error}
             </p>
           )}

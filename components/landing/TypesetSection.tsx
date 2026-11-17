@@ -36,18 +36,18 @@ export default function TypesetSection() {
 
         <div>
           <p className="eyebrow">Made properly</p>
-          <h2 className="display mt-4 text-4xl sm:text-5xl">
-            AI paints the picture. <span className="display-italic text-pine">We set the type.</span>
+          <h2 className="display mt-4 text-5xl sm:text-6xl">
+            AI paints the picture. <span className="display-italic text-ok">We set the type.</span>
           </h2>
           <dl className="mt-10 space-y-8">
             {points.map((point, i) => (
               <div key={point.title} className="flex gap-5">
                 <dt className="sr-only">{point.title}</dt>
-                <span aria-hidden="true" className="display mt-0.5 text-3xl text-persimmon">
+                <span aria-hidden="true" className="display mt-0.5 text-3xl text-gold-deep">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <dd>
-                  <h3 className="font-display text-xl font-bold">{point.title}</h3>
+                  <h3 className="font-display text-2xl">{point.title}</h3>
                   <p className="mt-1.5 text-ink-soft">{point.body}</p>
                 </dd>
               </div>

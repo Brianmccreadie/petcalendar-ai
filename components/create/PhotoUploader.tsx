@@ -85,7 +85,7 @@ export default function PhotoUploader({ photos, onChange, maxPhotos, petName, di
               onClick={() => remove(photo.id)}
               disabled={disabled}
               aria-label={`Remove photo ${i + 1}`}
-              className="absolute right-1.5 top-1.5 grid h-7 w-7 place-items-center rounded-full bg-ink/80 text-paper transition-colors hover:bg-persimmon"
+              className="absolute right-1.5 top-1.5 grid h-7 w-7 place-items-center rounded-full bg-ink/80 text-paper transition-colors hover:bg-ink"
             >
               <Close size={14} strokeWidth={2.5} />
             </button>
@@ -107,7 +107,7 @@ export default function PhotoUploader({ photos, onChange, maxPhotos, petName, di
             }}
             className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-[1.5px] border-dashed text-center transition-colors ${
               photos.length === 0 ? 'col-span-3 px-6 py-10 sm:col-span-5' : 'aspect-square p-2'
-            } ${dragOver ? 'border-persimmon bg-persimmon/5' : 'border-ink/30 bg-paper hover:border-ink hover:bg-paper-deep/60'} ${
+            } ${dragOver ? 'border-gold bg-gold/10' : 'border-ink/30 bg-paper hover:border-ink hover:bg-paper-deep/60'} ${
               disabled ? 'pointer-events-none opacity-50' : ''
             }`}
           >
@@ -116,7 +116,7 @@ export default function PhotoUploader({ photos, onChange, maxPhotos, petName, di
             </span>
             {photos.length === 0 ? (
               <>
-                <span className="font-display text-lg font-bold">{busy ? 'Preparing photos…' : `Add photos of ${name}`}</span>
+                <span className="font-display text-xl">{busy ? 'Preparing photos…' : `Add photos of ${name}`}</span>
                 <span className="text-sm text-ink-soft">Drag them here or tap to choose · up to {maxPhotos} · JPG, PNG or HEIC</span>
               </>
             ) : (
@@ -141,7 +141,7 @@ export default function PhotoUploader({ photos, onChange, maxPhotos, petName, di
       />
 
       {error && (
-        <p role="alert" className="mt-3 text-sm font-semibold text-persimmon-deep">
+        <p role="alert" className="mt-3 text-sm font-semibold text-signal">
           {error}
         </p>
       )}

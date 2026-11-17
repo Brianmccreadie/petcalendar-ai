@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "sample:print": "node scripts/sample-print.mjs",
     "render:reveal": "node scripts/render-reveal.mjs",
-    "previews": "node scripts/regenerate-previews.mjs"
+    "previews": "node scripts/regenerate-previews.mjs",
+    "sample:year": "node scripts/generate-sample-year.mjs"
   },
   "dependencies": {
     "@google/genai": "^3.3.0",

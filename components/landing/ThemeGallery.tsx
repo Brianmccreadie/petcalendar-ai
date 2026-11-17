@@ -32,7 +32,7 @@ export default function ThemeGallery() {
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <p className="eyebrow">Themes</p>
-            <h2 className="display mt-4 text-4xl sm:text-5xl">Fifty ways to make your pet the main character.</h2>
+            <h2 className="display mt-4 text-5xl sm:text-6xl">Fifty ways to make your pet the main character.</h2>
             <p className="lede mt-4">These are real sample pages. Switch the pet to see how each theme adapts.</p>
           </div>
           <div className="inline-flex shrink-0 self-start rounded-full border-[1.5px] border-ink bg-card p-1" role="radiogroup" aria-label="Sample pet">
@@ -78,7 +78,7 @@ export default function ThemeGallery() {
                     className="aspect-[3/2] w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
                   />
                 </div>
-                <h3 className="mt-3 font-display text-lg font-bold leading-tight group-hover:text-persimmon-deep">
+                <h3 className="mt-3 font-display text-xl leading-tight group-hover:text-signal">
                   {style.name}
                 </h3>
                 <p className="mt-0.5 text-sm text-ink-soft">{style.description}</p>

@@ -19,7 +19,7 @@ const read = (id) => readFile(new URL(`../public/previews/${id}-${petType}.jpg`,
 const input = {
   petNames: names.split(',').map((n) => n.trim()),
   styleName: 'Sampler',
-  accentColor: '#c2410c',
+  accentColor: '#86672a',
   year: Number(year),
   cover: await read('pet-photoshoot'),
   months: await Promise.all(styles.map(read)),

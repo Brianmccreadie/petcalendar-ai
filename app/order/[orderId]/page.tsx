@@ -22,7 +22,7 @@ export default async function OrderPage(props: PageProps<'/order/[orderId]'>) {
   return (
     <div className="mx-auto max-w-2xl px-5 py-16 sm:px-8 sm:py-24">
       <p className="eyebrow">Order {orderNumber(order.id)}</p>
-      <h1 className="display mt-4 text-4xl sm:text-5xl">Where’s my calendar?</h1>
+      <h1 className="display mt-4 text-5xl sm:text-6xl">Where’s my calendar?</h1>
       <div className="mt-8">
         <OrderStatus order={order} />
       </div>

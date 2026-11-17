@@ -104,7 +104,7 @@ export default function UploadStep() {
       <StepHeader current={1} />
 
       <header className="text-center">
-        <h1 className="display text-4xl sm:text-5xl">First, who’s the star?</h1>
+        <h1 className="display text-5xl sm:text-6xl">First, who’s the star?</h1>
         <p className="lede mx-auto mt-4 max-w-xl">
           Add three to five photos per pet. The clearer the photos, the more the calendar looks like them.
         </p>
@@ -123,11 +123,11 @@ export default function UploadStep() {
         {pets.map((pet, index) => (
           <section key={pet.id} className="card p-5 sm:p-7" aria-label={pet.name || `Pet ${index + 1}`}>
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="font-display text-xl font-bold">{pets.length > 1 ? `Pet ${index + 1}` : 'Your pet'}</h2>
+              <h2 className="font-display text-2xl">{pets.length > 1 ? `Pet ${index + 1}` : 'Your pet'}</h2>
               {pets.length > 1 && (
                 <button
                   type="button"
-                  className="text-sm font-bold text-ink-soft underline underline-offset-4 hover:text-persimmon-deep"
+                  className="text-sm font-bold text-ink-soft underline underline-offset-4 hover:text-signal"
                   onClick={() => setPets((prev) => prev.filter((p) => p.id !== pet.id))}
                   disabled={busy}
                 >
@@ -202,7 +202,7 @@ export default function UploadStep() {
       {pets.length > 1 && (
         <fieldset className="card mt-6 p-5 sm:p-7">
           <legend className="sr-only">How should your pets appear?</legend>
-          <p className="font-display text-xl font-bold">How should they share the calendar?</p>
+          <p className="font-display text-2xl">How should they share the calendar?</p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {(
               [
@@ -229,7 +229,7 @@ export default function UploadStep() {
       )}
 
       {error && (
-        <p role="alert" className="mt-6 rounded-2xl border border-persimmon/40 bg-persimmon/10 px-4 py-3 font-semibold text-persimmon-deep">
+        <p role="alert" className="mt-6 rounded-2xl border border-signal/40 bg-signal/10 px-4 py-3 font-semibold text-signal">
           {error}
         </p>
       )}

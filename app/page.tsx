@@ -4,9 +4,10 @@ import FinalCTA from '@/components/landing/FinalCTA'
 import Hero from '@/components/landing/Hero'
 import HowItWorks from '@/components/landing/HowItWorks'
 import Pricing from '@/components/landing/Pricing'
-import ThemeGallery from '@/components/landing/ThemeGallery'
+import ThemeExplorer from '@/components/landing/ThemeExplorer'
 import ThemeMarquee from '@/components/landing/ThemeMarquee'
-import TypesetSection from '@/components/landing/TypesetSection'
+import Craft from '@/components/landing/Craft'
+import YearShowcase from '@/components/landing/YearShowcase'
 import { PRICING, SITE } from '@/lib/config'
 
 const structuredData = [
@@ -15,7 +16,7 @@ const structuredData = [
     '@type': 'Product',
     name: 'Custom pet wall calendar',
     description: SITE.description,
-    image: `${SITE.url}/previews/hero-1.jpg`,
+    image: `${SITE.url}/year/cover.jpg`,
     brand: { '@type': 'Brand', name: SITE.name },
     offers: {
       '@type': 'Offer',
@@ -45,9 +46,10 @@ export default function Home() {
       />
       <Hero />
       <ThemeMarquee />
+      <YearShowcase />
       <HowItWorks />
-      <ThemeGallery />
-      <TypesetSection />
+      <ThemeExplorer />
+      <Craft />
       <Pricing />
       <FAQ />
       <FinalCTA />

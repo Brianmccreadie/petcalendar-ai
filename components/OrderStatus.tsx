@@ -56,7 +56,7 @@ export default function OrderStatus({ order }: { order: PublicOrder }) {
       </dl>
 
       {problem ? (
-        <p className="mt-6 rounded-2xl bg-persimmon/10 px-4 py-3 font-semibold text-persimmon-deep">
+        <p className="mt-6 rounded-2xl bg-signal/10 px-4 py-3 font-semibold text-signal">
           {order.status === 'refunded'
             ? 'This order was refunded.'
             : 'There’s a problem with this order. We’ve been notified — reply to your confirmation email and we’ll sort it out.'}
@@ -68,11 +68,11 @@ export default function OrderStatus({ order }: { order: PublicOrder }) {
             return (
               <li key={stage.key} className="relative flex gap-4 pb-6 last:pb-0" aria-current={i === reached ? 'step' : undefined}>
                 {i < stages.length - 1 && (
-                  <span aria-hidden="true" className={`absolute left-[0.6875rem] top-6 h-full w-[1.5px] ${i < reached ? 'bg-pine' : 'bg-rule'}`} />
+                  <span aria-hidden="true" className={`absolute left-[0.6875rem] top-6 h-full w-[1.5px] ${i < reached ? 'bg-ink' : 'bg-rule'}`} />
                 )}
                 <span
                   className={`relative z-10 mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full border-[1.5px] ${
-                    done ? 'border-pine bg-pine text-white' : 'border-rule bg-card'
+                    done ? 'border-ink bg-ink text-ivory' : 'border-rule bg-card'
                   }`}
                 >
                   {done && <Check size={13} strokeWidth={3.5} />}

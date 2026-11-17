@@ -119,36 +119,38 @@ export const ART_ASPECT = 4 / 3
 // ---- Typeset page layouts (inches from the top-left trim corner) ----
 // Used by components/calendar/* (SVG, 100 units per inch) and lib/print/pdf.ts.
 
-export const INK = '#1d1a16'
-export const PAPER = '#fffdf8'
-export const RULE = '#d8d0c2'
-export const MUTED = '#8a8175'
+export const INK = '#14120f'
+export const PAPER = '#fdfbf6'
+export const RULE = '#d9d2c5'
+export const MUTED = '#8d867c'
 
 export const GRID_PAGE = {
   left: 0.5,
   right: 10.5,
-  titleBaseline: 1.28,
-  titleSize: 0.62, // month name cap size in inches (font-size)
-  yearSize: 0.4,
-  captionSize: 0.115,
-  weekdayBaseline: 1.66,
-  weekdaySize: 0.105,
-  gridTop: 1.78,
+  titleBaseline: 1.3,
+  titleSize: 0.95, // month name font-size in inches (Instrument Serif)
+  yearSize: 0.5,
+  captionSize: 0.1,
+  weekdayBaseline: 1.68,
+  weekdaySize: 0.095,
+  gridTop: 1.8,
   gridBottom: 8.0,
-  dayInset: 0.1,
-  daySize: 0.21,
-  holidaySize: 0.095,
+  dayInset: 0.11,
+  daySize: 0.19,
+  holidaySize: 0.09,
 }
 
 export const COVER_PAGE = {
   /** Scrim starts this far down the page and darkens toward the bottom. */
-  scrimTop: 4.2,
-  scrimMaxOpacity: 0.78,
-  titleBaseline: 7.25,
-  titleSize: 0.95,
+  scrimTop: 4.0,
+  scrimMaxOpacity: 0.8,
+  titleBaseline: 7.3,
+  titleSize: 1.3,
   titleMaxWidth: 10,
-  subtitleBaseline: 7.72,
-  subtitleSize: 0.17,
+  /** Average glyph width as a fraction of font size, used to fit long titles on screen. */
+  titleCharWidth: 0.4,
+  subtitleBaseline: 7.78,
+  subtitleSize: 0.15,
   left: 0.5,
 }
 
@@ -167,7 +169,7 @@ export function coverSubtitle(styleName: string): string {
 }
 
 /** Darken light accent colours so they stay readable on white paper (screen and print). */
-export function printableAccent(color: string | undefined, fallback = '#c4411c'): string {
+export function printableAccent(color: string | undefined, fallback = '#86672a'): string {
   if (!color || !/^#[0-9a-f]{6}$/i.test(color)) return fallback
   const n = parseInt(color.slice(1), 16)
   const rgb = [(n >> 16) & 255, (n >> 8) & 255, n & 255]

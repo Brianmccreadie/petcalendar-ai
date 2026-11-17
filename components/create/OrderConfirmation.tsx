@@ -40,10 +40,10 @@ export default function OrderConfirmation() {
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-16 text-center sm:px-8 sm:py-24">
-      <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-pine text-white">
+      <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ink text-ivory">
         <Check size={32} strokeWidth={3} />
       </span>
-      <h1 className="display mt-6 text-4xl sm:text-5xl">It’s going to print.</h1>
+      <h1 className="display mt-6 text-5xl sm:text-6xl">It’s going to print.</h1>
       <p className="lede mx-auto mt-4 max-w-md">Thank you. A receipt is on its way to your inbox, and you can follow the order here any time.</p>
 
       <div className="mt-10">
