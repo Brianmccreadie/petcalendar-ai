@@ -13,7 +13,7 @@ const U = 100
  */
 export default function CoverTitle({ title, subtitle }: CoverTitleProps) {
   // Approximate fit: shrink long titles so they stay inside the safe width.
-  const estimated = title.length * C.titleSize * U * 0.56
+  const estimated = title.length * C.titleSize * U * C.titleCharWidth
   const fontSize = Math.min(C.titleSize * U, (C.titleSize * U * C.titleMaxWidth * U) / Math.max(estimated, 1))
   const id = `scrim-${title.length}-${fontSize.toFixed(0)}`
 
@@ -32,7 +32,7 @@ export default function CoverTitle({ title, subtitle }: CoverTitleProps) {
         y={C.titleBaseline * U}
         fontSize={fontSize}
         fill="#fff"
-        style={{ fontFamily: 'var(--font-display)', fontWeight: 900 }}
+        style={{ fontFamily: 'var(--font-display)', fontWeight: 400 }}
       >
         {title}
       </text>
@@ -40,11 +40,11 @@ export default function CoverTitle({ title, subtitle }: CoverTitleProps) {
         <text
           x={C.left * U}
           y={C.subtitleBaseline * U}
-          fontSize={C.subtitleSize * U * 0.72}
+          fontSize={C.subtitleSize * U * 0.8}
           fill="#fff"
           fillOpacity="0.85"
-          letterSpacing="1.6"
-          style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, textTransform: 'uppercase' }}
+          letterSpacing="2.6"
+          style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, textTransform: 'uppercase' }}
         >
           {subtitle}
         </text>

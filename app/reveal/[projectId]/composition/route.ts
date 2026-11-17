@@ -36,7 +36,7 @@ export async function GET(request: NextRequest, ctx: RouteContext<'/reveal/[proj
     title: coverTitle(names.length ? names : [project.pet_name || 'Your Pet'], project.start_year),
     subtitle: coverSubtitle(style?.name ?? 'Custom').split(' · ')[0],
     year: project.start_year,
-    accent: '#e2512a',
+    accent: '#c9a45c',
     coverUrl: cover,
     monthUrls: months as string[],
     fontBase,

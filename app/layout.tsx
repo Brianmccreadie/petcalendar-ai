@@ -4,21 +4,20 @@ import Navbar from '@/components/Navbar'
 import { SITE } from '@/lib/config'
 import './globals.css'
 
-// Self-hosted variable fonts (SIL OFL) — no build-time network dependency.
-const fraunces = localFont({
+// Self-hosted fonts (SIL OFL) — no build-time network dependency.
+const instrument = localFont({
   src: [
-    { path: '../public/fonts/fraunces.woff2', style: 'normal' },
-    { path: '../public/fonts/fraunces-italic.woff2', style: 'italic' },
+    { path: '../public/fonts/instrument-serif.woff2', style: 'normal', weight: '400' },
+    { path: '../public/fonts/instrument-serif-italic.woff2', style: 'italic', weight: '400' },
   ],
-  variable: '--font-fraunces',
-  weight: '100 900',
+  variable: '--font-instrument',
   display: 'swap',
 })
 
-const dmSans = localFont({
-  src: '../public/fonts/dm-sans.woff2',
-  variable: '--font-dm-sans',
-  weight: '100 1000',
+const geist = localFont({
+  src: '../public/fonts/geist.woff2',
+  variable: '--font-geist',
+  weight: '100 900',
   display: 'swap',
 })
 
@@ -34,18 +33,18 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `${SITE.name} — Custom pet calendars, starring your pet`,
     description: SITE.description,
-    images: [{ url: '/previews/hero-1.jpg', width: 1200, height: 805, alt: 'A golden retriever dressed as a wizard' }],
+    images: [{ url: '/year/cover.jpg', width: 1400, height: 1050, alt: 'A sample calendar cover starring a dog' }],
   },
   twitter: { card: 'summary_large_image' },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#fbf6ec',
+  themeColor: '#0c0b0a',
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${dmSans.variable} h-full antialiased`}>
+    <html lang="en" className={`${instrument.variable} ${geist.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <a
           href="#main"

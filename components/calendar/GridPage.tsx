@@ -43,7 +43,7 @@ export default function GridPage({ month, year, accent: rawAccent, caption, clas
         y={L.titleBaseline * U}
         fontSize={L.titleSize * U}
         fill={INK}
-        style={{ fontFamily: 'var(--font-display)', fontWeight: 900 }}
+        style={{ fontFamily: 'var(--font-display)', fontWeight: 400 }}
       >
         {grid.name}
       </text>
@@ -53,7 +53,7 @@ export default function GridPage({ month, year, accent: rawAccent, caption, clas
         fontSize={L.yearSize * U}
         textAnchor="end"
         fill={accent}
-        style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
+        style={{ fontFamily: 'var(--font-display)', fontWeight: 400 }}
       >
         {year}
       </text>
@@ -64,8 +64,8 @@ export default function GridPage({ month, year, accent: rawAccent, caption, clas
           fontSize={L.captionSize * U}
           textAnchor="end"
           fill={MUTED}
-          letterSpacing="0.9"
-          style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, textTransform: 'uppercase' }}
+          letterSpacing="1.6"
+          style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, textTransform: 'uppercase' }}
         >
           {caption}
         </text>
@@ -78,8 +78,8 @@ export default function GridPage({ month, year, accent: rawAccent, caption, clas
           y={L.weekdayBaseline * U}
           fontSize={L.weekdaySize * U}
           fill={column === 0 || column === 6 ? accent : MUTED}
-          letterSpacing="0.6"
-          style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, textTransform: 'uppercase' }}
+          letterSpacing="1.4"
+          style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, textTransform: 'uppercase' }}
         >
           {label}
         </text>
@@ -118,7 +118,7 @@ export default function GridPage({ month, year, accent: rawAccent, caption, clas
               y={(rect.y + L.dayInset + L.daySize * 0.78) * U}
               fontSize={L.daySize * U}
               fill={weekend ? accent : INK}
-              style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
+              style={{ fontFamily: 'var(--font-sans)', fontWeight: 400 }}
             >
               {cell.day}
             </text>

@@ -8,25 +8,25 @@ const rowA: [string, PetType][] = [
 ]
 const rowB: [string, PetType][] = [
   ['secret-agent', 'cat'], ['snow-day', 'dog'], ['cooking-show', 'other'], ['national-park', 'dog'],
-  ['high-school-yearbook', 'cat'], ['mythical-quest', 'dog'], ['fashion-week', 'cat'], ['camping-adventures', 'dog'],
+  ['fashion-week', 'cat'], ['mythical-quest', 'dog'], ['underwater-odyssey', 'cat'], ['space-explorer', 'dog'],
 ]
 
 function Row({ items, reverse }: { items: [string, PetType][]; reverse?: boolean }) {
   // Duplicated once so the -50% translate loops seamlessly.
   const loop = [...items, ...items]
   return (
-    <div className={`flex w-max gap-4 ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'} hover:[animation-play-state:paused]`}>
+    <div className={`flex w-max gap-3 ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'} hover:[animation-play-state:paused]`}>
       {loop.map(([id, pet], i) => (
-        <figure key={`${id}-${i}`} className="relative w-64 shrink-0 overflow-hidden rounded-[4px] sm:w-80" aria-hidden={i >= items.length}>
+        <figure key={`${id}-${i}`} className="group relative w-72 shrink-0 overflow-hidden sm:w-[26rem]" aria-hidden={i >= items.length}>
           <Image
             src={previewSrc(id, pet)}
             alt={i < items.length ? `${styleById(id)?.name} theme with a ${pet === 'other' ? 'pet' : pet}` : ''}
-            width={640}
-            height={430}
-            sizes="320px"
-            className="aspect-[3/2] w-full object-cover"
+            width={832}
+            height={624}
+            sizes="416px"
+            className="aspect-[4/3] w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
           />
-          <figcaption className="absolute bottom-2 left-2 rounded-full bg-ink/75 px-3 py-1 text-xs font-bold text-paper backdrop-blur-sm">
+          <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-night/80 to-transparent px-4 pb-3 pt-10 font-display text-xl text-ivory">
             {styleById(id)?.name}
           </figcaption>
         </figure>
@@ -37,7 +37,7 @@ function Row({ items, reverse }: { items: [string, PetType][]; reverse?: boolean
 
 export default function ThemeMarquee() {
   return (
-    <section aria-label="Sample calendar pages" className="space-y-4 overflow-hidden border-y border-rule bg-paper-deep py-6">
+    <section aria-label="Sample calendar pages" className="on-dark space-y-3 overflow-hidden pb-24">
       <Row items={rowA} />
       <Row items={rowB} reverse />
     </section>

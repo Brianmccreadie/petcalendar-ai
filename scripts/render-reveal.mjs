@@ -26,7 +26,7 @@ if (!sample && !projectId) {
 const name = sample ? 'sample' : projectId
 const dir = path.resolve('reveal-out', name)
 await mkdir(path.join(dir, 'assets'), { recursive: true })
-for (const font of ['fraunces.woff2', 'dm-sans.woff2']) {
+for (const font of ['instrument-serif.woff2', 'geist.woff2']) {
   await copyFile(path.resolve('public/fonts', font), path.join(dir, 'assets', font))
 }
 await copyFile(path.resolve('public/vendor/gsap.min.js'), path.join(dir, 'assets', 'gsap.min.js'))
@@ -44,7 +44,7 @@ if (sample) {
     title: 'Luna’s ' + (new Date().getFullYear() + 1),
     subtitle: 'The Sampler edition',
     year: new Date().getFullYear() + 1,
-    accent: '#e2512a',
+    accent: '#c9a45c',
     coverUrl: 'assets/mythical-quest.jpg',
     monthUrls: ids.map((id) => `assets/${id}.jpg`),
     fontBase: 'assets',

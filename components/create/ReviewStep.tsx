@@ -30,7 +30,7 @@ function StatusArt({ slot, working }: { slot: CalendarSlot; working: boolean }) 
     return (
       <div className="grid h-full w-full place-items-center bg-paper-deep p-6 text-center">
         <div>
-          <p className="font-display text-xl font-bold">This page didn’t finish.</p>
+          <p className="font-display text-2xl">This page didn’t finish.</p>
           <p className="mt-1 text-sm text-ink-soft">Use “Try again” — it won’t use up a revision.</p>
         </div>
       </div>
@@ -170,7 +170,7 @@ export default function ReviewStep() {
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
         <StepHeader current={3} />
         <div className="skeleton mx-auto aspect-[11/8.5] max-w-xl rounded-[4px]" />
-        {state === 'error' && <p className="mt-6 text-center font-semibold text-persimmon-deep">We’re having trouble loading your calendar. Retrying…</p>}
+        {state === 'error' && <p className="mt-6 text-center font-semibold text-signal">We’re having trouble loading your calendar. Retrying…</p>}
       </div>
     )
   }
@@ -184,7 +184,7 @@ export default function ReviewStep() {
       <StepHeader current={3} />
 
       <header className="text-center">
-        <h1 className="display text-4xl sm:text-5xl">
+        <h1 className="display text-5xl sm:text-6xl">
           {allDone ? `${possessive(names)} calendar is ready.` : running ? `Making ${possessive(names)} calendar…` : `${possessive(names)} calendar`}
         </h1>
         <p className="lede mx-auto mt-4 max-w-xl">
@@ -200,10 +200,10 @@ export default function ReviewStep() {
         <div className="mx-auto mt-8 max-w-xl" role="status">
           <div className="flex justify-between text-sm font-bold">
             <span>{done} of 13 pages ready</span>
-            {failed > 0 && <span className="text-persimmon-deep">{failed} didn’t finish</span>}
+            {failed > 0 && <span className="text-signal">{failed} didn’t finish</span>}
           </div>
           <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-rule">
-            <div className="h-full rounded-full bg-pine transition-[width] duration-700" style={{ width: `${(done / 13) * 100}%` }} />
+            <div className="h-full rounded-full bg-ink transition-[width] duration-700" style={{ width: `${(done / 13) * 100}%` }} />
           </div>
           {failed > 0 && !running && !ordered && (
             <button type="button" className="btn btn-dark btn-sm mt-4" onClick={retryFailed} disabled={retrying}>
@@ -245,7 +245,7 @@ export default function ReviewStep() {
               <button type="button" className="btn btn-ghost btn-sm" onClick={() => go(-1)} aria-label="Previous page">
                 <ArrowLeft size={18} />
               </button>
-              <p className="font-display text-xl font-bold" aria-live="polite">
+              <p className="font-display text-2xl" aria-live="polite">
                 {slotLabel(slot)} {slot.page_type === 'month' && <span className="text-muted">{year}</span>}
               </p>
               <button type="button" className="btn btn-ghost btn-sm" onClick={() => go(1)} aria-label="Next page">
@@ -282,7 +282,7 @@ export default function ReviewStep() {
                       {s.image_url && s.status === 'complete' && !busy ? (
                         <img src={s.image_url} alt="" className="h-full w-full object-cover" loading="lazy" />
                       ) : s.status === 'failed' && !busy ? (
-                        <span className="grid h-full w-full place-items-center bg-persimmon/15 text-lg font-bold text-persimmon-deep">!</span>
+                        <span className="grid h-full w-full place-items-center bg-signal/15 text-lg font-bold text-signal">!</span>
                       ) : (
                         <span className={`block h-full w-full ${busy ? 'skeleton' : ''}`} />
                       )}
@@ -298,7 +298,7 @@ export default function ReviewStep() {
 
           {!ordered && (
             <div className="card p-5">
-              <h2 className="font-display text-xl font-bold">{slotLabel(slot)}</h2>
+              <h2 className="font-display text-2xl">{slotLabel(slot)}</h2>
 
               {slot.status === 'complete' && (
                 <p className="mt-1 text-sm text-ink-soft">
@@ -320,12 +320,12 @@ export default function ReviewStep() {
                         aria-pressed={v.is_selected}
                         aria-label={`Version ${v.version_number}${v.is_selected ? ' (selected)' : ''}`}
                         className={`relative aspect-[11/8.5] w-16 overflow-hidden rounded-[3px] ${
-                          v.is_selected ? 'shadow-[0_0_0_2px_var(--color-card),0_0_0_4px_var(--color-pine)]' : 'opacity-70 hover:opacity-100'
+                          v.is_selected ? 'shadow-[0_0_0_2px_var(--color-card),0_0_0_4px_var(--color-ink)]' : 'opacity-70 hover:opacity-100'
                         }`}
                       >
                         <img src={v.image_url} alt="" className="h-full w-full object-cover" />
                         {v.is_selected && (
-                          <span className="absolute right-0.5 top-0.5 grid h-4 w-4 place-items-center rounded-full bg-pine text-white">
+                          <span className="absolute right-0.5 top-0.5 grid h-4 w-4 place-items-center rounded-full bg-ink text-ivory">
                             <Check size={10} strokeWidth={4} />
                           </span>
                         )}
@@ -392,7 +392,7 @@ export default function ReviewStep() {
 
               {isWorking && <p className="mt-3 text-sm font-semibold text-ink-soft">Working on it — about a minute.</p>}
               {notice && (
-                <p role="alert" className="mt-3 text-sm font-semibold text-persimmon-deep">
+                <p role="alert" className="mt-3 text-sm font-semibold text-signal">
                   {notice}
                 </p>
               )}
@@ -401,7 +401,7 @@ export default function ReviewStep() {
 
           {allDone && (
             <Link href={`/reveal/${projectId}`} className="card flex items-center gap-4 p-4 transition-colors hover:border-ink">
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-marigold">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gold">
                 <Play size={18} />
               </span>
               <span>

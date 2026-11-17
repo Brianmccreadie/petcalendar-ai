@@ -138,7 +138,7 @@ export async function fulfilOrder(orderId: string): Promise<Order> {
       const input = {
         petNames: pets.length ? pets.map((p) => p.pet.name) : [project.pet_name || 'Your Pet'],
         styleName: style?.name ?? 'Custom',
-        accentColor: style?.accentColor ?? '#c2410c',
+        accentColor: style?.accentColor ?? '#86672a',
         year: project.start_year,
         cover: await load(cover!),
         months: [] as Buffer[],

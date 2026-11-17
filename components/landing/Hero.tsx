@@ -1,54 +1,61 @@
 import Link from 'next/link'
-import { ArrowRight, Check } from '@/components/icons'
+import FlipCalendar from '@/components/calendar/FlipCalendar'
+import { ArrowRight } from '@/components/icons'
 import { PRICING, defaultCalendarYear, formatPrice } from '@/lib/config'
-import HeroCalendar from './HeroCalendar'
+import { SHOWCASE } from '@/lib/showcase'
 
 export default function Hero() {
   const year = defaultCalendarYear()
   return (
-    <section className="relative -mt-[4.5rem] overflow-hidden pt-[4.5rem]">
-      <div aria-hidden="true" className="grain absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 pb-20 pt-12 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:pb-28 lg:pt-20">
-        <div className="animate-rise">
-          <p className="eyebrow">{year} calendars · made from your photos</p>
-          <h1 className="display mt-5 text-[2.9rem] sm:text-6xl lg:text-[4.6rem]">
-            Your pet, starring in{' '}
-            <span className="display-italic relative whitespace-nowrap text-persimmon">
-              every month
-              <svg aria-hidden="true" viewBox="0 0 300 14" preserveAspectRatio="none" className="absolute -bottom-2 left-0 h-3 w-full text-marigold">
-                <path d="M2 9c48-7 96-8 148-5s98 5 148-1" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-              </svg>
-            </span>{' '}
-            of the year.
+    <section className="on-dark grain relative overflow-hidden">
+      {/* gallery spotlight behind the calendar */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(60rem 40rem at 78% 38%, rgb(201 164 92 / 0.16), transparent 62%), radial-gradient(40rem 30rem at 10% 100%, rgb(201 164 92 / 0.07), transparent 60%)',
+        }}
+      />
+      <div className="relative mx-auto grid max-w-[84rem] items-center gap-16 px-5 pb-24 pt-14 sm:px-8 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[1.08fr_1fr] lg:gap-8 lg:pb-20 lg:pt-10">
+        <div>
+          <p className="eyebrow animate-rise">The {year} edition</p>
+          <h1 className="display mt-7 animate-rise text-[3.4rem] [animation-delay:80ms] sm:text-7xl lg:text-[6.2rem]">
+            Twelve months of the one you love <span className="display-italic text-gold">most.</span>
           </h1>
-          <p className="lede mt-7 max-w-xl">
-            Upload a few photos, pick a theme — wizard, astronaut, secret agent, 47 more — and we turn your pet into
-            twelve scenes that actually look like them. Printed on heavyweight paper and shipped free.
+          <p className="lede mt-8 max-w-[34rem] animate-rise [animation-delay:160ms]">
+            Upload a few photos and choose a world for them to live in. We create twelve scenes that truly look like your
+            pet, typeset every name and date, and print it on heavyweight paper.
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
-            <Link href="/create" className="btn btn-primary btn-lg">
-              Make my calendar <ArrowRight />
+          <div className="mt-10 flex animate-rise flex-wrap items-center gap-x-7 gap-y-4 [animation-delay:240ms]">
+            <Link href="/create" className="btn btn-light btn-lg">
+              Create your calendar <ArrowRight size={18} />
             </Link>
-            <Link href="/#themes" className="btn btn-ghost btn-lg">
-              Browse 50 themes
+            <Link href="/#the-year" className="link-line text-sm font-medium text-ivory">
+              See a full year
             </Link>
           </div>
 
-          <ul className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem] font-semibold text-ink-soft">
-            {['Preview every page before you pay', `${formatPrice(PRICING.firstCopyCents)}, shipping included`, 'No account needed'].map((item) => (
-              <li key={item} className="flex items-center gap-2">
-                <span className="grid h-5 w-5 place-items-center rounded-full bg-pine text-white">
-                  <Check size={13} strokeWidth={3} />
-                </span>
-                {item}
-              </li>
+          <dl className="mt-14 grid max-w-xl animate-rise grid-cols-3 border-t border-ivory/15 [animation-delay:320ms]">
+            {[
+              ['Free', 'to create and preview'],
+              [formatPrice(PRICING.firstCopyCents), 'printed and delivered'],
+              ['5 min', 'from photos to preview'],
+            ].map(([value, label]) => (
+              <div key={label} className="border-r border-ivory/15 py-5 pr-4 last:border-r-0 [&:not(:first-child)]:pl-5">
+                <dt className="sr-only">{label}</dt>
+                <dd>
+                  <span className="display block text-3xl sm:text-4xl">{value}</span>
+                  <span className="mt-1 block text-xs leading-snug text-ivory/50">{label}</span>
+                </dd>
+              </div>
             ))}
-          </ul>
+          </dl>
         </div>
 
-        <div className="animate-rise pt-6 [animation-delay:120ms]">
-          <HeroCalendar year={year} />
+        <div className="animate-rise pt-8 [animation-delay:200ms] lg:pt-4">
+          <FlipCalendar pages={SHOWCASE.months} year={year} caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`} />
         </div>
       </div>
     </section>

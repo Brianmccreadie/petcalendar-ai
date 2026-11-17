@@ -19,7 +19,7 @@ export interface RevealInput {
   accent: string
   coverUrl: string
   monthUrls: string[] // 12, January first
-  /** Where fraunces.woff2 / dm-sans.woff2 live (URL or relative path, no trailing slash). */
+  /** Where instrument-serif.woff2 / geist.woff2 live (URL or relative path, no trailing slash). */
   fontBase: string
   /** URL of gsap.min.js (self-hosted at /vendor/gsap.min.js). */
   gsapUrl: string
@@ -53,7 +53,7 @@ export function buildRevealComposition(input: RevealInput): string {
   const total = revealDuration()
   const monthsStart = T + C
   const outroStart = monthsStart + 12 * M
-  const accent = safeColor(input.accent, '#e2512a')
+  const accent = safeColor(input.accent, '#c9a45c')
   const months = input.monthUrls.slice(0, 12)
   const titleWords = input.title.split(/\s+/).filter(Boolean)
 
@@ -95,31 +95,31 @@ export function buildRevealComposition(input: RevealInput): string {
     <title>${esc(input.title)} — reveal</title>
     <script src="${esc(input.gsapUrl)}"></script>
     <style>
-      @font-face { font-family: "Fraunces"; src: url("${esc(input.fontBase)}/fraunces.woff2") format("woff2"); font-weight: 100 900; font-display: block; }
-      @font-face { font-family: "DM Sans"; src: url("${esc(input.fontBase)}/dm-sans.woff2") format("woff2"); font-weight: 100 1000; font-display: block; }
-      :root { --paper: #fbf6ec; --ink: #1d1a16; --muted: #857c70; --accent: ${accent}; }
+      @font-face { font-family: "Instrument Serif"; src: url("${esc(input.fontBase)}/instrument-serif.woff2") format("woff2"); font-weight: 400; font-display: block; }
+      @font-face { font-family: "Geist"; src: url("${esc(input.fontBase)}/geist.woff2") format("woff2"); font-weight: 100 900; font-display: block; }
+      :root { --paper: #f4efe6; --ink: #0c0b0a; --muted: #8d867c; --accent: ${accent}; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: ${REVEAL.width}px; height: ${REVEAL.height}px; overflow: hidden; background: var(--paper); }
-      #root { position: relative; width: 100%; height: 100%; color: var(--ink); font-family: "DM Sans", sans-serif; }
+      #root { position: relative; width: 100%; height: 100%; color: var(--ink); font-family: "Geist", sans-serif; }
       .scene { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
-      .display { font-family: "Fraunces", Georgia, serif; font-weight: 900; font-variation-settings: "SOFT" 100, "WONK" 1; letter-spacing: -0.02em; line-height: 1; }
+      .display { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: -0.02em; line-height: 1; }
       .mask { overflow: hidden; padding-bottom: 0.14em; }
-      .eyebrow { font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; font-size: 26px; }
+      .eyebrow { font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; font-size: 26px; }
       img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
       /* Title card */
       #title-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; text-align: center; padding: 0 140px;
         background-image: radial-gradient(rgba(29, 26, 22, 0.05) 2px, transparent 2px); background-size: 34px 34px; }
-      #title-card .eyebrow { color: var(--accent); }
-      #title-words { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 0.24em; font-size: ${titleWords.join(' ').length > 22 ? 150 : 210}px; }
-      #title-rule { width: 520px; height: 8px; border-radius: 8px; background: var(--accent); transform-origin: center; }
+      #title-card .eyebrow { color: #86672a; }
+      #title-words { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 0.24em; font-size: ${titleWords.join(' ').length > 22 ? 190 : 270}px; }
+      #title-rule { width: 420px; height: 2px; background: #86672a; transform-origin: center; }
       #title-sub { font-size: 40px; font-weight: 500; color: #4a443c; }
 
       /* Cover */
       #cover-art { position: absolute; inset: 0; }
       #cover-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15, 13, 10, 0.82), rgba(15, 13, 10, 0.3) 38%, transparent 62%); }
       #cover-copy { position: absolute; left: 110px; right: 110px; bottom: 100px; color: #fff; }
-      #cover-copy .display { font-size: ${input.title.length > 22 ? 130 : 180}px; }
+      #cover-copy .display { font-size: ${input.title.length > 22 ? 170 : 230}px; }
       #cover-copy .eyebrow { margin-top: 22px; opacity: 0.9; }
 
       /* Months */
@@ -127,16 +127,16 @@ export function buildRevealComposition(input: RevealInput): string {
       .month-art { position: absolute; left: 110px; top: 105px; width: 1125px; height: 870px; border-radius: 6px; overflow: hidden;
         box-shadow: 0 50px 90px -40px rgba(29, 26, 22, 0.55), 0 4px 10px rgba(29, 26, 22, 0.12); }
       .month-copy { position: absolute; left: 1320px; right: 80px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
-      .month-num { font-weight: 700; font-size: 34px; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 18px; }
-      .month-name { font-family: "Fraunces", Georgia, serif; font-weight: 900; font-variation-settings: "SOFT" 100, "WONK" 1; letter-spacing: -0.02em; line-height: 1.05; font-size: 104px; }
-      .month-year { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-style: normal; font-size: 54px; color: var(--muted); margin-top: 10px; }
+      .month-num { font-weight: 600; font-size: 30px; letter-spacing: 0.26em; color: #86672a; margin-bottom: 18px; }
+      .month-name { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; font-size: 132px; }
+      .month-year { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-style: normal; font-size: 54px; color: var(--muted); margin-top: 10px; }
 
       /* Outro */
       #outro { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 44px; background: var(--ink); color: var(--paper); }
       #outro-grid { display: grid; grid-template-columns: repeat(6, 250px); gap: 18px; }
       .thumb { width: 250px; height: 193px; border-radius: 4px; }
-      #outro-title { font-size: 120px; }
-      #outro-site { font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; font-size: 26px; color: var(--accent); }
+      #outro-title { font-size: 160px; }
+      #outro-site { font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; font-size: 26px; color: var(--accent); }
     </style>
   </head>
   <body>
