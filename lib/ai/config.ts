@@ -6,9 +6,11 @@ import type { ImageProviderName } from './types'
 // Everything here can be overridden with environment variables so a new model
 // release is a config change, not a code change.
 //
-//   IMAGE_PROVIDER        openai | gemini | mock   (default: openai when
-//                         OPENAI_API_KEY is set, otherwise gemini; mock returns
+//   IMAGE_PROVIDER        fal | openai | gemini | mock   (default: the first of
+//                         fal, openai, gemini that has a key; mock returns
 //                         bundled sample images for local development)
+//   FAL_KEY               fal.ai key (FAL_API_KEY, FAL_AI_KEY and FAL also accepted)
+//   FAL_IMAGE_MODEL       default openai/gpt-image-2.5/sunburst/edit
 //   OPENAI_IMAGE_MODEL    default gpt-image-2.5-sunburst
 //   OPENAI_IMAGE_QUALITY  low | medium | high | xhigh | max   (default high)
 //   OPENAI_IMAGE_SIZE     WIDTHxHEIGHT, both divisible by 16  (default 2176x1632)
@@ -32,6 +34,18 @@ export const OPENAI_IMAGE = {
   fallbackSize: '1536x1024',
 }
 
+export const FAL_IMAGE = {
+  // fal endpoint ids. GPT Image 2.5 first; Nano Banana 2 if it is unavailable.
+  models: list(process.env.FAL_IMAGE_MODEL, 'openai/gpt-image-2.5/sunburst/edit', 'fal-ai/nano-banana-2/edit'),
+  gptSize: process.env.OPENAI_IMAGE_SIZE || '2176x1632',
+  gptQuality: process.env.OPENAI_IMAGE_QUALITY || 'high',
+  resolution: process.env.GEMINI_IMAGE_SIZE || '2K',
+}
+
+export function falApiKey(): string | undefined {
+  return process.env.FAL_KEY || process.env.FAL_API_KEY || process.env.FAL_AI_KEY || process.env.FAL_AI_API_KEY || process.env.FAL
+}
+
 export const GEMINI_IMAGE = {
   models: list(
     process.env.GEMINI_IMAGE_MODEL,
@@ -48,7 +62,8 @@ export function geminiApiKey(): string | undefined {
 
 export function resolveProviderName(): ImageProviderName {
   const explicit = (process.env.IMAGE_PROVIDER || '').toLowerCase()
-  if (explicit === 'openai' || explicit === 'gemini' || explicit === 'mock') return explicit
+  if (explicit === 'fal' || explicit === 'openai' || explicit === 'gemini' || explicit === 'mock') return explicit
+  if (falApiKey()) return 'fal'
   if (process.env.OPENAI_API_KEY) return 'openai'
   return 'gemini'
 }

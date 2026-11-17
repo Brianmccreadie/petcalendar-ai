@@ -1,4 +1,4 @@
-export type ImageProviderName = 'openai' | 'gemini' | 'mock'
+export type ImageProviderName = 'fal' | 'openai' | 'gemini' | 'mock'
 
 export interface ReferenceImage {
   data: Buffer

@@ -43,3 +43,4 @@ next-env.d.ts
 supabase/.temp
 sample-print/
 reveal-out/
+scripts/.previews-done.json

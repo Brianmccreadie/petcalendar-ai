@@ -1,4 +1,5 @@
 import { MAX_ATTEMPTS_PER_MODEL, resolveProviderName } from './config'
+import { falProvider } from './fal'
 import { geminiProvider } from './gemini'
 import { mockProvider } from './mock'
 import { openaiProvider } from './openai'
@@ -15,7 +16,7 @@ export type { GeneratedImage, ReferenceImage } from './types'
 
 function getProvider(): ImageProvider {
   const name = resolveProviderName()
-  return name === 'openai' ? openaiProvider : name === 'mock' ? mockProvider : geminiProvider
+  return name === 'fal' ? falProvider : name === 'openai' ? openaiProvider : name === 'mock' ? mockProvider : geminiProvider
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

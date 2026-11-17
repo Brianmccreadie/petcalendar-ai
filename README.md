@@ -46,12 +46,15 @@ npm run dev
 
 1. **Supabase** — run the SQL in `supabase/migrations/` in order (the newest one adds guest checkout columns and the
    `print-files` bucket). Create public buckets `pet-photos` and `generated-images` if they don't exist.
-2. **Image model** — set `OPENAI_API_KEY` and/or `GOOGLE_GEMINI_API_KEY` (see below).
+2. **Image model** — set `FAL_KEY`, `OPENAI_API_KEY` or `GOOGLE_GEMINI_API_KEY` (see below).
 3. **Stripe** — set `STRIPE_SECRET_KEY`; point a webhook at `/api/webhooks/stripe` for `checkout.session.completed`
    and set `STRIPE_WEBHOOK_SECRET`.
 4. **Lulu** — set `LULU_CLIENT_KEY` / `LULU_CLIENT_SECRET`, subscribe a webhook to `/api/webhooks/lulu`.
    **Start with `LULU_API_ENVIRONMENT=sandbox` and place a test order** to confirm Lulu accepts the print files and
    `LULU_CALENDAR_POD_PACKAGE_ID` for your calendar product before going live.
+
+`GET /api/health` reports which pieces are configured (booleans only). Checkout stays closed until Stripe is set
+and the migration has been applied, so a payment can never be taken without an order being recorded.
 
 To try the whole flow without spending anything, set `IMAGE_PROVIDER=mock` — pages are filled with bundled samples.
 
@@ -61,6 +64,7 @@ Configured in `lib/ai/config.ts`, all overridable by env:
 
 | Provider | Default model | Used when |
 | --- | --- | --- |
+| fal.ai | `openai/gpt-image-2.5/sunburst/edit` (falls back to `fal-ai/nano-banana-2/edit`) | `FAL_KEY` is set, or `IMAGE_PROVIDER=fal` |
 | OpenAI | `gpt-image-2.5-sunburst` (falls back to `gpt-image-2`) | `OPENAI_API_KEY` is set, or `IMAGE_PROVIDER=openai` |
 | Google | `gemini-3.1-flash-image` (falls back to the `-preview` id) | otherwise, or `IMAGE_PROVIDER=gemini` |
 
@@ -111,6 +115,7 @@ Rendering needs headless Chrome + FFmpeg, so it runs on a workstation or worker,
 | `npm run lint` / `typecheck` | ESLint, TypeScript |
 | `npm run sample:print` | Sample print PDFs |
 | `npm run render:reveal` | Render a reveal film |
+| `npm run previews` | Regenerate the sample images in `public/previews` with the current model and prompts |
 
 ## Guard rails
 

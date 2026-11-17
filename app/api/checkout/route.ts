@@ -3,6 +3,7 @@ import type Stripe from 'stripe'
 import { jsonError, readJson } from '@/lib/api'
 import { joinPetNames } from '@/lib/calendar/layout'
 import { PRICING, SITE } from '@/lib/config'
+import { ordersTableReady } from '@/lib/readiness'
 import { getStripe } from '@/lib/stripe'
 import { styleById } from '@/lib/style-meta'
 import { createAdminSupabaseClient } from '@/lib/supabase-admin'
@@ -17,6 +18,12 @@ export async function POST(request: Request) {
     const projectId = body?.project_id
     if (!isUuid(projectId)) return jsonError('project_id is required.', 400)
     const quantity = Math.max(1, Math.min(PRICING.maxCopies, Math.floor(Number(body?.quantity)) || 1))
+
+    // Never take a payment we could not record or fulfil.
+    if (!process.env.STRIPE_SECRET_KEY || !(await ordersTableReady())) {
+      console.error('checkout: ordering is not configured (Stripe key or database migration missing)')
+      return jsonError('Ordering is not open yet. Your calendar is saved — please check back soon.', 503)
+    }
 
     const supabase = createAdminSupabaseClient()
     const [{ data: project }, { data: pets }, { data: pages }] = await Promise.all([
