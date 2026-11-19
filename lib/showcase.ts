@@ -4,17 +4,17 @@ import { MONTH_NAMES } from './calendar/layout'
 // from a single reference photo with `npm run sample:year`.
 export const SHOWCASE = {
   petName: 'Luna',
-  styleId: 'around-the-world',
-  styleName: 'Around the World',
-  cover: '/year/cover.jpg',
+  styleId: 'wizarding-world',
+  styleName: 'Wizard Academy',
+  cover: '/sample-year/cover.jpg',
   months: MONTH_NAMES.map((name, i) => ({
     month: i + 1,
     name,
-    src: `/year/${String(i + 1).padStart(2, '0')}.jpg`,
+    src: `/sample-year/${String(i + 1).padStart(2, '0')}.jpg`,
   })),
 }
 
 export const SHOWCASE_PLACES = [
-  'Paris', 'Agra', 'Tokyo', 'Machu Picchu', 'the Netherlands', 'Santorini',
-  'the Great Wall', 'the Serengeti', 'Rome', 'Mexico City', 'Marrakech', 'the Alps',
+  'the Great Hall', 'Potions class', 'the flying pitch', 'the greenhouse', 'the library', 'the great lake',
+  'the astronomy tower', 'the enchanted forest', 'the castle gates', 'the Halloween feast', 'the common room', 'the snowy courtyard',
 ]

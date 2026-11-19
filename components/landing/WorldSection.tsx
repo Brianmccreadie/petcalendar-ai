@@ -5,9 +5,7 @@ import type { World } from '@/lib/worlds'
 interface WorldSectionProps {
   world: World
   id?: string
-  /** "01" — position of this world on the page. */
-  index: string
-  total?: string
+  index?: string
   /** Light serif line of the title. */
   serif: string
   /** Heavy grotesk line of the title. */
@@ -37,32 +35,43 @@ export default function WorldSection({
   children,
 }: WorldSectionProps) {
   const dark = world.tone === 'dark'
+  const tone = dark ? 'on-dark' : 'world-light text-ink'
+
+  // Every world after the first: the painting sits behind the top of the
+  // section and dissolves into its colour, so the content reads inside the scene.
+  if (!underNav) {
+    return (
+      <section id={id} className={`relative overflow-hidden ${tone}`} style={{ background: world.color }}>
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[26rem] sm:h-[34rem]">
+          <Image src={world.art} alt="" fill sizes="100vw" className="object-cover object-[50%_22%]" />
+          <div
+            className="absolute inset-0"
+            style={{ background: `linear-gradient(to bottom, ${world.color}00 0%, ${world.color}8c 45%, ${world.color} 100%)` }}
+          />
+        </div>
+        <div className="relative mx-auto max-w-[84rem] px-5 pb-24 pt-[13rem] sm:px-8 sm:pt-[18rem] lg:pb-32">
+          <Heading className={`world-title world-title-sm mb-12 ${dark ? 'text-ivory' : 'text-ink'}`}>
+            <span className="serif">{serif}</span>
+            <span className="sans">{sans}</span>
+          </Heading>
+          {children}
+        </div>
+      </section>
+    )
+  }
+
   return (
-    <section
-      id={id}
-      className={`relative ${underNav ? '-mt-16' : ''} ${dark ? 'on-dark' : 'world-light text-ink'}`}
-      style={{ background: world.color }}
-    >
+    <section id={id} className={`relative -mt-16 ${tone}`} style={{ background: world.color }}>
       <div className={`relative overflow-hidden ${bannerClassName}`}>
-        <Image
-          src={world.art}
-          alt={world.alt}
-          fill
-          priority={priority}
-          sizes="100vw"
-          className="object-cover object-[50%_20%]"
-        />
-        {/* the painting dissolves into the world's colour */}
+        <Image src={world.art} alt={world.alt} fill priority={priority} sizes="100vw" className="object-cover object-[50%_20%]" />
         <div
           aria-hidden="true"
           className="absolute inset-0"
-          style={{ background: `linear-gradient(to bottom, transparent 46%, ${world.color}b3 72%, ${world.color} 100%)` }}
+          style={{ background: `linear-gradient(to bottom, transparent 34%, ${world.color}cc 70%, ${world.color} 100%)` }}
         />
-        {underNav && (
-          <div aria-hidden="true" className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/55 to-transparent" />
-        )}
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/55 to-transparent" />
         <div className={`absolute inset-x-0 bottom-[4%] flex flex-col items-center px-4 ${dark ? 'text-ivory' : 'text-ink'}`}>
-          <Heading className="world-title drop-shadow-[0_2px_18px_rgb(0_0_0/0.25)]">
+          <Heading className="world-title drop-shadow-[0_4px_28px_rgb(6_14_32/0.7)]">
             <span className="serif">{serif}</span>
             <span className="sans">{sans}</span>
           </Heading>

@@ -8,20 +8,20 @@
 --------------------------------------------------------------------------- */
 
 @theme inline {
-  --color-night: #2a0709;
-  --color-night-2: #3b0d10;
-  --color-night-3: #4d1418;
-  --color-ivory: #f7eedc;
-  --color-paper: #f3e9d7;
-  --color-paper-deep: #e8dabd;
-  --color-card: #fbf5e8;
-  --color-ink: #22110f;
-  --color-ink-soft: #5e4a42;
-  --color-muted: #96857a;
-  --color-rule: #decfb4;
-  --color-gold: #e0a93f;
-  --color-gold-soft: #efc671;
-  --color-gold-deep: #8c5a17;
+  --color-night: #0f2140;
+  --color-night-2: #16305a;
+  --color-night-3: #1f4175;
+  --color-ivory: #fdfdff;
+  --color-paper: #f8fbfe;
+  --color-paper-deep: #e6f2fc;
+  --color-card: #ffffff;
+  --color-ink: #12223f;
+  --color-ink-soft: #485a78;
+  --color-muted: #8292aa;
+  --color-rule: #d9e6f2;
+  --color-gold: #f9b4cb;
+  --color-gold-soft: #fcd3e0;
+  --color-gold-deep: #c43c74;
   --color-signal: #b23a26;
   --color-ok: #2e6a4d;
 
@@ -133,9 +133,9 @@ body {
   .btn-sm { padding: 0.55rem 1.05rem; font-size: 0.85rem; }
 
   .btn-primary, .btn-dark { background: var(--color-ink); color: var(--color-ivory); }
-  .btn-primary:hover:not(:disabled), .btn-dark:hover:not(:disabled) { background: #000; box-shadow: 0 10px 24px -12px rgb(30 6 8 / 0.6); }
+  .btn-primary:hover:not(:disabled), .btn-dark:hover:not(:disabled) { background: #000; box-shadow: 0 10px 24px -12px rgb(10 22 48 / 0.5); }
   .btn-light { background: var(--color-ivory); color: var(--color-night); }
-  .btn-light:hover:not(:disabled) { background: #fff; box-shadow: 0 0 0 6px rgb(247 238 220 / 0.12); }
+  .btn-light:hover:not(:disabled) { background: #fff; box-shadow: 0 0 0 6px rgb(255 255 255 / 0.16); }
   .btn-gold { background: var(--color-gold); color: var(--color-night); }
   .btn-gold:hover:not(:disabled) { background: var(--color-gold-soft); }
   .btn-ghost { background: transparent; color: var(--color-ink); border: 1px solid rgb(34 17 15 / 0.3); }
@@ -161,7 +161,7 @@ body {
     color: var(--color-ink);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  .field::placeholder { color: #b5ad9f; }
+  .field::placeholder { color: #9fb0c6; }
   .field:focus { outline: none; border-color: var(--color-ink); box-shadow: 0 0 0 4px rgb(224 169 63 / 0.28); }
   .label { display: block; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.02em; margin-bottom: 0.45rem; }
 
@@ -186,7 +186,7 @@ body {
   .on-dark .chip[aria-pressed='true'], .on-dark .chip[aria-checked='true'] { background: var(--color-ivory); border-color: var(--color-ivory); color: var(--color-night); }
 
   .skeleton {
-    background: linear-gradient(100deg, #e8dabd 30%, #f5ecd9 50%, #e8dabd 70%);
+    background: linear-gradient(100deg, #e1edf8 30%, #f4f9fe 50%, #e1edf8 70%);
     background-size: 200% 100%;
     animation: var(--animate-shimmer);
   }
@@ -258,4 +258,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; }
+}
+
+/* Compact two-voice heading used inside the worlds after the hero. */
+.world-title.world-title-sm {
+  font-size: clamp(2.3rem, 6vw, 4.6rem);
 }

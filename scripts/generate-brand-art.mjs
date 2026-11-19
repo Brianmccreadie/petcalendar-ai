@@ -40,7 +40,7 @@ Each animal is painted naturalistically, with correct anatomy, and the costumes 
 
 Palette: ochre, umber, sea green, cream and smoky rose, with vermilion and gold accents; the different worlds are unified by one warm evening light.
 
-Composition: very wide and balanced, like a frieze. All of the animals sit in the lower half of the canvas, their heads no higher than the middle; the whole upper 45% is open, calm evening sky with only soft cloud and the two small puppy cherubs near the top corners — a very large title will be set across that sky. No human figures anywhere, including the cherubs: they are puppies with wings. The lower third of the canvas dissolves into heavy billowing clouds in deep umber, rust and oxblood red, growing darker toward the bottom edge until the bottom is an almost solid dark oxblood (#3b0d10).`,
+Composition: very wide and balanced, like a frieze. All of the animals sit in the lower half of the canvas, their heads no higher than the middle; the whole upper 45% is open, calm evening sky with only soft cloud and the two small puppy cherubs near the top corners — a very large title will be set across that sky. No human figures anywhere, including the cherubs: they are puppies with wings. The lower third of the canvas dissolves into heavy billowing twilight clouds in dusky blue and indigo, growing darker toward the bottom edge until the bottom is an almost solid deep twilight blue (#16305a). No red or burgundy in the lower clouds.`,
   },
   voyage: {
     size: '2560x1440',
@@ -101,9 +101,9 @@ Composition: very wide. Keep the upper-middle of the canvas calm and open — a 
     refs: ['pom', 'golden', 'cat'],
     prompt: `${PAINT}
 
-Subject: a baroque ceiling fresco of the heavens. The Pomeranian from image 1 and the golden retriever from image 2, each with small feathered cherub wings, tumble joyfully through golden-rose clouds; the grey cat from image 3 reclines on a cloud at lower right, unimpressed. Shafts of warm light break through from a glowing opening in the centre. Every figure is a pet animal: there are no human figures, no human babies and no human cherubs anywhere in the painting — the only cherubs are the winged dogs.
+Subject: a baroque ceiling fresco of the heavens. The Pomeranian from image 1 and the golden retriever from image 2, each with small feathered cherub wings, tumble joyfully through cream and pale-gold clouds in a clear light-blue sky; the grey cat from image 3 reclines on a cloud at lower right, unimpressed. Shafts of warm light break through from a glowing opening in the centre. Every figure is a pet animal: there are no human figures, no human babies and no human cherubs anywhere in the painting — the only cherubs are the winged dogs.
 
-Composition: very wide. Keep the upper-middle of the canvas calm and open — a large title will sit there. The lower third of the canvas dissolves into heavy rose and umber clouds that thickens toward the bottom edge until the bottom is an almost solid dark oxblood (#3b0d10).`,
+Composition: very wide. Keep the upper-middle of the canvas calm and open — a large title will sit there. The lower third of the canvas dissolves into soft pale clouds that thin toward the bottom edge until the bottom is an almost solid pale sky blue (#cfe3f2).`,
   },
 }
 
