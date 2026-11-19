@@ -1,34 +1,35 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   PetCalendar.ai design system — "the atelier".
-   A dark gallery for the artwork, warm ivory for the paper, one metallic
-   accent. Instrument Serif for display, Geist for everything functional.
+   PetCalendar.ai design system — "the painted worlds".
+   Each section of the site is its own world: a classical oil painting that
+   dissolves into that world's colour. Oxblood is home base, cream is paper,
+   ochre gold is the accent. Instrument Serif and Geist share every headline.
 --------------------------------------------------------------------------- */
 
 @theme inline {
-  --color-night: #0c0b0a;
-  --color-night-2: #151311;
-  --color-night-3: #201d1a;
-  --color-ivory: #f4efe6;
-  --color-paper: #f4efe6;
-  --color-paper-deep: #ebe4d7;
-  --color-card: #fbf8f2;
-  --color-ink: #14120f;
-  --color-ink-soft: #57514a;
-  --color-muted: #8d867c;
-  --color-rule: #ddd5c7;
-  --color-gold: #c9a45c;
-  --color-gold-soft: #e3c98f;
-  --color-gold-deep: #86672a;
+  --color-night: #2a0709;
+  --color-night-2: #3b0d10;
+  --color-night-3: #4d1418;
+  --color-ivory: #f7eedc;
+  --color-paper: #f3e9d7;
+  --color-paper-deep: #e8dabd;
+  --color-card: #fbf5e8;
+  --color-ink: #22110f;
+  --color-ink-soft: #5e4a42;
+  --color-muted: #96857a;
+  --color-rule: #decfb4;
+  --color-gold: #e0a93f;
+  --color-gold-soft: #efc671;
+  --color-gold-deep: #8c5a17;
   --color-signal: #b23a26;
   --color-ok: #2e6a4d;
 
   --font-display: var(--font-instrument), 'Iowan Old Style', 'Times New Roman', serif;
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
 
-  --shadow-page: 0 1px 1px rgb(12 11 10 / 0.08), 0 14px 30px -12px rgb(12 11 10 / 0.35);
-  --shadow-lift: 0 2px 4px rgb(12 11 10 / 0.08), 0 40px 70px -28px rgb(12 11 10 / 0.55);
+  --shadow-page: 0 1px 1px rgb(30 6 8 / 0.08), 0 14px 30px -12px rgb(30 6 8 / 0.35);
+  --shadow-lift: 0 2px 4px rgb(30 6 8 / 0.08), 0 40px 70px -28px rgb(30 6 8 / 0.55);
   --shadow-stage: 0 60px 120px -40px rgb(0 0 0 / 0.9), 0 12px 30px -10px rgb(0 0 0 / 0.6);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -106,7 +107,7 @@ body {
     color: var(--color-ink-soft);
     text-wrap: pretty;
   }
-  .on-dark .lede { color: rgb(244 239 230 / 0.66); }
+  .on-dark .lede { color: rgb(247 238 220 / 0.66); }
 
   /* Buttons: monochrome, calm, precise. */
   .btn {
@@ -132,17 +133,17 @@ body {
   .btn-sm { padding: 0.55rem 1.05rem; font-size: 0.85rem; }
 
   .btn-primary, .btn-dark { background: var(--color-ink); color: var(--color-ivory); }
-  .btn-primary:hover:not(:disabled), .btn-dark:hover:not(:disabled) { background: #000; box-shadow: 0 10px 24px -12px rgb(12 11 10 / 0.6); }
+  .btn-primary:hover:not(:disabled), .btn-dark:hover:not(:disabled) { background: #000; box-shadow: 0 10px 24px -12px rgb(30 6 8 / 0.6); }
   .btn-light { background: var(--color-ivory); color: var(--color-night); }
-  .btn-light:hover:not(:disabled) { background: #fff; box-shadow: 0 0 0 6px rgb(244 239 230 / 0.12); }
+  .btn-light:hover:not(:disabled) { background: #fff; box-shadow: 0 0 0 6px rgb(247 238 220 / 0.12); }
   .btn-gold { background: var(--color-gold); color: var(--color-night); }
   .btn-gold:hover:not(:disabled) { background: var(--color-gold-soft); }
-  .btn-ghost { background: transparent; color: var(--color-ink); border: 1px solid rgb(20 18 15 / 0.3); }
-  .btn-ghost:hover:not(:disabled) { border-color: var(--color-ink); background: rgb(20 18 15 / 0.04); }
-  .on-dark .btn-ghost, .btn-ghost.on-dark { color: var(--color-ivory); border-color: rgb(244 239 230 / 0.28); }
-  .on-dark .btn-ghost:hover:not(:disabled), .btn-ghost.on-dark:hover:not(:disabled) { border-color: var(--color-ivory); background: rgb(244 239 230 / 0.06); }
+  .btn-ghost { background: transparent; color: var(--color-ink); border: 1px solid rgb(34 17 15 / 0.3); }
+  .btn-ghost:hover:not(:disabled) { border-color: var(--color-ink); background: rgb(34 17 15 / 0.04); }
+  .on-dark .btn-ghost, .btn-ghost.on-dark { color: var(--color-ivory); border-color: rgb(247 238 220 / 0.28); }
+  .on-dark .btn-ghost:hover:not(:disabled), .btn-ghost.on-dark:hover:not(:disabled) { border-color: var(--color-ivory); background: rgb(247 238 220 / 0.06); }
   .btn-quiet { color: var(--color-ink-soft); padding-inline: 0.8rem; }
-  .btn-quiet:hover:not(:disabled) { color: var(--color-ink); background: rgb(20 18 15 / 0.06); }
+  .btn-quiet:hover:not(:disabled) { color: var(--color-ink); background: rgb(34 17 15 / 0.06); }
 
   .card {
     background: var(--color-card);
@@ -161,7 +162,7 @@ body {
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .field::placeholder { color: #b5ad9f; }
-  .field:focus { outline: none; border-color: var(--color-ink); box-shadow: 0 0 0 4px rgb(201 164 92 / 0.28); }
+  .field:focus { outline: none; border-color: var(--color-ink); box-shadow: 0 0 0 4px rgb(224 169 63 / 0.28); }
   .label { display: block; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.02em; margin-bottom: 0.45rem; }
 
   .chip {
@@ -180,12 +181,12 @@ body {
   }
   .chip:hover { border-color: var(--color-ink); color: var(--color-ink); }
   .chip[aria-pressed='true'], .chip[aria-checked='true'] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-ivory); }
-  .on-dark .chip { border-color: rgb(244 239 230 / 0.2); color: rgb(244 239 230 / 0.7); }
+  .on-dark .chip { border-color: rgb(247 238 220 / 0.2); color: rgb(247 238 220 / 0.7); }
   .on-dark .chip:hover { border-color: var(--color-ivory); color: var(--color-ivory); }
   .on-dark .chip[aria-pressed='true'], .on-dark .chip[aria-checked='true'] { background: var(--color-ivory); border-color: var(--color-ivory); color: var(--color-night); }
 
   .skeleton {
-    background: linear-gradient(100deg, #e6dfd2 30%, #f3ede2 50%, #e6dfd2 70%);
+    background: linear-gradient(100deg, #e8dabd 30%, #f5ecd9 50%, #e8dabd 70%);
     background-size: 200% 100%;
     animation: var(--animate-shimmer);
   }
@@ -198,6 +199,30 @@ body {
   .link-line { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; padding-bottom: 2px; transition: background-size 0.4s var(--ease-out-expo); }
   .link-line:hover { background-size: 0 1px; background-position: 100% 100%; }
 }
+
+/* World titles: a light serif line over a heavy grotesk line, set right on the painting. */
+.world-title {
+  font-size: clamp(3.4rem, 12.5vw, 11.5rem);
+  line-height: 0.84;
+  text-transform: uppercase;
+  text-align: center;
+  text-wrap: balance;
+}
+.world-title .serif { display: block; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; }
+.world-title .sans { display: block; font-family: var(--font-sans); font-weight: 800; letter-spacing: -0.045em; }
+
+/* Outlined pill, as on a gallery label. */
+.btn-outline {
+  border: 1px solid currentColor;
+  background: transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 1.05rem 2.1rem;
+}
+.btn-outline:hover:not(:disabled) { background: var(--color-ivory); color: var(--color-night); border-color: var(--color-ivory); }
+.world-light .btn-outline:hover:not(:disabled) { background: var(--color-ink); color: var(--color-ivory); border-color: var(--color-ink); }
 
 /* Dark sections. */
 .on-dark { background: var(--color-night); color: var(--color-ivory); }

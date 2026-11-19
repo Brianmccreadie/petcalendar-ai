@@ -1,4 +1,3 @@
-import { Plus } from '@/components/icons'
 import { LIMITS, PRICING, SITE, formatPrice } from '@/lib/config'
 
 export const faqs = [
@@ -39,37 +38,3 @@ export const faqs = [
     a: `No. Your calendar is saved in this browser under “My calendars”, and your order has its own tracking page. Need help? Email ${SITE.supportEmail}.`,
   },
 ]
-
-export default function FAQ() {
-  return (
-    <section id="faq" className="mx-auto max-w-[84rem] px-5 py-28 sm:px-8 lg:py-40">
-      <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-        <div>
-          <p className="eyebrow">Questions</p>
-          <h2 className="display mt-6 text-5xl sm:text-7xl">
-            Good to <span className="display-italic">know.</span>
-          </h2>
-          <p className="lede mt-6">
-            Something else? Write to{' '}
-            <a className="link-line text-ink" href={`mailto:${SITE.supportEmail}`}>
-              {SITE.supportEmail}
-            </a>
-          </p>
-        </div>
-        <div className="border-t border-ink">
-          {faqs.map((faq) => (
-            <details key={faq.q} className="group border-b border-rule">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 font-display text-[1.7rem] leading-tight [&::-webkit-details-marker]:hidden">
-                {faq.q}
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-ink/25 transition-all duration-300 group-open:rotate-45 group-open:border-ink group-open:bg-ink group-open:text-ivory">
-                  <Plus size={16} strokeWidth={1.5} />
-                </span>
-              </summary>
-              <p className="max-w-2xl pb-7 leading-relaxed text-ink-soft">{faq.a}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
