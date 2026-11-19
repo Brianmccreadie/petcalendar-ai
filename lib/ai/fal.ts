@@ -21,7 +21,7 @@ interface FalResult {
 function headers(): Record<string, string> {
   const key = falApiKey()
   if (!key) throw new ImageGenerationError('FAL_KEY is not set', 'config')
-  return { Authorization: `Key ${key}`, 'Content-Type': 'application/json' }
+  return { Authorization: `Key ${key.trim()}`, 'Content-Type': 'application/json' }
 }
 
 function failure(status: number, body: string): ImageGenerationError {
