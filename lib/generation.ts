@@ -188,7 +188,7 @@ async function renderAndStore(
   instructions: string | null
 ): Promise<string> {
   const image = await generateImage({ prompt, references, safetyId: page.project_id })
-  const normalised = await normaliseGeneratedImage(image.data)
+  const normalised = await normaliseGeneratedImage(image.data, image.mimeType)
   const label = page.page_type === 'month' ? `month-${page.month_number}` : page.page_type
   const { url, path } = await uploadGeneratedImage(page.project_id, label, normalised.data, normalised.mimeType)
   await savePageImage(page, url, path, instructions)
@@ -314,9 +314,9 @@ export async function regeneratePage(
     if (options.newReference) {
       const target = cast[0]
       const photo = await normalisePetPhoto(options.newReference)
-      references = [petReference(toSubject(target), photo.data, 'image/jpeg'), ...references].slice(0, 6)
+      references = [petReference(toSubject(target), photo.data, photo.mimeType), ...references].slice(0, 6)
       try {
-        const stored = await uploadPetPhoto(page.project_id, target.pet.id, photo.data, 'image/jpeg')
+        const stored = await uploadPetPhoto(page.project_id, target.pet.id, photo.data, photo.mimeType)
         await supabase.from('pet_photos').insert({
           project_id: page.project_id,
           pet_id: target.pet.id,

@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       return jsonError('We could not read that image. Try a different photo.', 415)
     }
 
-    const { url, path } = await uploadPetPhoto(projectId, petId, photo.data, 'image/jpeg')
+    const { url, path } = await uploadPetPhoto(projectId, petId, photo.data, photo.mimeType)
     const { error } = await supabase.from('pet_photos').insert({
       project_id: projectId,
       pet_id: petId,

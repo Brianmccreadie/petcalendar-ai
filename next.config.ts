@@ -14,7 +14,8 @@ const nextConfig: NextConfig = {
   },
   // The print fonts are read from disk at runtime by lib/print/pdf.ts.
   outputFileTracingIncludes: {
-    '/api/**': ['./lib/print/fonts/**'],
+    // Fonts are read from disk at runtime; sharp's native binaries must ship with every API route.
+    '/api/**': ['./lib/print/fonts/**', './node_modules/sharp/**', './node_modules/@img/**'],
   },
   serverExternalPackages: ['sharp'],
   async headers() {

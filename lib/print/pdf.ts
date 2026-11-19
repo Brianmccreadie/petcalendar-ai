@@ -1,8 +1,19 @@
 import { readFile } from 'fs/promises'
 import path from 'path'
 import fontkit from '@pdf-lib/fontkit'
-import { PDFDocument, rgb, type PDFFont, type PDFPage, type RGB } from 'pdf-lib'
-import sharp from 'sharp'
+import {
+  PDFDocument,
+  clip,
+  endPath,
+  popGraphicsState,
+  pushGraphicsState,
+  rectangle,
+  rgb,
+  type PDFFont,
+  type PDFImage,
+  type PDFPage,
+  type RGB,
+} from 'pdf-lib'
 import {
   COVER_PAGE,
   GRID_PAGE,
@@ -21,6 +32,8 @@ import {
   printableAccent,
 } from '../calendar/layout'
 import { SITE } from '../config'
+import { loadSharp } from '../images'
+import { sniffImageMime } from '../validate'
 
 // ---------------------------------------------------------------------------
 // Print-ready PDFs for an 11 × 8.5 in Wire-O wall calendar.
@@ -102,35 +115,73 @@ function fitSize(font: PDFFont, text: string, size: number, maxWidth: number): n
   return width > maxWidth ? (size * maxWidth) / width : size
 }
 
-async function artJpeg(input: Buffer, width = ART_PX.width, height = ART_PX.height): Promise<Buffer> {
-  return sharp(input)
-    .rotate()
-    .resize(width, height, { fit: 'cover', position: 'centre' })
-    .toColourspace('srgb')
-    .jpeg({ quality: 90, chromaSubsampling: '4:4:4' })
-    .toBuffer()
+/**
+ * Embed artwork in the document. With sharp available the image is first
+ * cropped and resampled to the exact print size (optionally with the cover
+ * scrim burned in). Without it, the original bytes are embedded and the page
+ * drawing code crops by clipping instead.
+ */
+async function embedArt(doc: PDFDocument, input: Buffer, options: { scrim?: boolean } = {}): Promise<{ image: PDFImage; scrimBurned: boolean }> {
+  const sharp = await loadSharp()
+  if (sharp) {
+    const { width, height } = ART_PX
+    let pipeline = sharp(input).rotate().resize(width, height, { fit: 'cover', position: 'centre' }).toColourspace('srgb')
+    if (options.scrim) {
+      const start = (COVER_PAGE.scrimTop + PAGE.bleed) / (PAGE.trimHeight + PAGE.bleed * 2)
+      const scrim = Buffer.from(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+          <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="${start}" stop-color="#0f0d0a" stop-opacity="0"/>
+            <stop offset="${start + (1 - start) * 0.55}" stop-color="#0f0d0a" stop-opacity="${COVER_PAGE.scrimMaxOpacity * 0.6}"/>
+            <stop offset="1" stop-color="#0f0d0a" stop-opacity="${COVER_PAGE.scrimMaxOpacity}"/>
+          </linearGradient></defs>
+          <rect width="100%" height="100%" fill="url(#g)"/>
+        </svg>`
+      )
+      pipeline = sharp(await pipeline.jpeg({ quality: 95, chromaSubsampling: '4:4:4' }).toBuffer()).composite([{ input: scrim }])
+    }
+    const jpeg = await pipeline.jpeg({ quality: 90, chromaSubsampling: '4:4:4' }).toBuffer()
+    return { image: await doc.embedJpg(jpeg), scrimBurned: Boolean(options.scrim) }
+  }
+
+  const mime = sniffImageMime(input)
+  if (mime === 'image/jpeg') return { image: await doc.embedJpg(input), scrimBurned: false }
+  if (mime === 'image/png') return { image: await doc.embedPng(input), scrimBurned: false }
+  throw new Error('Artwork must be JPEG or PNG to build print files without image processing')
 }
 
-/** Burn the bottom-up dark gradient into the cover art so the white title stays legible. */
-async function withCoverScrim(image: Buffer): Promise<Buffer> {
-  const { width, height } = ART_PX
-  const start = (COVER_PAGE.scrimTop + PAGE.bleed) / (PAGE.trimHeight + PAGE.bleed * 2)
-  const scrim = Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
-      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="${start}" stop-color="#0f0d0a" stop-opacity="0"/>
-        <stop offset="${start + (1 - start) * 0.55}" stop-color="#0f0d0a" stop-opacity="${COVER_PAGE.scrimMaxOpacity * 0.6}"/>
-        <stop offset="1" stop-color="#0f0d0a" stop-opacity="${COVER_PAGE.scrimMaxOpacity}"/>
-      </linearGradient></defs>
-      <rect width="100%" height="100%" fill="url(#g)"/>
-    </svg>`
-  )
-  return sharp(await artJpeg(image)).composite([{ input: scrim }]).jpeg({ quality: 92, chromaSubsampling: '4:4:4' }).toBuffer()
+/** Draw an image so it covers the box (centre-cropped), clipped to the box. Coordinates in points. */
+function drawCover(page: PDFPage, image: PDFImage, x: number, y: number, width: number, height: number) {
+  const scale = Math.max(width / image.width, height / image.height)
+  const w = image.width * scale
+  const h = image.height * scale
+  page.pushOperators(pushGraphicsState(), rectangle(x, y, width, height), clip(), endPath())
+  page.drawImage(image, { x: x + (width - w) / 2, y: y + (height - h) / 2, width: w, height: h })
+  page.pushOperators(popGraphicsState())
 }
 
-async function drawFullBleedArt(doc: PDFDocument, page: PDFPage, image: Buffer) {
-  const jpg = await doc.embedJpg(await artJpeg(image))
-  page.drawImage(jpg, { x: 0, y: 0, width: PAGE_W, height: PAGE_H })
+/** Vector fallback for the cover scrim: thin strips of increasing opacity. */
+function drawVectorScrim(page: PDFPage) {
+  const top = Y(COVER_PAGE.scrimTop)
+  const steps = 120
+  const strip = top / steps
+  for (let i = 0; i < steps; i++) {
+    const t = (i + 0.5) / steps
+    page.drawRectangle({
+      x: 0,
+      y: top - (i + 1) * strip,
+      width: PAGE_W,
+      height: strip,
+      color: rgb(0.06, 0.05, 0.04),
+      opacity: COVER_PAGE.scrimMaxOpacity * (0.25 * t + 0.75 * t * t),
+    })
+  }
+}
+
+async function drawFullBleedArt(doc: PDFDocument, page: PDFPage, image: Buffer): Promise<PDFImage> {
+  const art = await embedArt(doc, image)
+  drawCover(page, art.image, 0, 0, PAGE_W, PAGE_H)
+  return art.image
 }
 
 function drawGridPage(page: PDFPage, fonts: Fonts, month: number, input: PrintInput) {
@@ -233,6 +284,13 @@ function drawCoverTitle(page: PDFPage, fonts: Fonts, input: PrintInput) {
   } as Parameters<PDFPage['drawText']>[1])
 }
 
+/** Small copy of a page for the back-cover index (full image when sharp is unavailable). */
+async function embedThumb(doc: PDFDocument, input: Buffer): Promise<PDFImage> {
+  const sharp = await loadSharp()
+  if (!sharp) return (await embedArt(doc, input)).image
+  return doc.embedJpg(await sharp(input).rotate().resize(660, 495, { fit: 'cover' }).jpeg({ quality: 88 }).toBuffer())
+}
+
 async function drawBackCover(doc: PDFDocument, page: PDFPage, fonts: Fonts, input: PrintInput) {
   const ink = hex(INK)
   const muted = hex(MUTED)
@@ -254,8 +312,8 @@ async function drawBackCover(doc: PDFDocument, page: PDFPage, fonts: Fonts, inpu
     const row = Math.floor(i / columns)
     const x = 0.5 + col * (thumbW + gap)
     const y = top + row * rowPitch
-    const jpg = await doc.embedJpg(await artJpeg(input.months[i], 660, Math.round(660 * (thumbH / thumbW))))
-    page.drawImage(jpg, { x: X(x), y: Y(y + thumbH), width: thumbW * PT, height: thumbH * PT })
+    const thumb = await embedThumb(doc, input.months[i])
+    drawCover(page, thumb, X(x), Y(y + thumbH), thumbW * PT, thumbH * PT)
     page.drawText(MONTH_NAMES[i].toUpperCase(), {
       x: X(x),
       y: Y(y + thumbH + 0.16),
@@ -293,7 +351,9 @@ export async function buildCoverPdf(input: PrintInput): Promise<Uint8Array> {
   const fonts = await loadFonts(doc)
 
   const front = newPage(doc)
-  await drawFullBleedArt(doc, front, await withCoverScrim(input.cover))
+  const cover = await embedArt(doc, input.cover, { scrim: true })
+  drawCover(front, cover.image, 0, 0, PAGE_W, PAGE_H)
+  if (!cover.scrimBurned) drawVectorScrim(front)
   drawCoverTitle(front, fonts, input)
 
   const back = newPage(doc)
