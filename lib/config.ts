@@ -2,7 +2,10 @@
 
 export const SITE = {
   name: 'PetCalendar.ai',
-  url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  // Falls back to the Vercel production domain when NEXT_PUBLIC_APP_URL is not set.
+  url:
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:3000'),
   supportEmail: 'hello@petcalendar.ai',
   tagline: 'Your pet, starring in every month of the year.',
   description:
