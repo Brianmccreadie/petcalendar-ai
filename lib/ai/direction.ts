@@ -24,7 +24,7 @@ const SHOTS = [
 ]
 
 const COVER_SHOT =
-  'Cover portrait. Three-quarter view at the pet’s eye level, the pet filling roughly 40% of the frame and looking just past the camera, with the setting clearly readable around it. Keep the lower fifth of the frame calm — the title is set there.'
+  'Cover portrait. The pet sits or stands facing the camera in the horizontal centre of the frame, occupying roughly the middle third, at its eye level. Keep the left third and the right third of the frame at mid-height calm and uncluttered — soft background only, no faces, props or busy detail — because the name and the year are set there. Keep the bottom-right corner simple too.'
 
 function hash(text: string): number {
   let h = 0

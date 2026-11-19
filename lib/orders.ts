@@ -140,6 +140,7 @@ export async function fulfilOrder(orderId: string): Promise<Order> {
         styleName: style?.name ?? 'Custom',
         accentColor: style?.accentColor ?? '#86672a',
         year: project.start_year,
+        petType: new Set(pets.map((p) => p.pet.pet_type)).size === 1 ? pets[0].pet.pet_type : 'other',
         cover: await load(cover!),
         months: [] as Buffer[],
       }

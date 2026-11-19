@@ -21,6 +21,7 @@ const input = {
   styleName: 'Sampler',
   accentColor: '#86672a',
   year: Number(year),
+  petType,
   cover: await read('pet-photoshoot'),
   months: await Promise.all(styles.map(read)),
 }

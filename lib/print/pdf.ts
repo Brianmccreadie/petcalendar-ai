@@ -25,7 +25,7 @@ import {
   RULE,
   WEEKDAY_LABELS,
   buildMonthGrid,
-  coverSubtitle,
+  coverText,
   coverTitle,
   gridCellRect,
   joinPetNames,
@@ -62,6 +62,8 @@ export interface PrintInput {
   styleName: string
   accentColor: string
   year: number
+  /** 'dog' | 'cat' | 'other' — used in the cover caption. */
+  petType?: string
   /** Raw image bytes for the cover. */
   cover: Buffer
   /** Raw image bytes for months 1-12, in order. */
@@ -69,6 +71,7 @@ export interface PrintInput {
 }
 
 interface Fonts {
+  cover: PDFFont
   display: PDFFont
   displaySemi: PDFFont
   sans: PDFFont
@@ -90,13 +93,14 @@ async function loadFonts(doc: PDFDocument): Promise<Fonts> {
   doc.registerFontkit(fontkit)
   const dir = path.join(process.cwd(), 'lib', 'print', 'fonts')
   const load = async (file: string) => doc.embedFont(await readFile(path.join(dir, file)), { subset: true })
-  const [display, displaySemi, sans, sansBold] = await Promise.all([
+  const [cover, display, displaySemi, sans, sansBold] = await Promise.all([
+    load('nunito-800-italic.woff'),
     load('instrument-serif-400.woff'),
     load('instrument-serif-400.woff'),
     load('geist-400.ttf'),
     load('geist-600.ttf'),
   ])
-  return { display, displaySemi, sans, sansBold }
+  return { cover, display, displaySemi, sans, sansBold }
 }
 
 /** Drop characters the embedded font cannot draw (emoji, non-Latin scripts). */
@@ -127,15 +131,20 @@ async function embedArt(doc: PDFDocument, input: Buffer, options: { scrim?: bool
     const { width, height } = ART_PX
     let pipeline = sharp(input).rotate().resize(width, height, { fit: 'cover', position: 'centre' }).toColourspace('srgb')
     if (options.scrim) {
-      const start = (COVER_PAGE.scrimTop + PAGE.bleed) / (PAGE.trimHeight + PAGE.bleed * 2)
+      // Soft shade behind each block of cover text so white type holds on bright art.
+      const px = (inches: number) => Math.round((inches + PAGE.bleed) * PRINT_DPI)
+      const C = COVER_PAGE
+      const blob = (cx: number, cy: number, rx: number, ry: number) =>
+        `<ellipse cx="${px(cx)}" cy="${px(cy)}" rx="${Math.round(rx * PRINT_DPI)}" ry="${Math.round(ry * PRINT_DPI)}" fill="url(#g)"/>`
       const scrim = Buffer.from(
         `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
-          <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="${start}" stop-color="#0f0d0a" stop-opacity="0"/>
-            <stop offset="${start + (1 - start) * 0.55}" stop-color="#0f0d0a" stop-opacity="${COVER_PAGE.scrimMaxOpacity * 0.6}"/>
-            <stop offset="1" stop-color="#0f0d0a" stop-opacity="${COVER_PAGE.scrimMaxOpacity}"/>
-          </linearGradient></defs>
-          <rect width="100%" height="100%" fill="url(#g)"/>
+          <defs><radialGradient id="g">
+            <stop offset="0" stop-color="#0f0d0a" stop-opacity="0.42"/>
+            <stop offset="1" stop-color="#0f0d0a" stop-opacity="0"/>
+          </radialGradient></defs>
+          ${blob(C.left + C.zoneWidth / 2, C.centerY, C.zoneWidth * 0.75, 2.2)}
+          ${blob(C.right - C.zoneWidth / 2, C.centerY, C.zoneWidth * 0.75, 2.2)}
+          ${blob(C.right - 1.2, C.captionBaseline - 0.1, 2.6, 0.9)}
         </svg>`
       )
       pipeline = sharp(await pipeline.jpeg({ quality: 95, chromaSubsampling: '4:4:4' }).toBuffer()).composite([{ input: scrim }])
@@ -158,24 +167,6 @@ function drawCover(page: PDFPage, image: PDFImage, x: number, y: number, width: 
   page.pushOperators(pushGraphicsState(), rectangle(x, y, width, height), clip(), endPath())
   page.drawImage(image, { x: x + (width - w) / 2, y: y + (height - h) / 2, width: w, height: h })
   page.pushOperators(popGraphicsState())
-}
-
-/** Vector fallback for the cover scrim: thin strips of increasing opacity. */
-function drawVectorScrim(page: PDFPage) {
-  const top = Y(COVER_PAGE.scrimTop)
-  const steps = 120
-  const strip = top / steps
-  for (let i = 0; i < steps; i++) {
-    const t = (i + 0.5) / steps
-    page.drawRectangle({
-      x: 0,
-      y: top - (i + 1) * strip,
-      width: PAGE_W,
-      height: strip,
-      color: rgb(0.06, 0.05, 0.04),
-      opacity: COVER_PAGE.scrimMaxOpacity * (0.25 * t + 0.75 * t * t),
-    })
-  }
 }
 
 async function drawFullBleedArt(doc: PDFDocument, page: PDFPage, image: Buffer): Promise<PDFImage> {
@@ -268,20 +259,29 @@ function drawGridPage(page: PDFPage, fonts: Fonts, month: number, input: PrintIn
 
 function drawCoverTitle(page: PDFPage, fonts: Fonts, input: PrintInput) {
   const C = COVER_PAGE
+  const font = fonts.cover
+  const t = coverText(input.petNames, input.year, input.styleName, input.petType ?? 'other')
   const white = rgb(1, 1, 1)
-  const title = safeText(fonts.display, coverTitle(input.petNames, input.year)) || String(input.year)
-  const titleSize = fitSize(fonts.display, title, C.titleSize * PT, C.titleMaxWidth * PT)
-  page.drawText(title, { x: X(C.left), y: Y(C.titleBaseline), size: titleSize, font: fonts.display, color: white })
+  const shadow = rgb(0.06, 0.05, 0.04)
 
-  page.drawText(safeText(fonts.sansBold, coverSubtitle(input.styleName).toUpperCase()), {
-    x: X(C.left),
-    y: Y(C.subtitleBaseline),
-    size: C.subtitleSize * PT * 0.8,
-    font: fonts.sansBold,
-    color: white,
-    opacity: 0.85,
-    characterSpacing: 2,
-  } as Parameters<PDFPage['drawText']>[1])
+  // White lettering with a soft offset shadow, anchored left or right.
+  const put = (text: string, anchor: 'left' | 'right', baseline: number, sizeIn: number, maxWidthIn: number) => {
+    const clean = safeText(font, text)
+    if (!clean) return
+    const size = fitSize(font, clean, sizeIn * PT, maxWidthIn * PT)
+    const width = font.widthOfTextAtSize(clean, size)
+    const x = anchor === 'left' ? X(C.left) : X(C.right) - width
+    const y = Y(baseline)
+    const offset = size * 0.035
+    page.drawText(clean, { x: x + offset * 0.4, y: y - offset, size, font, color: shadow, opacity: 0.45 })
+    page.drawText(clean, { x, y, size, font, color: white })
+  }
+
+  t.nameLines.forEach((line, i) => put(line, 'left', t.nameBaselines[i], t.nameSize, C.zoneWidth))
+  put(t.year, 'right', t.yearBaseline, t.yearSize, C.zoneWidth)
+  t.caption.forEach((line, i) =>
+    put(line, 'right', C.captionBaseline + (i - 1) * C.captionSize * C.captionLineHeight, C.captionSize, 4.5)
+  )
 }
 
 /** Small copy of a page for the back-cover index (full image when sharp is unavailable). */
@@ -353,7 +353,6 @@ export async function buildCoverPdf(input: PrintInput): Promise<Uint8Array> {
   const front = newPage(doc)
   const cover = await embedArt(doc, input.cover, { scrim: true })
   drawCover(front, cover.image, 0, 0, PAGE_W, PAGE_H)
-  if (!cover.scrimBurned) drawVectorScrim(front)
   drawCoverTitle(front, fonts, input)
 
   const back = newPage(doc)

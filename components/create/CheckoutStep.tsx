@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import CoverTitle from '@/components/calendar/CoverTitle'
 import { ArrowLeft, Lock, Truck } from '@/components/icons'
-import { coverSubtitle, coverTitle, joinPetNames } from '@/lib/calendar/layout'
+import { joinPetNames } from '@/lib/calendar/layout'
 import { calendarSlots, isCalendarComplete, useCalendar } from '@/lib/client/use-calendar'
 import { PRICING, formatPrice, orderTotalCents } from '@/lib/config'
 import { styleById } from '@/lib/style-meta'
@@ -67,7 +67,7 @@ export default function CheckoutStep() {
             {cover.image_url ? (
               <>
                 <img src={cover.image_url} alt={`Cover of ${names}’s calendar`} className="h-full w-full object-cover" />
-                <CoverTitle title={coverTitle(petNames, data.project.start_year)} subtitle={coverSubtitle(style?.name ?? '')} />
+                <CoverTitle petNames={petNames} year={data.project.start_year} styleName={style?.name ?? ''} petType={data.project.pet_type} />
               </>
             ) : (
               <div className="skeleton h-full w-full" />
