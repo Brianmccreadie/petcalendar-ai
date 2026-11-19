@@ -1,4 +1,4 @@
-import { resolveProviderName, falApiKey, geminiApiKey } from './ai/config'
+import { resolveProviderName, falApiKey, falKeyShape, geminiApiKey } from './ai/config'
 import { imageProcessingStatus } from './images'
 import { isLuluConfigured } from './lulu'
 import { BUCKETS } from './storage'
@@ -81,6 +81,7 @@ export async function readiness() {
     image_key: imageKey,
     image_key_accepted: keyProbe.ok,
     ...(keyProbe.error ? { image_key_error: keyProbe.error } : {}),
+    ...(provider === 'fal' && !keyProbe.ok ? { image_key_shape: falKeyShape() } : {}),
     storage: storage.ok,
     ...(storage.error ? { storage_error: storage.error } : {}),
     // Optional: the site works without it, with slightly larger stored files.
