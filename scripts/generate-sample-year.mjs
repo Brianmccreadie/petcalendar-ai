@@ -2,7 +2,7 @@
 // cover + twelve months — exactly what a customer receives.
 //
 //   npm run sample:year -- [styleId] [referenceImage] [name] [petType]
-//   → public/year/cover.jpg, public/year/01.jpg … 12.jpg
+//   → public/sample-year/cover.jpg, public/sample-year/01.jpg … 12.jpg
 import { mkdir, readFile, writeFile } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
@@ -22,7 +22,7 @@ const force = process.argv.includes('--force')
 const only = (process.argv.find((a) => a.startsWith('--only='))?.slice(7) ?? '').split(',').filter(Boolean)
 const subject = { name, petType }
 const reference = ai.petReference(subject, await readFile(ref), 'image/jpeg')
-const dir = path.resolve(process.env.SAMPLE_YEAR_DIR || 'public/year')
+const dir = path.resolve(process.env.SAMPLE_YEAR_DIR || 'public/sample-year')
 await mkdir(dir, { recursive: true })
 
 const pages = [{ file: 'cover.jpg', type: 'cover', month: null, scene: getCoverPrompt(style, describeSubjects([subject])) }]

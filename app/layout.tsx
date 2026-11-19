@@ -42,13 +42,13 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `${SITE.name} — Custom pet calendars, starring your pet`,
     description: SITE.description,
-    images: [{ url: '/year/cover.jpg', width: 1400, height: 1050, alt: 'A sample calendar cover starring a dog' }],
+    images: [{ url: '/sample-year/cover.jpg', width: 1400, height: 1050, alt: 'A sample calendar cover starring a dog' }],
   },
   twitter: { card: 'summary_large_image' },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#2a0709',
+  themeColor: '#0f2140',
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

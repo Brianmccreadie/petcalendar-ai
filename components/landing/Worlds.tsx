@@ -4,6 +4,7 @@ import Link from 'next/link'
 import CoverTitle from '@/components/calendar/CoverTitle'
 import FlipCalendar from '@/components/calendar/FlipCalendar'
 import GridPage from '@/components/calendar/GridPage'
+import WallCalendar from '@/components/calendar/WallCalendar'
 import Reveal from '@/components/Reveal'
 import { ArrowRight, Plus } from '@/components/icons'
 import { LIMITS, PRICING, PRODUCT_SPECS, SITE, defaultCalendarYear, formatPrice } from '@/lib/config'
@@ -21,15 +22,15 @@ export function MuralWorld() {
     <WorldSection
       world={WORLDS.hero}
       index="01"
-      serif="A year"
-      sans="of them"
+      serif="Your pet’s"
+      sans="calendar"
       as="h1"
       priority
       underNav
       bannerClassName="h-[100svh] min-h-[36rem] max-h-[70rem]"
     >
       <Reveal>
-        <Statement lead="PetCalendar">turns the one you love most into twelve months of legend.</Statement>
+        <Statement lead="A custom wall calendar">starring your pet, in any world you choose.</Statement>
         <p className="lede mx-auto mt-8 max-w-xl text-center">
           Upload a few photos, choose a world, and we create thirteen scenes that truly look like your pet — typeset,
           printed on heavyweight paper and delivered.
@@ -43,6 +44,21 @@ export function MuralWorld() {
           </p>
         </div>
       </Reveal>
+      <Reveal delay={120}>
+        <div className="mx-auto mt-20 grid max-w-5xl grid-cols-3 items-start gap-4 sm:gap-10">
+          {[0, 5, 9].map((m, i) => (
+            <WallCalendar
+              key={m}
+              imageUrl={SHOWCASE.months[m].src}
+              imageAlt={`${SHOWCASE.months[m].name} page of a sample calendar: ${SHOWCASE.petName} in ${SHOWCASE_PLACES[m]}`}
+              month={m + 1}
+              year={defaultCalendarYear()}
+              caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`}
+              className={['-rotate-2 sm:mt-8', 'sm:-mt-2', 'rotate-2 sm:mt-8'][i]}
+            />
+          ))}
+        </div>
+      </Reveal>
     </WorldSection>
   )
 }
@@ -50,13 +66,13 @@ export function MuralWorld() {
 export function VoyageWorld() {
   const year = defaultCalendarYear()
   return (
-    <WorldSection world={WORLDS.voyage} id="the-year" index="02" serif="One dog" sans="everywhere">
+    <WorldSection world={WORLDS.academy} id="the-year" index="02" serif="One dog," sans="a year of magic">
       <div className="grid items-center gap-16 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
         <Reveal>
           <p className="text-3xl font-bold tracking-tight sm:text-[2.6rem]">This is the real thing.</p>
           <p className="mt-2 font-display text-[2.1rem] leading-[1.08] sm:text-[3.3rem]">
             One photo of {SHOWCASE.petName}, one theme, and a whole year of her — same markings, same blue eyes, twelve
-            different places.
+            different scenes.
           </p>
           <div className="mt-9 flex items-center gap-5">
             <Image
@@ -78,22 +94,20 @@ export function VoyageWorld() {
         </Reveal>
       </div>
 
-      <ol className="mt-24 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-14">
+      <ol className="mt-24 grid grid-cols-2 gap-x-4 gap-y-14 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-16">
         {SHOWCASE.months.map((page, i) => (
           <li key={page.month}>
             <Reveal delay={(i % 4) * 90}>
               <figure className="group">
-                <div className="overflow-hidden rounded-[2px] bg-paper-deep shadow-page">
-                  <Image
-                    src={page.src}
-                    alt={`${page.name}: ${SHOWCASE.petName} in ${SHOWCASE_PLACES[i]}`}
-                    width={700}
-                    height={525}
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="aspect-[4/3] w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.05]"
-                  />
-                </div>
-                <figcaption className="mt-4 flex items-baseline justify-between border-t border-ink/20 pt-3">
+                <WallCalendar
+                  imageUrl={page.src}
+                  imageAlt={`${page.name}: ${SHOWCASE.petName} in ${SHOWCASE_PLACES[i]}`}
+                  month={page.month}
+                  year={year}
+                  caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`}
+                  className="transition-transform duration-500 ease-out group-hover:-translate-y-1.5"
+                />
+                <figcaption className="mt-5 flex items-baseline justify-between">
                   <span className="font-display text-2xl">{page.name}</span>
                   <span className="text-xs font-medium uppercase tracking-[0.16em] text-ink/50">{SHOWCASE_PLACES[i]}</span>
                 </figcaption>
@@ -120,12 +134,12 @@ export function CosmosWorld() {
       </Reveal>
       <ol className="mx-auto mt-16 max-w-5xl">
         {steps.map(([title, body], i) => (
-          <li key={title} className="border-t border-ivory/15 last:border-b">
+          <li key={title} className="border-t border-ink/15 last:border-b">
             <Reveal delay={i * 80}>
               <div className="grid gap-4 py-9 md:grid-cols-[7rem_1fr_1.1fr] md:items-baseline md:gap-10 lg:py-11">
-                <span className="display-italic text-5xl text-gold lg:text-6xl">{String(i + 1).padStart(2, '0')}</span>
+                <span className="display-italic text-5xl text-gold-deep lg:text-6xl">{String(i + 1).padStart(2, '0')}</span>
                 <h3 className="font-display text-4xl leading-none lg:text-5xl">{title}</h3>
-                <p className="max-w-md text-ivory/65">{body}</p>
+                <p className="max-w-md text-ink/65">{body}</p>
               </div>
             </Reveal>
           </li>
@@ -155,7 +169,7 @@ const craft = [
 export function AcademyWorld() {
   const year = defaultCalendarYear()
   return (
-    <WorldSection world={WORLDS.academy} index="05" serif="Real" sans="spellwork">
+    <WorldSection world={WORLDS.voyage} index="05" serif="Set in" sans="real type">
       <Reveal>
         <Statement lead="AI paints the picture.">We set the type.</Statement>
       </Reveal>
@@ -174,9 +188,9 @@ export function AcademyWorld() {
         <dl>
           {craft.map(([title, body], i) => (
             <Reveal key={title} delay={i * 90}>
-              <div className="border-t border-ivory/15 py-7">
+              <div className="border-t border-ink/15 py-7">
                 <dt className="font-display text-3xl">{title}</dt>
-                <dd className="mt-2 max-w-lg text-ivory/65">{body}</dd>
+                <dd className="mt-2 max-w-lg text-ink/65">{body}</dd>
               </div>
             </Reveal>
           ))}
@@ -201,38 +215,38 @@ export function CourtWorld() {
         <Statement lead="Nothing to pay">until you love every page.</Statement>
       </Reveal>
       <Reveal delay={120}>
-        <div className="mx-auto mt-16 grid max-w-5xl overflow-hidden rounded-[1.25rem] border border-gold/30 bg-black/25 backdrop-blur-sm lg:grid-cols-[1fr_1.1fr]">
-          <div className="flex flex-col justify-between border-b border-ivory/12 p-8 sm:p-12 lg:border-b-0 lg:border-r">
+        <div className="mx-auto mt-16 grid max-w-5xl overflow-hidden rounded-[1.25rem] border border-ink/10 bg-white shadow-lift lg:grid-cols-[1fr_1.1fr]">
+          <div className="flex flex-col justify-between border-b border-ink/12 p-8 sm:p-12 lg:border-b-0 lg:border-r">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">The wall calendar</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-deep">The wall calendar</p>
               <p className="mt-6 flex items-start font-display leading-none">
-                <span className="mt-3 text-4xl text-ivory/70">$</span>
+                <span className="mt-3 text-4xl text-ink/70">$</span>
                 <span className="text-[8rem] tracking-tight sm:text-[9.5rem]">{dollars}</span>
-                <span className="mt-3 text-4xl text-ivory/70">.{cents}</span>
+                <span className="mt-3 text-4xl text-ink/70">.{cents}</span>
               </p>
-              <p className="mt-2 text-ivory/60">Shipping included · extra copies {formatPrice(PRICING.extraCopyCents)} each</p>
+              <p className="mt-2 text-ink/60">Shipping included · extra copies {formatPrice(PRICING.extraCopyCents)} each</p>
             </div>
             <div className="mt-10">
-              <Link href="/create" className="btn btn-gold btn-lg w-full">
+              <Link href="/create" className="btn btn-primary btn-lg w-full">
                 Make your calendar <ArrowRight size={18} />
               </Link>
-              <p className="mt-4 text-center text-xs text-ivory/45">No account and no card needed to start.</p>
+              <p className="mt-4 text-center text-xs text-ink/45">No account and no card needed to start.</p>
             </div>
           </div>
           <div className="p-8 sm:p-12">
             <ul>
               {included.map((item) => (
-                <li key={item} className="flex items-start gap-4 border-b border-ivory/10 py-4 first:pt-0">
-                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
-                  <span className="text-ivory/85">{item}</span>
+                <li key={item} className="flex items-start gap-4 border-b border-ink/10 py-4 first:pt-0">
+                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-deep" />
+                  <span className="text-ink/85">{item}</span>
                 </li>
               ))}
             </ul>
             <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5">
               {PRODUCT_SPECS.slice(0, 4).map((spec) => (
                 <div key={spec.label}>
-                  <dt className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-ivory/45">{spec.label}</dt>
-                  <dd className="mt-1 text-sm text-ivory/85">{spec.value}</dd>
+                  <dt className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-ink/45">{spec.label}</dt>
+                  <dd className="mt-1 text-sm text-ink/85">{spec.value}</dd>
                 </div>
               ))}
             </dl>
@@ -280,7 +294,7 @@ export function HeavensWorld() {
           <Link href="/create" className="btn btn-outline">
             Make your calendar
           </Link>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-ivory/50">About five minutes · free to preview</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] opacity-60">About five minutes · free to preview</p>
         </div>
       </Reveal>
     </WorldSection>
