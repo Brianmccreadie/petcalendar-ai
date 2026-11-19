@@ -31,10 +31,26 @@ const tips = [
 const newPet = (): PetDraft => ({ id: crypto.randomUUID(), name: '', type: 'dog', photos: [] })
 
 async function postJson(url: string, body: unknown) {
-  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-  const data = await res.json().catch(() => ({}))
-  if (!res.ok) throw new Error(data.error || 'Something went wrong. Please try again.')
-  return data
+  // One quiet retry: a cold start or a brief network blip should not cost the customer their upload.
+  for (let attempt = 0; ; attempt++) {
+    let res: Response
+    try {
+      res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    } catch {
+      if (attempt === 0) {
+        await new Promise((r) => setTimeout(r, 900))
+        continue
+      }
+      throw new Error('We could not reach the server. Check your connection and try again.')
+    }
+    const data = await res.json().catch(() => ({}))
+    if (res.ok) return data
+    if (res.status >= 500 && attempt === 0) {
+      await new Promise((r) => setTimeout(r, 900))
+      continue
+    }
+    throw new Error(data.error || `Could not start your calendar (error ${res.status}). Please try again.`)
+  }
 }
 
 export default function UploadStep() {
