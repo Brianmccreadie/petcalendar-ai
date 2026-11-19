@@ -42,8 +42,41 @@ export const FAL_IMAGE = {
   resolution: process.env.GEMINI_IMAGE_SIZE || '2K',
 }
 
+const FAL_KEY_NAMES = ['FAL_KEY', 'FAL_API_KEY', 'FAL_AI_KEY', 'FAL_AI_API_KEY', 'FAL'] as const
+
+/** Tolerate the common paste mistakes: whitespace, wrapping quotes, a leading "Key ". */
+function cleanKey(raw: string): string {
+  return raw
+    .trim()
+    .replace(/^["'`]+|["'`]+$/g, '')
+    .replace(/^Key\s+/i, '')
+    .trim()
+}
+
 export function falApiKey(): string | undefined {
-  return process.env.FAL_KEY || process.env.FAL_API_KEY || process.env.FAL_AI_KEY || process.env.FAL_AI_API_KEY || process.env.FAL
+  for (const name of FAL_KEY_NAMES) {
+    const value = process.env[name]
+    if (value && cleanKey(value)) return cleanKey(value)
+  }
+  return undefined
+}
+
+/** Shape of the configured key for diagnostics — never the key itself. */
+export function falKeyShape() {
+  const present = FAL_KEY_NAMES.filter((name) => Boolean(process.env[name]))
+  const raw = present.length ? process.env[present[0]]! : ''
+  const cleaned = cleanKey(raw)
+  const [id = '', secret = ''] = cleaned.split(':')
+  return {
+    variable_used: present[0] ?? null,
+    other_fal_variables_set: present.slice(1),
+    length: cleaned.length,
+    has_colon: cleaned.includes(':'),
+    id_length: id.length,
+    secret_length: secret.length,
+    had_quotes_or_spaces: raw !== cleaned,
+    looks_like_placeholder: /your|xxx|example|<|>/i.test(cleaned),
+  }
 }
 
 export const GEMINI_IMAGE = {
