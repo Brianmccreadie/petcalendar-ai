@@ -2,7 +2,6 @@
 import CoverTitle from '@/components/calendar/CoverTitle'
 import GridPage from '@/components/calendar/GridPage'
 import Reveal from '@/components/Reveal'
-import { coverSubtitle, coverTitle } from '@/lib/calendar/layout'
 import { defaultCalendarYear } from '@/lib/config'
 import { SHOWCASE } from '@/lib/showcase'
 
@@ -30,7 +29,7 @@ export default function Craft() {
           <div className="relative pb-[16%] pr-[8%]">
             <div className="relative aspect-[11/8.5] overflow-hidden rounded-[2px] shadow-lift">
               <img src={SHOWCASE.cover} alt={`Sample calendar cover: ${SHOWCASE.petName}’s ${year}`} className="h-full w-full object-cover" loading="lazy" />
-              <CoverTitle title={coverTitle([SHOWCASE.petName], year)} subtitle={coverSubtitle(SHOWCASE.styleName)} />
+              <CoverTitle petNames={[SHOWCASE.petName]} year={year} styleName={SHOWCASE.styleName} petType="dog" />
             </div>
             <div className="absolute bottom-0 right-0 w-[40%] overflow-hidden rounded-[2px] shadow-lift">
               <GridPage month={10} year={year} caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`} />

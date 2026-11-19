@@ -7,7 +7,7 @@ import { useSearchParams } from 'next/navigation'
 import CoverTitle from '@/components/calendar/CoverTitle'
 import WallCalendar from '@/components/calendar/WallCalendar'
 import { ArrowLeft, ArrowRight, Check, Pencil, Play, Refresh } from '@/components/icons'
-import { MONTH_NAMES, coverSubtitle, coverTitle, joinPetNames, possessive } from '@/lib/calendar/layout'
+import { MONTH_NAMES, joinPetNames, possessive } from '@/lib/calendar/layout'
 import { calendarSlots, useCalendar, type CalendarSlot } from '@/lib/client/use-calendar'
 import { LIMITS, PRICING, formatPrice } from '@/lib/config'
 import { styleById } from '@/lib/style-meta'
@@ -222,7 +222,7 @@ export default function ReviewStep() {
                 {slot.status === 'complete' && slot.image_url && !isWorking ? (
                   <>
                     <img src={slot.image_url} alt={`Cover artwork for ${names}`} className="h-full w-full object-cover" />
-                    <CoverTitle title={coverTitle(petNames, year)} subtitle={coverSubtitle(style?.name ?? '')} />
+                    <CoverTitle petNames={petNames} year={year} styleName={style?.name ?? ''} petType={data.project.pet_type} />
                   </>
                 ) : (
                   <StatusArt slot={slot} working={isWorking} />

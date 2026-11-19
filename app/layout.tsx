@@ -21,6 +21,15 @@ const geist = localFont({
   display: 'swap',
 })
 
+// Cover lettering for the calendar itself.
+const coverFace = localFont({
+  src: '../public/fonts/nunito-800-italic.woff2',
+  variable: '--font-cover',
+  weight: '800',
+  style: 'italic',
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
@@ -44,7 +53,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${instrument.variable} ${geist.variable} h-full antialiased`}>
+    <html lang="en" className={`${instrument.variable} ${geist.variable} ${coverFace.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <a
           href="#main"

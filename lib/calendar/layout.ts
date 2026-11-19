@@ -140,18 +140,89 @@ export const GRID_PAGE = {
   holidaySize: 0.09,
 }
 
+// Cover: the pet sits in the middle of the frame, the name to its left and
+// the year to its right at mid-height, with a small caption bottom-right.
 export const COVER_PAGE = {
-  /** Scrim starts this far down the page and darkens toward the bottom. */
-  scrimTop: 4.0,
-  scrimMaxOpacity: 0.8,
-  titleBaseline: 7.3,
-  titleSize: 1.3,
-  titleMaxWidth: 10,
-  /** Average glyph width as a fraction of font size, used to fit long titles on screen. */
-  titleCharWidth: 0.4,
-  subtitleBaseline: 7.78,
-  subtitleSize: 0.15,
   left: 0.5,
+  right: 10.5,
+  /** Width of the text zone on each side of the pet. */
+  zoneWidth: 3.5,
+  /** Vertical centre of the name and year, from the top trim edge. */
+  centerY: 4.0,
+  textSize: 1.08,
+  minTextSize: 0.5,
+  maxNameLines: 3,
+  lineHeight: 1.02,
+  /** Average glyph width of the cover face (Nunito ExtraBold Italic, capitals) as a fraction of font size. */
+  charWidth: 0.7,
+  captionSize: 0.21,
+  captionBaseline: 7.98,
+  captionLineHeight: 1.2,
+}
+
+export interface CoverText {
+  nameLines: string[]
+  nameSize: number // inches
+  /** Baseline of each name line, inches from the top trim edge. */
+  nameBaselines: number[]
+  year: string
+  yearSize: number
+  yearBaseline: number
+  caption: [string, string]
+}
+
+function wrapWords(words: string[], maxChars: number): string[] {
+  const lines: string[] = []
+  let line = ''
+  for (const word of words) {
+    const next = line ? `${line} ${word}` : word
+    if (next.length <= maxChars || !line) line = next
+    else {
+      lines.push(line)
+      line = word
+    }
+  }
+  if (line) lines.push(line)
+  return lines
+}
+
+/**
+ * Lay out the cover text. Short names print large on one line; longer and
+ * multi-pet names wrap onto up to three lines and shrink until they fit the
+ * left-hand zone.
+ */
+export function coverText(petNames: string[], year: number, styleName: string, petType: string): CoverText {
+  const C = COVER_PAGE
+  // Keep "&" with the name that follows it so it never sits on a line alone.
+  const words = joinPetNames(petNames)
+    .toUpperCase()
+    .replace(/& /g, '&\u00a0')
+    .split(/ +/)
+  let size = C.textSize
+  let lines: string[] = [words.join(' ')]
+  for (; size >= C.minTextSize; size -= 0.04) {
+    const maxChars = Math.floor(C.zoneWidth / (size * C.charWidth))
+    lines = wrapWords(words, maxChars)
+    const widest = Math.max(...lines.map((l) => l.length))
+    if (lines.length <= C.maxNameLines && widest <= maxChars) break
+  }
+  size = Math.max(size, C.minTextSize)
+  // A single very long word can still overflow at the minimum size: scale it to the zone.
+  const widest = Math.max(...lines.map((l) => l.length))
+  if (widest * size * C.charWidth > C.zoneWidth) size = C.zoneWidth / (widest * C.charWidth)
+
+  const block = (lines.length - 1) * size * C.lineHeight
+  const first = C.centerY - block / 2 + size * 0.36
+  const kind = petType === 'dog' ? 'Dog' : petType === 'cat' ? 'Cat' : 'Pet'
+  return {
+    nameLines: lines,
+    nameSize: size,
+    nameBaselines: lines.map((_, i) => first + i * size * C.lineHeight),
+    year: String(year),
+    yearSize: C.textSize,
+    yearBaseline: C.centerY + C.textSize * 0.36,
+    caption: [styleName, `${kind} Calendar`],
+  }
 }
 
 export function gridCellRect(grid: MonthGrid, column: number, row: number) {
