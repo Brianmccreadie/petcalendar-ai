@@ -29,29 +29,20 @@ export default function ThemeExplorer() {
   const active = styles.find((s) => s.id === activeId) ?? styles[0]
 
   return (
-    <section id="themes" className="on-dark grain relative">
-      <div className="relative mx-auto max-w-[84rem] px-5 py-28 sm:px-8 lg:py-40">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="eyebrow">Fifty themes</p>
-            <h2 className="display mt-6 max-w-3xl text-5xl sm:text-7xl">
-              Choose the world they <span className="display-italic text-gold">belong</span> in.
-            </h2>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <button type="button" className="chip" aria-pressed={category === 'all'} onClick={() => setCategory('all')}>
-              All
+    <div className="mt-16">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <button type="button" className="chip" aria-pressed={category === 'all'} onClick={() => setCategory('all')}>
+            All
+          </button>
+          {STYLE_CATEGORIES.map((c) => (
+            <button key={c.id} type="button" className="chip" aria-pressed={category === c.id} onClick={() => setCategory(c.id)}>
+              {c.label}
             </button>
-            {STYLE_CATEGORIES.map((c) => (
-              <button key={c.id} type="button" className="chip" aria-pressed={category === c.id} onClick={() => setCategory(c.id)}>
-                {c.label}
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
 
         {/* Desktop: index + stage */}
-        <div className="mt-16 hidden gap-14 lg:grid lg:grid-cols-[1fr_1.25fr]">
+        <div className="mt-12 hidden gap-14 lg:grid lg:grid-cols-[1fr_1.25fr]">
           <ol
             className="no-scrollbar max-h-[38rem] overflow-y-auto pr-4 [mask-image:linear-gradient(to_bottom,transparent,black_6%,black_90%,transparent)]"
             aria-label="Themes"
@@ -161,7 +152,6 @@ export default function ThemeExplorer() {
           </ul>
           <p className="mt-6 text-xs uppercase tracking-[0.2em] text-ivory/40">Swipe · {styles.length} themes</p>
         </div>
-      </div>
-    </section>
+    </div>
   )
 }

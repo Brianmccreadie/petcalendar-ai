@@ -1,13 +1,15 @@
 import Footer from '@/components/Footer'
-import FAQ, { faqs } from '@/components/landing/FAQ'
-import FinalCTA from '@/components/landing/FinalCTA'
-import Hero from '@/components/landing/Hero'
-import HowItWorks from '@/components/landing/HowItWorks'
-import Pricing from '@/components/landing/Pricing'
-import ThemeExplorer from '@/components/landing/ThemeExplorer'
-import ThemeMarquee from '@/components/landing/ThemeMarquee'
-import Craft from '@/components/landing/Craft'
-import YearShowcase from '@/components/landing/YearShowcase'
+import { faqs } from '@/components/landing/FAQ'
+import {
+  AcademyWorld,
+  CosmosWorld,
+  CourtWorld,
+  DeepWorld,
+  HearthWorld,
+  HeavensWorld,
+  MuralWorld,
+  VoyageWorld,
+} from '@/components/landing/Worlds'
 import { PRICING, SITE } from '@/lib/config'
 
 const structuredData = [
@@ -44,15 +46,14 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
       />
-      <Hero />
-      <ThemeMarquee />
-      <YearShowcase />
-      <HowItWorks />
-      <ThemeExplorer />
-      <Craft />
-      <Pricing />
-      <FAQ />
-      <FinalCTA />
+      <MuralWorld />
+      <VoyageWorld />
+      <CosmosWorld />
+      <DeepWorld />
+      <AcademyWorld />
+      <CourtWorld />
+      <HearthWorld />
+      <HeavensWorld />
       <Footer />
     </>
   )

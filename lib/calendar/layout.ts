@@ -240,7 +240,7 @@ export function coverSubtitle(styleName: string): string {
 }
 
 /** Darken light accent colours so they stay readable on white paper (screen and print). */
-export function printableAccent(color: string | undefined, fallback = '#86672a'): string {
+export function printableAccent(color: string | undefined, fallback = '#8c5a17'): string {
   if (!color || !/^#[0-9a-f]{6}$/i.test(color)) return fallback
   const n = parseInt(color.slice(1), 16)
   const rgb = [(n >> 16) & 255, (n >> 8) & 255, n & 255]

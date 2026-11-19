@@ -43,7 +43,7 @@ export default function Navbar() {
   return (
     <header
       className={`sticky top-0 z-50 text-ivory transition-[background-color,border-color] duration-300 ${
-        open ? 'border-b border-ivory/10 bg-night' : scrolled ? 'border-b border-ivory/10 bg-night/85 backdrop-blur-xl' : 'border-b border-transparent bg-night'
+        open ? 'border-b border-ivory/10 bg-night' : scrolled ? 'border-b border-ivory/10 bg-night/80 backdrop-blur-xl' : pathname === '/' ? 'border-b border-transparent bg-transparent' : 'border-b border-transparent bg-night'
       }`}
     >
       <div className="mx-auto flex h-16 max-w-[84rem] items-center justify-between px-5 sm:px-8">
@@ -59,13 +59,13 @@ export default function Navbar() {
           <>
             <nav className="hidden items-center gap-9 md:flex" aria-label="Main">
               {links.map((link) => (
-                <Link key={link.href} href={link.href} className="text-sm font-medium text-ivory/65 transition-colors hover:text-ivory">
+                <Link key={link.href} href={link.href} className="text-sm font-medium text-ivory/85 transition-colors hover:text-ivory">
                   {link.label}
                 </Link>
               ))}
             </nav>
             <div className="hidden items-center gap-6 md:flex">
-              <Link href="/dashboard" className="text-sm font-medium text-ivory/65 transition-colors hover:text-ivory">
+              <Link href="/dashboard" className="text-sm font-medium text-ivory/85 transition-colors hover:text-ivory">
                 My calendars
               </Link>
               <Link href="/create" className="btn btn-light btn-sm">
