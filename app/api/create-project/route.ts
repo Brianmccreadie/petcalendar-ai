@@ -70,6 +70,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ projectId: project.id, petIds })
   } catch (error) {
     console.error('create-project error:', error)
-    return jsonError('Something went wrong. Please try again.', 500)
+    const detail = error instanceof Error ? error.message : ''
+    if (/not configured/i.test(detail)) {
+      // Typically a preview deployment without the production environment variables.
+      return jsonError('This copy of the site is not connected to its database, so calendars cannot be started here.', 503)
+    }
+    if (/fetch failed|network|timeout|ECONN|ENOTFOUND/i.test(detail)) {
+      return jsonError('We could not reach the database just now. Please try again in a moment.', 503)
+    }
+    return jsonError('Could not start your calendar (unexpected server error). Please try again.', 500)
   }
 }
