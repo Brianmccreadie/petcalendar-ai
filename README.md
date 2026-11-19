@@ -44,8 +44,9 @@ cp .env.example .env.local     # fill in what you have
 npm run dev
 ```
 
-1. **Supabase** — run the SQL in `supabase/migrations/` in order (the newest one adds guest checkout columns and the
-   `print-files` bucket). Create public buckets `pet-photos` and `generated-images` if they don't exist.
+1. **Supabase** — in a new project, paste `supabase/setup.sql` into the SQL Editor and run it. It creates every
+   table and the three storage buckets. Then set `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+   (`supabase/migrations/` is the history of the original project; a fresh project only needs `setup.sql`.)
 2. **Image model** — set `FAL_KEY`, `OPENAI_API_KEY` or `GOOGLE_GEMINI_API_KEY` (see below).
 3. **Stripe** — set `STRIPE_SECRET_KEY`; point a webhook at `/api/webhooks/stripe` for `checkout.session.completed`
    and set `STRIPE_WEBHOOK_SECRET`.
