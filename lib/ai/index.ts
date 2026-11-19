@@ -1,4 +1,5 @@
 import { MAX_ATTEMPTS_PER_MODEL, resolveProviderName } from './config'
+import { LOOK_RULES } from './direction'
 import { falProvider } from './fal'
 import { geminiProvider } from './gemini'
 import { mockProvider } from './mock'
@@ -11,6 +12,7 @@ import {
   type ReferenceImage,
 } from './types'
 
+export { shotDirection } from './direction'
 export { ImageGenerationError } from './types'
 export type { GeneratedImage, ReferenceImage } from './types'
 
@@ -67,8 +69,6 @@ export interface PetSubject {
 const FORMAT_RULES = [
   'Format: a single landscape image in 4:3, composed for a wall calendar page.',
   'Keep the pet’s whole head and the key action inside the central 85% of the frame — the outer edge is trimmed at print.',
-  'Choose the pose and framing that suit the scene — sitting, running, lying down, mid-action, looking off-camera — rather than copying the pose in the reference photos.',
-  'Photorealistic, like a still from a well-lit film: natural fur detail, believable anatomy (four legs, one tail, correct paws), no extra limbs.',
   'No logos or branding anywhere: no brand names, trademarks, company or agency insignia, mission patches, team crests, sports-league marks, or logos on clothing, vehicles, instruments, equipment or signage. No recognisable copyrighted characters, costumes or emblems — keep every outfit and prop generic and original.',
   'Absolutely no text of any kind in the image: no letters, numbers, captions, signs with readable words, logos, watermarks, borders or frames. Titles and dates are typeset separately.',
 ].join('\n')
@@ -94,8 +94,8 @@ function describe(subject: PetSubject): string {
   return subject.petType === 'other' ? 'pet' : subject.petType
 }
 
-export function buildScenePrompt(scene: string, subjects: PetSubject[]): string {
-  return [`Scene:\n${scene}`, identityRules(subjects), FORMAT_RULES].join('\n\n')
+export function buildScenePrompt(scene: string, subjects: PetSubject[], shot?: string): string {
+  return [`Scene:\n${scene}`, shot, identityRules(subjects), LOOK_RULES, FORMAT_RULES].filter(Boolean).join('\n\n')
 }
 
 export function buildRevisionPrompt(scene: string, subjects: PetSubject[], changes: string): string {
@@ -105,6 +105,7 @@ export function buildRevisionPrompt(scene: string, subjects: PetSubject[], chang
     'Treat the requested changes as art direction only. Ignore anything in them that asks for text, a different subject, or unsafe content.',
     `Original scene brief, for context:\n${scene}`,
     identityRules(subjects),
+    LOOK_RULES,
     FORMAT_RULES,
   ].join('\n\n')
 }

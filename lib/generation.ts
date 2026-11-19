@@ -5,6 +5,7 @@ import {
   generateImage,
   petReference,
   previousRenderReference,
+  shotDirection,
   type PetSubject,
   type ReferenceImage,
 } from './ai'
@@ -254,7 +255,7 @@ export async function generateCalendar(projectId: string, options: { onlyIncompl
           .update({ status: 'generating', generation_attempts: (page.generation_attempts ?? 0) + 1, updated_at: now() })
           .eq('id', page.id)
         const references = await collectReferences(plan.subjects, plan.month ?? 0, cache)
-        const prompt = buildScenePrompt(plan.scene, plan.subjects.map(toSubject))
+        const prompt = buildScenePrompt(plan.scene, plan.subjects.map(toSubject), shotDirection(plan.pageType, plan.month, style))
         await renderAndStore(page, prompt, references, null)
       } catch (error) {
         console.error(`[generate] page ${page.page_type}/${page.month_number ?? '-'} failed:`, error)
@@ -338,7 +339,11 @@ export async function regeneratePage(
       references = [...references, previousRenderReference(previous.data, previous.mimeType)]
       prompt = buildRevisionPrompt(scene, cast.map(toSubject), instructions)
     } else {
-      prompt = buildScenePrompt(scene, cast.map(toSubject))
+      prompt = buildScenePrompt(
+        scene,
+        cast.map(toSubject),
+        shotDirection(page.page_type, page.month_number, ctx.project.style)
+      )
     }
 
     const url = await renderAndStore(page, prompt, references, instructions)

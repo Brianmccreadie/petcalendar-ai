@@ -18,14 +18,16 @@ const [style = 'around-the-world', ref = 'public/previews/pet-photoshoot-dog.jpg
   .slice(2)
   .filter((a) => !a.startsWith('--'))
 const force = process.argv.includes('--force')
+// --only=01,05,cover limits the run to those pages
+const only = (process.argv.find((a) => a.startsWith('--only='))?.slice(7) ?? '').split(',').filter(Boolean)
 const subject = { name, petType }
 const reference = ai.petReference(subject, await readFile(ref), 'image/jpeg')
-const dir = path.resolve('public/year')
+const dir = path.resolve(process.env.SAMPLE_YEAR_DIR || 'public/year')
 await mkdir(dir, { recursive: true })
 
-const pages = [{ file: 'cover.jpg', scene: getCoverPrompt(style, describeSubjects([subject])) }]
+const pages = [{ file: 'cover.jpg', type: 'cover', month: null, scene: getCoverPrompt(style, describeSubjects([subject])) }]
 for (let m = 1; m <= 12; m++) {
-  pages.push({ file: `${String(m).padStart(2, '0')}.jpg`, scene: getPromptForMonth(style, m, describeSubjects([subject])) })
+  pages.push({ file: `${String(m).padStart(2, '0')}.jpg`, type: 'month', month: m, scene: getPromptForMonth(style, m, describeSubjects([subject])) })
 }
 
 let cursor = 0
@@ -33,10 +35,11 @@ await Promise.all(
   Array.from({ length: 5 }, async () => {
     while (cursor < pages.length) {
       const page = pages[cursor++]
+      if (only.length && !only.includes(page.file.replace('.jpg', ''))) continue
       const out = path.join(dir, page.file)
       if (existsSync(out) && !force) continue
       try {
-        const image = await ai.generateImage({ prompt: ai.buildScenePrompt(page.scene, [subject]), references: [reference] })
+        const image = await ai.generateImage({ prompt: ai.buildScenePrompt(page.scene, [subject], ai.shotDirection(page.type, page.month, style)), references: [reference] })
         await writeFile(out, await sharp(image.data).resize({ width: 1400 }).jpeg({ quality: 80, mozjpeg: true }).toBuffer())
         console.log('done', page.file)
       } catch (error) {
