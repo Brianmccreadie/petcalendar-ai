@@ -5,6 +5,7 @@ export type CutoutName =
   | 'king' | 'astronaut' | 'pirate' | 'wizard' | 'sheriff' | 'cherub' | 'cherub2'
   | 'duchess' | 'musketeer' | 'sorceress' | 'siamese' | 'pig' | 'bunny'
   | 'dachshund' | 'corgi' | 'poodle' | 'cloud1' | 'cloud2' | 'garland'
+  | 'galleon' | 'saturn' | 'moon' | 'balloon' | 'castle' | 'mesa' | 'temple'
 
 interface CutoutProps {
   name: CutoutName

@@ -72,7 +72,7 @@ export default function Navbar() {
           : scrolled
             ? 'border-b border-ivory/10 bg-night/85 text-ivory backdrop-blur-xl'
             : pathname === '/'
-              ? 'border-b border-transparent bg-transparent text-ink' // over the pale sky of the homepage hero
+              ? 'border-b border-transparent bg-transparent text-ivory' // over the painted sky of the homepage hero
               : 'border-b border-transparent bg-night text-ivory'
       }`}
     >
@@ -98,7 +98,7 @@ export default function Navbar() {
               <Link href="/dashboard" className="text-sm font-semibold opacity-80 transition-opacity hover:opacity-100">
                 My calendars
               </Link>
-              <Link href="/create" className={`btn btn-sm ${pathname === '/' && !scrolled && !open ? 'btn-primary' : 'btn-light'}`}>
+              <Link href="/create" className="btn btn-light btn-sm">
                 Create yours
               </Link>
             </div>
