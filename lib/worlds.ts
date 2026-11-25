@@ -24,6 +24,7 @@ const world = (id: string, color: string, tone: World['tone'], alt: string): Wor
 
 export const WORLDS = {
   hero: world('hero', '#16305a', 'dark', 'A classical mural of pets as explorers, pirates, wizards, royalty and sheriffs'),
+  runway: world('runway', '#ffffff', 'light', 'A painting of a small cream dog walking a palace catwalk in a silk cape'),
   voyage: world('voyage', '#ffffff', 'light', 'A painting of a dog as a traveller on the quay of an old port city'),
   cosmos: world('cosmos', '#e6f2fc', 'light', 'A painting of a golden retriever floating among stars and planets'),
   deep: world('deep', '#fdeef3', 'light', 'A painting of a crowned cat enthroned in an underwater kingdom'),

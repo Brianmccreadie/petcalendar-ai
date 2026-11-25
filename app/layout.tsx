@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `${SITE.name} — Custom pet calendars, starring your pet`,
     description: SITE.description,
-    images: [{ url: '/sample-year/cover.jpg', width: 1400, height: 1050, alt: 'A sample calendar cover starring a dog' }],
+    images: [{ url: '/sample-bonnie/cover.jpg', width: 1400, height: 1050, alt: 'A sample calendar cover starring a dog' }],
   },
   twitter: { card: 'summary_large_image' },
 }
