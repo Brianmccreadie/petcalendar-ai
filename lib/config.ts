@@ -25,8 +25,12 @@ export const LIMITS = {
   maxPhotosPerPet: 5,
   maxPhotoBytes: 12 * 1024 * 1024,
   maxPetNameLength: 24,
-  /** Free redo/edit rounds per page after the first generation. */
-  maxRevisionsPerPage: 3,
+  /**
+   * Customers can redo or revise a page as often as they like. This is only a
+   * quiet backstop so a runaway script cannot generate images without end; the
+   * interface never mentions a count.
+   */
+  maxRevisionsPerPage: 40,
   maxInstructionLength: 400,
   /** New calendars one visitor may start per 24h (cost guard for free previews). */
   maxProjectsPerDay: 5,

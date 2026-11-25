@@ -36,12 +36,28 @@ function hash(text: string): number {
  * Framing for a page. Deterministic, so a redo keeps the same idea, and offset
  * per theme so two themes don't share the same month-by-month sequence.
  */
+/** Which way the body points. Cycled on a different period from SHOTS so neighbouring months never match. */
+const FACINGS = [
+  'body pointing to the left of the frame',
+  'body pointing to the right of the frame',
+  'body angled three-quarters toward the camera',
+  'body angled away from the camera, head turned back',
+  'seen from slightly above',
+  'seen from low down, near ground level',
+  'body side-on, head turned toward the camera',
+]
+
 export function shotDirection(pageType: 'cover' | 'month' | 'back', month: number | null, styleId: string): string {
-  const shot = pageType === 'month' && month ? SHOTS[(month - 1 + (hash(styleId) % SHOTS.length)) % SHOTS.length] : COVER_SHOT
+  const isMonth = pageType === 'month' && Boolean(month)
+  const offset = hash(styleId)
+  const shot = isMonth ? SHOTS[((month as number) - 1 + (offset % SHOTS.length)) % SHOTS.length] : COVER_SHOT
+  const facing = isMonth ? FACINGS[((month as number) - 1 + (offset % FACINGS.length)) % FACINGS.length] : null
   return [
-    `Shot: ${shot}`,
-    'If the scene brief already describes a specific action, keep that action and apply this framing to it. Adapt naturally to the species (a bird perches or flies, a fish swims) and, with several pets, to the group.',
-    'The reference photos show who the pet is, not how to pose it: do not reuse the pose, angle or expression from the references.',
+    'POSE AND FRAMING — the most important instruction, it overrides the pose in the reference photos:',
+    `Shot: ${shot}${facing ? ` Orientation: ${facing}.` : ''}`,
+    'The reference photos are an identity sheet only. They tell you who this animal is — its colours, markings, face and build — and nothing about how it should stand. Draw the animal afresh in this new pose, from this new camera angle, with a new expression. Do not copy, trace or paste the pose, body angle, head direction or crop from any reference photo; a page where the pet stands exactly as it does in the reference is wrong.',
+    'This is one page of a twelve-month calendar in which every month must show a visibly different pose, distance and angle, like a photographer following the same pet through a day of exploring.',
+    'If the scene brief already describes a specific action, keep that action and apply this framing to it. Adapt naturally to the species — a bird perches or flies, a fish swims, a reptile basks, climbs or crawls, a small animal burrows or stands up to sniff — and, with several pets, to the group.',
   ].join('\n')
 }
 

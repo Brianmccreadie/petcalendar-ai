@@ -80,6 +80,7 @@ function identityRules(subjects: PetSubject[]): string {
       `Identity: the animal in the image must be ${s.name}, the exact ${describe(s)} shown in the reference photos — not a generic lookalike.`,
       'Match breed, coat colour and pattern, markings, ear shape, eye colour, muzzle, body size and proportions. If the references disagree, trust the clearest, closest photo.',
       'Costume and props go on or around the pet; they must not change the pet’s face, fur colour or build.',
+      'Likeness means the same individual, not the same picture: keep who it is, but give it a new pose, angle and expression as directed above.',
     ].join('\n')
   }
   const names = subjects.map((s) => `${s.name} (${describe(s)})`).join(', ')
@@ -95,7 +96,8 @@ function describe(subject: PetSubject): string {
 }
 
 export function buildScenePrompt(scene: string, subjects: PetSubject[], shot?: string): string {
-  return [`Scene:\n${scene}`, shot, identityRules(subjects), LOOK_RULES, FORMAT_RULES].filter(Boolean).join('\n\n')
+  // Pose first: image-edit models otherwise carry the reference photo's pose into every page.
+  return [shot, `Scene:\n${scene}`, identityRules(subjects), LOOK_RULES, FORMAT_RULES].filter(Boolean).join('\n\n')
 }
 
 export function buildRevisionPrompt(scene: string, subjects: PetSubject[], changes: string): string {
