@@ -69,8 +69,10 @@ export function shotDirection(pageType: 'cover' | 'month' | 'back', month: numbe
 export const ANATOMY_RULE = [
   'Anatomy (strict): the pet keeps its real animal body. A dog or cat has exactly four legs in total — two front, two hind — and one tail. Count them: never five or six limbs.',
   'No human arms, hands, fingers or shoulders, and no extra pair of forelegs coming out of a costume. Sleeves, robes, jackets and capes are cut for a four-legged animal and drape over its back and front legs; an empty or extra sleeve never contains a limb.',
-  'The pet stands, sits, lies, walks or runs the way that animal really does — not upright on its hind legs like a person unless the brief explicitly asks for it.',
-  'Props are never gripped in a hand. If the scene involves a wand, tool, instrument or other object, it is held in the mouth, rests under or against one front paw (which is then one of the four legs, lifted or planted), is strapped to the outfit, floats by magic, or lies beside the pet.',
+  'Posture: the pet stands, sits, lies, walks, runs, jumps or climbs the way that animal really does, with its spine roughly horizontal. It never stands or sits upright like a person with its chest facing the camera and its forelegs hanging or working in front of it.',
+  'Front legs are legs, not arms. They bear weight, step, reach, paw, bat, dig, or rest on something. They never bend at a human elbow, and never lift and operate an object the way a hand does — no pouring, holding up, carrying, stirring, strumming, typing, painting or gesturing with a foreleg.',
+  'Keep all the personality, the animal way. When the brief describes a human activity (cooking, playing music, pouring a drink, casting a spell), stage it so the pet is caught in the middle of it as an animal: nose in the bowl, a paw planted on the table edge or the instrument, the tool in its mouth, the object knocked over, floating, or already in motion beside it. Costume, expression and mischief carry the joke, not a human pose.',
+  'Props are never gripped. An object is held in the mouth, rests under or against one front paw (one of the four legs), is strapped to the outfit, floats by magic, or lies beside the pet.',
 ].join(' ')
 
 export const LOOK_RULES = [
