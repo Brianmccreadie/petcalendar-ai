@@ -53,8 +53,8 @@ export default function PhotoUploader({ photos, onChange, maxPhotos, petName, di
 
       if (added.length) onChange([...photos, ...added])
       const notes: string[] = []
-      if (skipped) notes.push(`${skipped} file${skipped > 1 ? 's were' : ' was'} not a JPG, PNG, WebP or HEIC photo`)
-      if (failed) notes.push(`${failed} photo${failed > 1 ? 's' : ''} could not be read`)
+      if (skipped) notes.push(`${skipped} file${skipped > 1 ? 's were' : ' was'} not an image file`)
+      if (failed) notes.push(`${failed} photo${failed > 1 ? 's' : ''} could not be opened — try saving ${failed > 1 ? 'them' : 'it'} as a JPG`)
       if (supported.length > accepted.length) notes.push(`only ${maxPhotos} photos per pet`)
       if (notes.length) setError(notes.join(' · '))
     },
@@ -117,7 +117,7 @@ export default function PhotoUploader({ photos, onChange, maxPhotos, petName, di
             {photos.length === 0 ? (
               <>
                 <span className="font-display text-xl">{busy ? 'Preparing photos…' : `Add photos of ${name}`}</span>
-                <span className="text-sm text-ink-soft">Drag them here or tap to choose · up to {maxPhotos} · JPG, PNG or HEIC</span>
+                <span className="text-sm text-ink-soft">Drag them here or tap to choose · up to {maxPhotos} · any photo format</span>
               </>
             ) : (
               <span className="text-xs font-bold text-ink-soft">{busy ? 'Preparing…' : 'Add more'}</span>
@@ -130,7 +130,7 @@ export default function PhotoUploader({ photos, onChange, maxPhotos, petName, di
         id={inputId}
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif"
+        accept="image/*,.heic,.heif,.avif"
         multiple
         disabled={disabled}
         className="sr-only"

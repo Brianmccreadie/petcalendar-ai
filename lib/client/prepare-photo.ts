@@ -1,4 +1,5 @@
-// Client-side photo preparation: HEIC → JPEG, then downscale. Phone photos are
+// Client-side photo preparation: any image the browser can open (JPEG, PNG,
+// WebP, AVIF, GIF, BMP, HEIC…) → JPEG, then downscale. Phone photos are
 // often 5–12 MB, which is over the request-body limit of serverless functions
 // and far more detail than the image model needs.
 
@@ -11,8 +12,32 @@ export function isHeif(file: File): boolean {
   return ext === 'heic' || ext === 'heif'
 }
 
+const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'jfif', 'png', 'webp', 'avif', 'gif', 'bmp', 'tif', 'tiff', 'heic', 'heif']
+
+/** Anything that claims to be a picture is worth a try; preparePhoto() decides whether it can be read. */
 export function isSupportedPhoto(file: File): boolean {
-  return /^image\/(jpeg|png|webp)$/i.test(file.type) || isHeif(file)
+  if (file.type.toLowerCase().startsWith('image/')) return true
+  // Some phones and file managers send no type at all for newer formats.
+  return IMAGE_EXTENSIONS.includes(file.name.split('.').pop()?.toLowerCase() ?? '')
+}
+
+/** Decode with the browser; fall back to the HEIC converter for anything it cannot open. */
+async function decode(file: File): Promise<ImageBitmap> {
+  if (!isHeif(file)) {
+    try {
+      return await createImageBitmap(file, { imageOrientation: 'from-image' })
+    } catch {
+      // Not a format this browser reads natively — it may still be HEIF with the wrong label.
+    }
+  } else {
+    try {
+      // Safari reads HEIC natively, which is faster and keeps more detail.
+      return await createImageBitmap(file, { imageOrientation: 'from-image' })
+    } catch {
+      // Other browsers need the converter.
+    }
+  }
+  return createImageBitmap(await heifToJpeg(file), { imageOrientation: 'from-image' })
 }
 
 async function heifToJpeg(file: File): Promise<Blob> {
@@ -22,8 +47,7 @@ async function heifToJpeg(file: File): Promise<Blob> {
 }
 
 export async function preparePhoto(file: File): Promise<File> {
-  const source: Blob = isHeif(file) ? await heifToJpeg(file) : file
-  const bitmap = await createImageBitmap(source, { imageOrientation: 'from-image' })
+  const bitmap = await decode(file)
   try {
     const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height))
     const width = Math.round(bitmap.width * scale)

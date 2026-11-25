@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { jsonError } from '@/lib/api'
 import { LIMITS } from '@/lib/config'
+import { shareToken } from '@/lib/share'
 import { createAdminSupabaseClient } from '@/lib/supabase-admin'
 import type { CalendarPage } from '@/lib/types'
 import { isUuid } from '@/lib/validate'
@@ -65,5 +66,5 @@ export async function GET(request: NextRequest) {
 
   pages.sort((a, b) => (a.month_number ?? 0) - (b.month_number ?? 0))
   const photos = (photoRows ?? []).map((p) => ({ id: p.id, pet_id: p.pet_id, url: p.cloudinary_url }))
-  return NextResponse.json({ project, pets: pets ?? [], pages, photos }, { headers: { 'Cache-Control': 'no-store' } })
+  return NextResponse.json({ project, pets: pets ?? [], pages, photos, share_token: shareToken(project.id) }, { headers: { 'Cache-Control': 'no-store' } })
 }
