@@ -5,19 +5,20 @@ import { SITE } from '@/lib/config'
 import { buildRevealComposition } from '@/lib/reveal/composition'
 import { styleById } from '@/lib/style-meta'
 import { createAdminSupabaseClient } from '@/lib/supabase-admin'
-import { isUuid } from '@/lib/validate'
+import { resolveSharedProject } from '@/lib/share'
 
 // Serves the HyperFrames composition (plain HTML + GSAP timeline) for a calendar.
 // Played in-page by <hyperframes-player>, or rendered to MP4 by scripts/render-reveal.mjs.
 export async function GET(request: NextRequest, ctx: RouteContext<'/reveal/[projectId]/composition'>) {
-  const { projectId } = await ctx.params
-  if (!isUuid(projectId)) return jsonError('Calendar not found.', 404)
+  const projectId = resolveSharedProject((await ctx.params).projectId)
+  if (!projectId) return jsonError('Calendar not found.', 404)
 
   const supabase = createAdminSupabaseClient()
-  const [{ data: project }, { data: pets }, { data: pages }] = await Promise.all([
+  const [{ data: project }, { data: pets }, { data: pages }, { data: photos }] = await Promise.all([
     supabase.from('projects').select('id, style, start_year, pet_name').eq('id', projectId).maybeSingle(),
     supabase.from('pets').select('name').eq('project_id', projectId).order('sort_order'),
     supabase.from('calendar_pages').select('page_type, month_number, cloudinary_url, status').eq('project_id', projectId).eq('status', 'complete'),
+    supabase.from('pet_photos').select('cloudinary_url, created_at').eq('project_id', projectId).order('created_at').limit(5),
   ])
   if (!project) return jsonError('Calendar not found.', 404)
 
@@ -39,6 +40,7 @@ export async function GET(request: NextRequest, ctx: RouteContext<'/reveal/[proj
     accent: '#c9a45c',
     coverUrl: cover,
     monthUrls: months as string[],
+    referenceUrls: (photos ?? []).map((p) => p.cloudinary_url).filter(Boolean),
     fontBase,
     gsapUrl,
     siteLabel: new URL(SITE.url).host.replace(/^www\./, '') || 'petcalendar.ai',

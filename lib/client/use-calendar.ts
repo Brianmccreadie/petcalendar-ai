@@ -27,6 +27,8 @@ export interface CalendarData {
   }
   pets: { id: string; name: string; pet_type: PetType }[]
   pages: CalendarPageView[]
+  /** Public id for the share page and the film; unlike the project id it cannot open the editor. */
+  share_token?: string
   /** The customer's uploaded reference photos, oldest first. */
   photos?: { id: string; pet_id: string | null; url: string }[]
 }

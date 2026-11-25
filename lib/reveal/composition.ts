@@ -19,6 +19,8 @@ export interface RevealInput {
   accent: string
   coverUrl: string
   monthUrls: string[] // 12, January first
+  /** The customer's own photos, shown first: "it started with these". Up to five are used. */
+  referenceUrls?: string[]
   /** Where instrument-serif.woff2 / geist.woff2 live (URL or relative path, no trailing slash). */
   fontBase: string
   /** URL of gsap.min.js (self-hosted at /vendor/gsap.min.js). */
@@ -30,14 +32,15 @@ export const REVEAL = {
   width: 1920,
   height: 1080,
   fps: 30,
+  introSeconds: 3.2,
   titleSeconds: 2.8,
   coverSeconds: 2.4,
   monthSeconds: 1.25,
   outroSeconds: 3.6,
 }
 
-export function revealDuration(): number {
-  return REVEAL.titleSeconds + REVEAL.coverSeconds + 12 * REVEAL.monthSeconds + REVEAL.outroSeconds
+export function revealDuration(hasReferences = false): number {
+  return (hasReferences ? REVEAL.introSeconds : 0) + REVEAL.titleSeconds + REVEAL.coverSeconds + 12 * REVEAL.monthSeconds + REVEAL.outroSeconds
 }
 
 function esc(value: string): string {
@@ -50,8 +53,11 @@ function safeColor(value: string, fallback: string): string {
 
 export function buildRevealComposition(input: RevealInput): string {
   const { titleSeconds: T, coverSeconds: C, monthSeconds: M, outroSeconds: O } = REVEAL
-  const total = revealDuration()
-  const monthsStart = T + C
+  const refs = (input.referenceUrls ?? []).filter(Boolean).slice(0, 5)
+  // Everything after the photo intro is shifted by its length.
+  const I = refs.length ? REVEAL.introSeconds : 0
+  const total = revealDuration(refs.length > 0)
+  const monthsStart = I + T + C
   const outroStart = monthsStart + 12 * M
   const accent = safeColor(input.accent, '#c9a45c')
   const months = input.monthUrls.slice(0, 12)
@@ -107,6 +113,14 @@ export function buildRevealComposition(input: RevealInput): string {
       .eyebrow { font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; font-size: 26px; }
       img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
+      /* Photo intro */
+      #intro { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 70px; background: var(--paper);
+        background-image: radial-gradient(rgba(29, 26, 22, 0.05) 2px, transparent 2px); background-size: 34px 34px; }
+      #intro .eyebrow { color: #86672a; font-size: 34px; }
+      #intro-photos { display: flex; align-items: center; justify-content: center; gap: 36px; }
+      .snap { width: ${refs.length > 3 ? 300 : 400}px; height: ${refs.length > 3 ? 375 : 500}px; padding: 14px 14px 54px; background: #fff; border-radius: 4px;
+        box-shadow: 0 40px 70px -34px rgba(29, 26, 22, 0.55), 0 3px 8px rgba(29, 26, 22, 0.14); }
+
       /* Title card */
       #title-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; text-align: center; padding: 0 140px;
         background-image: radial-gradient(rgba(29, 26, 22, 0.05) 2px, transparent 2px); background-size: 34px 34px; }
@@ -141,7 +155,13 @@ export function buildRevealComposition(input: RevealInput): string {
   </head>
   <body>
     <div id="root" data-composition-id="reveal" data-start="0" data-duration="${total.toFixed(3)}" data-width="${REVEAL.width}" data-height="${REVEAL.height}" data-fps="${REVEAL.fps}">
-      <section class="clip scene" id="title-card" data-start="0" data-duration="${T}" data-track-index="0">
+      ${refs.length ? `<section class="clip scene" id="intro" data-start="0" data-duration="${I}" data-track-index="4">
+        <div class="eyebrow" id="intro-eyebrow">It started with ${refs.length === 1 ? 'one photo' : 'a few photos'}</div>
+        <div id="intro-photos">
+          ${refs.map((url, i) => `<div class="snap" id="r${i}"><img src="${esc(url)}" alt="" /></div>`).join('')}
+        </div>
+      </section>` : ''}
+      <section class="clip scene" id="title-card" data-start="${I}" data-duration="${T}" data-track-index="0">
         <div class="eyebrow" id="title-eyebrow">Now showing</div>
         <div class="display" id="title-words">
           ${titleWords.map((w, i) => `<span class="mask"><span class="word" id="w${i}" style="display:inline-block">${esc(w)}</span></span>`).join('')}
@@ -150,7 +170,7 @@ export function buildRevealComposition(input: RevealInput): string {
         <div id="title-sub">${esc(input.subtitle)}</div>
       </section>
 
-      <section class="clip scene" id="cover" data-start="${T}" data-duration="${C}" data-track-index="1">
+      <section class="clip scene" id="cover" data-start="${I + T}" data-duration="${C}" data-track-index="1">
         <div id="cover-art"><img src="${esc(input.coverUrl)}" alt="" /></div>
         <div id="cover-scrim"></div>
         <div id="cover-copy">
@@ -173,8 +193,9 @@ ${monthScenes}
       // Scene visibility is driven by the timeline itself, so the film plays the
       // same in <hyperframes-player>, the HyperFrames renderer, or a bare browser.
       const scenes = ${JSON.stringify([
-        ['#title-card', 0, T],
-        ['#cover', T, T + C],
+        ...(refs.length ? [['#intro', 0, I]] : []),
+        ['#title-card', I, I + T],
+        ['#cover', I + T, I + T + C],
         ...months.map((_, i) => [`#m${i}`, monthsStart + i * M, monthsStart + (i + 1) * M]),
         ['#outro', outroStart, total],
       ])};
@@ -183,18 +204,23 @@ ${monthScenes}
         if (i < scenes.length - 1) tl.set(id, { visibility: "hidden" }, end);
       });
 
+      // Photo intro
+      ${refs.length ? `tl.fromTo("#intro-eyebrow", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.15);
+      ${refs.map((_, i) => `tl.fromTo("#r${i}", { opacity: 0, y: 120, rotation: ${(i % 2 ? 9 : -9)}, scale: 0.8 }, { opacity: 1, y: 0, rotation: ${((i - (refs.length - 1) / 2) * 4).toFixed(1)}, scale: 1, duration: 0.6, ease: "back.out(1.4)" }, ${(0.35 + i * 0.16).toFixed(2)});`).join('\n      ')}
+      tl.to("#intro", { opacity: 0, duration: 0.35 }, ${(I - 0.35).toFixed(2)});` : ''}
+
       // Title card
-      tl.fromTo("#title-eyebrow", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 0.1);
-      ${titleWords.map((_, i) => `tl.fromTo("#w${i}", { y: 260 }, { y: 0, duration: 0.7, ease: "power4.out" }, ${(0.25 + i * 0.12).toFixed(2)});`).join('\n      ')}
-      tl.fromTo("#title-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power3.out" }, 0.9);
-      tl.fromTo("#title-sub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 1.1);
-      tl.to("#title-card", { opacity: 0, duration: 0.3 }, ${(T - 0.3).toFixed(2)});
+      tl.fromTo("#title-eyebrow", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, ${I} + 0.1);
+      ${titleWords.map((_, i) => `tl.fromTo("#w${i}", { y: 260 }, { y: 0, duration: 0.7, ease: "power4.out" }, ${(I + 0.25 + i * 0.12).toFixed(2)});`).join('\n      ')}
+      tl.fromTo("#title-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power3.out" }, ${I} + 0.9);
+      tl.fromTo("#title-sub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, ${I} + 1.1);
+      tl.to("#title-card", { opacity: 0, duration: 0.3 }, ${(I + T - 0.3).toFixed(2)});
 
       // Cover
-      tl.fromTo("#cover-art", { scale: 1.12 }, { scale: 1, duration: ${C}, ease: "power1.out" }, ${T});
-      tl.fromTo("#cover", { opacity: 0 }, { opacity: 1, duration: 0.35 }, ${T});
-      tl.fromTo("#cover-title", { y: 220 }, { y: 0, duration: 0.7, ease: "power4.out" }, ${T} + 0.3);
-      tl.fromTo("#cover-sub", { opacity: 0, y: 16 }, { opacity: 0.9, y: 0, duration: 0.45 }, ${T} + 0.75);
+      tl.fromTo("#cover-art", { scale: 1.12 }, { scale: 1, duration: ${C}, ease: "power1.out" }, ${I + T});
+      tl.fromTo("#cover", { opacity: 0 }, { opacity: 1, duration: 0.35 }, ${I + T});
+      tl.fromTo("#cover-title", { y: 220 }, { y: 0, duration: 0.7, ease: "power4.out" }, ${I + T} + 0.3);
+      tl.fromTo("#cover-sub", { opacity: 0, y: 16 }, { opacity: 0.9, y: 0, duration: 0.45 }, ${I + T} + 0.75);
 
       // Months
 ${monthTweens}

@@ -9,6 +9,7 @@ import CoverTitle from '@/components/calendar/CoverTitle'
 import WallCalendar from '@/components/calendar/WallCalendar'
 import { ArrowLeft, ArrowRight, Check, Play, Refresh } from '@/components/icons'
 import { MONTH_NAMES, joinPetNames, possessive } from '@/lib/calendar/layout'
+import { preparePhoto } from '@/lib/client/prepare-photo'
 import { calendarSlots, useCalendar, type CalendarSlot } from '@/lib/client/use-calendar'
 import { LIMITS, PRICING, formatPrice } from '@/lib/config'
 import { styleById } from '@/lib/style-meta'
@@ -59,6 +60,7 @@ export default function ReviewStep() {
   const [newPhoto, setNewPhoto] = useState<File | null>(null)
   const [versionState, setVersionState] = useState<{ pageId: string; list: Version[] } | null>(null)
   const [retrying, setRetrying] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   const slots = useMemo(() => calendarSlots(data), [data])
   const slot = slots[index]
@@ -199,6 +201,23 @@ export default function ReviewStep() {
       body: JSON.stringify({ version_id: version.id }),
     })
     await reload()
+  }
+
+  /** Phones get the native share sheet; everything else copies the link. */
+  async function shareLink() {
+    const url = `${window.location.origin}/share/${data?.share_token ?? projectId}`
+    try {
+      if (navigator.share && window.matchMedia('(pointer: coarse)').matches) {
+        await navigator.share({ title: `${possessive(names)} ${year} calendar`, url })
+        return
+      }
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2500)
+    } catch {
+      // Sharing was cancelled or the clipboard is blocked: open the page so the address bar has the link.
+      window.open(url, '_blank')
+    }
   }
 
   async function retryFailed() {
@@ -505,10 +524,19 @@ export default function ReviewStep() {
                   {newPhoto ? `Using new photo: ${newPhoto.name}` : 'Doesn’t look like them? Add a clearer photo (optional)'}
                   <input
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
+                    accept="image/*,.heic,.heif,.avif"
                     className="sr-only"
                     disabled={anyBusy}
-                    onChange={(e) => setNewPhoto(e.target.files?.[0] ?? null)}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      if (!file) return setNewPhoto(null)
+                      try {
+                        setNewPhoto(await preparePhoto(file))
+                      } catch {
+                        setNewPhoto(null)
+                        setNotice('That photo could not be opened. Try saving it as a JPG.')
+                      }
+                    }}
                   />
                 </label>
 
@@ -543,13 +571,28 @@ export default function ReviewStep() {
           )}
 
           {allDone && (
-            <Link href={`/reveal/${projectId}`} className="card flex items-center gap-4 p-4 transition-colors hover:border-ink">
+            <div className="card p-4">
+              <p className="font-bold">Share this calendar</p>
+              <p className="mt-0.5 text-sm text-ink-soft">A link anyone can open to flip through the whole year.</p>
+              <div className="mt-3 flex gap-2">
+                <button type="button" className="btn btn-dark btn-sm flex-1" onClick={shareLink}>
+                  {copied ? 'Link copied' : 'Copy share link'}
+                </button>
+                <Link href={`/share/${data.share_token ?? projectId}`} target="_blank" className="btn btn-ghost btn-sm">
+                  Open
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {allDone && (
+            <Link href={`/reveal/${data.share_token ?? projectId}`} className="card flex items-center gap-4 p-4 transition-colors hover:border-ink">
               <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gold">
                 <Play size={18} />
               </span>
               <span>
-                <span className="block font-bold">Watch the reveal</span>
-                <span className="block text-sm text-ink-soft">A short flip-through video of the whole year.</span>
+                <span className="block font-bold">Watch the film</span>
+                <span className="block text-sm text-ink-soft">A short film: your photos, then the whole year.</span>
               </span>
             </Link>
           )}
