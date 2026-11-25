@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 /**
  * Brings the collage to life. One listener set for the whole page:
@@ -11,6 +12,8 @@ import { useEffect } from 'react'
  * skipped for visitors who ask for reduced motion.
  */
 export default function CollageMotion() {
+  // Mounted once in the root layout; every navigation brings a new set of pieces to find.
+  const pathname = usePathname()
   useEffect(() => {
     const pieces = Array.from(document.querySelectorAll<HTMLElement>('[data-cutout]'))
     if (pieces.length === 0) return
@@ -79,7 +82,7 @@ export default function CollageMotion() {
       cancelAnimationFrame(frame)
       cancelAnimationFrame(pointerFrame)
     }
-  }, [])
+  }, [pathname])
 
   return null
 }

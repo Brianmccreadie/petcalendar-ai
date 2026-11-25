@@ -109,8 +109,12 @@ async function make(name) {
   if (!cutUrl) throw new Error(`no cut-out for ${name}`)
 
   const png = Buffer.from(await (await fetch(cutUrl)).arrayBuffer())
-  const trimmed = await sharp(png).trim({ threshold: 8 }).resize({ width: 1100, height: 1100, fit: 'inside', withoutEnlargement: true }).webp({ quality: 86, alphaQuality: 90 }).toBuffer()
+  // Two sizes: one for desktops, one a quarter of the pixels for phones (see the srcset in Cutout.tsx).
+  const cut = await sharp(png).trim({ threshold: 8 }).png().toBuffer()
+  const trimmed = await sharp(cut).resize({ width: 880, height: 880, fit: 'inside', withoutEnlargement: true }).webp({ quality: 76, alphaQuality: 80, effort: 6 }).toBuffer()
+  const small = await sharp(cut).resize({ width: 440, height: 440, fit: 'inside' }).webp({ quality: 74, alphaQuality: 78, effort: 6 }).toBuffer()
   await writeFile(path.join(OUT, `${name}.webp`), trimmed)
+  await writeFile(path.join(OUT, `${name}-sm.webp`), small)
   const meta = await sharp(trimmed).metadata()
   console.log(`done ${name} ${meta.width}x${meta.height} ${(trimmed.length / 1024).toFixed(0)}KB`)
 }

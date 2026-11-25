@@ -1,5 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 import type { ReactNode } from 'react'
+import Art from './Art'
 import GridPage from './GridPage'
 
 interface WallCalendarProps {
@@ -13,6 +13,8 @@ interface WallCalendarProps {
   caption?: string
   className?: string
   hanging?: boolean
+  /** How wide the calendar is drawn, as a `sizes` value. */
+  sizes?: string
 }
 
 /**
@@ -29,6 +31,7 @@ export default function WallCalendar({
   caption,
   className = '',
   hanging = true,
+  sizes,
 }: WallCalendarProps) {
   return (
     <div className={`relative ${className}`}>
@@ -42,7 +45,7 @@ export default function WallCalendar({
         <div className="relative aspect-[11/8.5] overflow-hidden bg-paper-deep">
           {art ??
             (imageUrl ? (
-              <img src={imageUrl} alt={imageAlt} className="h-full w-full object-cover" />
+              <Art src={imageUrl} alt={imageAlt} sizes={sizes} />
             ) : (
               <div className="skeleton h-full w-full" />
             ))}

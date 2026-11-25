@@ -26,7 +26,9 @@
   --color-ok: #2e6a4d;
 
   --font-display: var(--font-instrument), 'Iowan Old Style', 'Times New Roman', serif;
-  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  /* The calendar grid keeps Geist so the on-screen page matches the printed one. */
+  --font-grid: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
 
   --shadow-page: 0 1px 1px rgb(30 6 8 / 0.08), 0 14px 30px -12px rgb(30 6 8 / 0.35);
   --shadow-lift: 0 2px 4px rgb(30 6 8 / 0.08), 0 40px 70px -28px rgb(30 6 8 / 0.55);
@@ -209,7 +211,7 @@ body {
   text-wrap: balance;
 }
 .world-title .serif { display: block; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; }
-.world-title .sans { display: block; font-family: var(--font-sans); font-weight: 800; letter-spacing: -0.045em; }
+.world-title .sans { display: block; font-family: var(--font-sans); font-weight: 900; letter-spacing: -0.04em; }
 
 /* Outlined pill, as on a gallery label. */
 .btn-outline {
@@ -324,7 +326,7 @@ body {
   text-align: center;
 }
 .collage-title .serif { display: block; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.015em; }
-.collage-title .sans { display: block; font-family: var(--font-sans); font-weight: 800; letter-spacing: -0.05em; }
+.collage-title .sans { display: block; font-family: var(--font-sans); font-weight: 900; letter-spacing: -0.045em; }
 
 /* A soft painted-paper grain over the flat section colours. */
 .paper-grain { position: relative; isolation: isolate; }

@@ -255,7 +255,7 @@ export async function generateCalendar(projectId: string, options: { onlyIncompl
           .update({ status: 'generating', generation_attempts: (page.generation_attempts ?? 0) + 1, updated_at: now() })
           .eq('id', page.id)
         const references = await collectReferences(plan.subjects, plan.month ?? 0, cache)
-        const prompt = buildScenePrompt(plan.scene, plan.subjects.map(toSubject), shotDirection(plan.pageType, plan.month, style))
+        const prompt = buildScenePrompt(plan.scene, plan.subjects.map(toSubject), shotDirection(plan.pageType, plan.month, style), style)
         await renderAndStore(page, prompt, references, null)
       } catch (error) {
         console.error(`[generate] page ${page.page_type}/${page.month_number ?? '-'} failed:`, error)
@@ -337,12 +337,13 @@ export async function regeneratePage(
     if (instructions && page.cloudinary_url) {
       const previous = await fetchStoredImage(page.cloudinary_url)
       references = [...references, previousRenderReference(previous.data, previous.mimeType)]
-      prompt = buildRevisionPrompt(scene, cast.map(toSubject), instructions)
+      prompt = buildRevisionPrompt(scene, cast.map(toSubject), instructions, ctx.project.style)
     } else {
       prompt = buildScenePrompt(
         scene,
         cast.map(toSubject),
-        shotDirection(page.page_type, page.month_number, ctx.project.style)
+        shotDirection(page.page_type, page.month_number, ctx.project.style),
+        ctx.project.style
       )
     }
 

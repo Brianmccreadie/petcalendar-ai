@@ -39,7 +39,7 @@ await Promise.all(
       const out = path.join(dir, page.file)
       if (existsSync(out) && !force) continue
       try {
-        const image = await ai.generateImage({ prompt: ai.buildScenePrompt(page.scene, [subject], ai.shotDirection(page.type, page.month, style)), references: [reference] })
+        const image = await ai.generateImage({ prompt: ai.buildScenePrompt(page.scene, [subject], ai.shotDirection(page.type, page.month, style), style), references: [reference] })
         await writeFile(out, await sharp(image.data).resize({ width: 1400 }).jpeg({ quality: 80, mozjpeg: true }).toBuffer())
         console.log('done', page.file)
       } catch (error) {

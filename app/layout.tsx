@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
+import CollageMotion from '@/components/landing/CollageMotion'
+import SiteScene from '@/components/SiteScene'
 import Navbar from '@/components/Navbar'
 import { SITE } from '@/lib/config'
 import './globals.css'
@@ -18,6 +20,14 @@ const geist = localFont({
   src: '../public/fonts/geist.woff2',
   variable: '--font-geist',
   weight: '100 900',
+  display: 'swap',
+})
+
+// The site's sans: warm, round and highly legible. (Geist stays for the calendar grid, where it matches the print files.)
+const figtree = localFont({
+  src: '../public/fonts/figtree.woff2',
+  variable: '--font-figtree',
+  weight: '300 900',
   display: 'swap',
 })
 
@@ -53,7 +63,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${instrument.variable} ${geist.variable} ${coverFace.variable} h-full antialiased`}>
+    <html lang="en" className={`${instrument.variable} ${figtree.variable} ${geist.variable} ${coverFace.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <a
           href="#main"
@@ -62,9 +72,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
         <Navbar />
-        <main id="main" className="flex-1">
+        <main id="main" className="relative isolate flex-1 overflow-x-clip">
+          <SiteScene />
           {children}
         </main>
+        <CollageMotion />
       </body>
     </html>
   )

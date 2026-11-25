@@ -1,6 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 import Image from 'next/image'
 import Link from 'next/link'
+import Art from '@/components/calendar/Art'
+import BackCover from '@/components/calendar/BackCover'
 import CoverTitle from '@/components/calendar/CoverTitle'
 import FlipCalendar from '@/components/calendar/FlipCalendar'
 import GridPage from '@/components/calendar/GridPage'
@@ -9,6 +10,7 @@ import Reveal from '@/components/Reveal'
 import { ArrowRight, Plus } from '@/components/icons'
 import { PRICING, PRODUCT_SPECS, SITE, defaultCalendarYear, formatPrice } from '@/lib/config'
 import { SHOWCASE, SHOWCASE_PLACES } from '@/lib/showcase'
+import { CALENDAR_STYLES } from '@/lib/types'
 import Cutout from './Cutout'
 import { faqs } from './FAQ'
 import ThemeExplorer from './ThemeExplorer'
@@ -67,19 +69,19 @@ export function MuralWorld() {
 
           <div className="relative z-10 mt-[clamp(8rem,19vh,12rem)] text-center">
             <h1 className="collage-title drop-shadow-[0_6px_30px_rgb(8_18_40/0.75)]">
-              <span className="serif">Your pet’s</span>
-              <span className="sans">calendar</span>
+              <span className="serif">Make your pet</span>
+              <span className="sans">a legend</span>
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg font-medium text-ivory drop-shadow-[0_2px_12px_rgb(8_18_40/0.9)] sm:text-xl">
-              A custom wall calendar starring your pet, in any world you choose. Upload a few photos and preview the
-              whole year for free.
+              A custom wall calendar starring your pet, in any world or art style. Upload three photos, pick a theme,
+              and the whole year is ready to preview in minutes.
             </p>
             <div className="mt-8 flex flex-col items-center gap-4">
               <Link href="/create" className="btn btn-light btn-lg shadow-[0_18px_40px_-12px_rgb(8_18_40/0.7)]">
                 Make your calendar <ArrowRight size={18} />
               </Link>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ivory/85 drop-shadow-[0_1px_8px_rgb(8_18_40/0.9)]">
-                Free to preview · {formatPrice(PRICING.firstCopyCents)} printed and delivered
+                Three photos · five minutes · free to preview
               </p>
             </div>
           </div>
@@ -112,6 +114,7 @@ export function MuralWorld() {
                   month={m + 1}
                   year={year}
                   caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`}
+                  sizes="(max-width: 1024px) 33vw, 320px"
                   className={['-rotate-2 sm:mt-8', 'sm:-mt-2', 'rotate-2 sm:mt-8'][i]}
                 />
               ))}
@@ -199,9 +202,9 @@ export function VoyageWorld() {
 }
 
 const steps = [
-  ['Show us who they are', 'Three to five clear photos — face, profile, full body. More than one pet? They can share the year or star together.', 'dachshund'],
-  ['Choose their world', 'Fifty themes, each with its own scene for every month: a January that feels like January, a December that feels like the holidays.', 'wizard'],
-  ['Direct the final cut', 'Review the cover and all twelve months. Redo a page, ask for a change, keep the version you love. Then we print and ship.', 'sorceress'],
+  ['Show us who they are', 'Three to five photos straight from your phone — face, profile, full body. No account, no editing, no skill needed. More than one pet? They can star together.', 'dachshund'],
+  ['Choose their world', `${CALENDAR_STYLES.length} themes and art styles, each with its own scene for every month: a January that feels like January, a December that feels like the holidays.`, 'wizard'],
+  ['Direct the final cut', 'All thirteen pages appear in a few minutes. Redo any of them or ask for a change in plain words, as often as you like. Then we print and ship.', 'sorceress'],
 ] as const
 
 export function CosmosWorld() {
@@ -221,7 +224,7 @@ export function CosmosWorld() {
       }
     >
       <Reveal>
-        <Statement lead="From camera roll">to wall, in about five minutes of your time.</Statement>
+        <Statement lead="It’s honestly this easy.">From camera roll to wall in about five minutes of your time.</Statement>
       </Reveal>
       <ol className="mx-auto mt-36 grid max-w-6xl gap-x-6 gap-y-32 md:mt-44 md:grid-cols-3 lg:gap-x-10">
         {steps.map(([title, body, mascot], i) => (
@@ -254,8 +257,8 @@ export function DeepWorld() {
     <WorldSection
       id="themes"
       backdrop="sky-blush"
-      serif="Fifty"
-      sans="worlds"
+      serif="Worlds &"
+      sans="art styles"
       cast={
         <>
           <Cutout name="pirate" flip className={`-left-[1%] top-[5%] hidden ${size.lg} lg:block`} depth={0.6} rotate={4} bob={0} />
@@ -266,26 +269,29 @@ export function DeepWorld() {
       }
     >
       <Reveal>
-        <Statement lead="Choose the one">they were always meant to rule.</Statement>
+        <Statement lead={`${CALENDAR_STYLES.length} themes.`}>Find the one they were always meant to rule.</Statement>
       </Reveal>
       <ThemeExplorer />
     </WorldSection>
   )
 }
 
-const craft = [
-  ['A likeness, not a lookalike', 'Every page is generated from several of your photos at once, holding markings, colouring and proportions steady from January to December.'],
-  ['Words set in real type', 'The artwork is deliberately text-free. Your pet’s name, each month and every date are typeset separately, so nothing is ever misspelled or misnumbered.'],
-  ['Dates you can trust', 'The grid is computed for the year you choose, with US holidays and a few pet days marked. What you preview is exactly what goes to press.'],
+const anatomy = [
+  ['11 × 8.5 in closed', 'Opens to 11 × 17 in on the wall.'],
+  ['Wire binding, hanging hole', 'Lies flat, flips cleanly, hangs on one nail.'],
+  ['Your artwork, full page', 'One finished scene above every month, edge to edge.'],
+  ['Real dates you can write in', 'Every day is a box with room for a note. US holidays and a few pet days are marked.'],
+  ['Heavy coated paper', '100# stock in full colour, the weight of a good art print.'],
 ]
 
 export function AcademyWorld() {
   const year = defaultCalendarYear()
   return (
     <WorldSection
+      id="what-you-get"
       backdrop="sky-cream"
-      serif="Set in"
-      sans="real type"
+      serif="No"
+      sans="surprises"
       cast={
         <>
           <Cutout name="mesa" className="-right-[6%] bottom-0 hidden w-[clamp(12rem,26vw,26rem)] lg:block" depth={0.15} bob={0} />
@@ -294,33 +300,68 @@ export function AcademyWorld() {
       }
     >
       <Reveal>
-        <Statement lead="AI paints the picture.">We set the type.</Statement>
+        <Statement lead="This is exactly what arrives.">A real wall calendar, with real dates, starring your pet.</Statement>
       </Reveal>
-      <div className="mt-24 grid items-center gap-16 lg:grid-cols-[1.1fr_1fr] lg:gap-24">
+
+      <div className="mt-24 grid items-start gap-16 lg:grid-cols-[1.05fr_1fr] lg:gap-20">
+        {/* the open calendar, large enough to read the dates */}
         <Reveal>
-          <div className="relative pb-[16%] pr-[8%]">
-            {/* a cat that has clearly decided the cover is hers */}
-            <Cutout name="siamese" flip className="bottom-[calc(100%-16%-1.4rem)] left-[6%] z-10 w-[42%]" depth={0.1} bob={0} />
-            <div className="relative aspect-[11/8.5] overflow-hidden rounded-[2px] shadow-stage">
-              <img src={SHOWCASE.cover} alt={`Sample calendar cover: ${SHOWCASE.petName} ${year}`} className="h-full w-full object-cover" loading="lazy" />
-              <CoverTitle petNames={[SHOWCASE.petName]} year={year} styleName={SHOWCASE.styleName} petType="dog" />
-            </div>
-            <div className="absolute bottom-0 right-0 w-[40%] overflow-hidden rounded-[2px] shadow-stage">
-              <GridPage month={10} year={year} caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`} />
-            </div>
-            <Cutout name="bunny" flip className="-bottom-[2%] left-[2%] z-10 w-[20%]" depth={0.3} bob={0} />
+          <div className="relative mx-auto max-w-[34rem]">
+            <Cutout name="siamese" flip className="bottom-[calc(100%-1.6rem)] left-[8%] z-10 w-[40%]" depth={0.1} bob={0} />
+            <WallCalendar
+              imageUrl={SHOWCASE.months[4].src}
+              imageAlt={`May page of ${SHOWCASE.petName}’s calendar, open on the wall`}
+              month={5}
+              year={year}
+              caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`}
+            />
+            <Cutout name="bunny" flip className="-bottom-[3%] -left-[9%] z-10 w-[22%]" depth={0.3} bob={0} />
+            <p className="mt-6 text-center text-sm text-ink-soft">Shown open, as it hangs: artwork on top, the month below.</p>
           </div>
         </Reveal>
-        <dl>
-          {craft.map(([title, body], i) => (
-            <Reveal key={title} delay={i * 90}>
-              <div className="border-t border-ink/15 py-7">
-                <dt className="font-display text-3xl">{title}</dt>
-                <dd className="mt-2 max-w-lg text-ink/65">{body}</dd>
-              </div>
-            </Reveal>
-          ))}
-        </dl>
+
+        <div>
+          <dl>
+            {anatomy.map(([title, body], i) => (
+              <Reveal key={title} delay={i * 70}>
+                <div className="flex gap-5 border-t border-ink/15 py-6">
+                  <span className="display-italic w-9 shrink-0 text-3xl text-gold-deep">{i + 1}</span>
+                  <div>
+                    <dt className="font-display text-[1.7rem] leading-tight">{title}</dt>
+                    <dd className="mt-1 max-w-md text-ink/70">{body}</dd>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </dl>
+
+          {/* front, inside, back */}
+          <Reveal delay={200}>
+            <div className="mt-8 grid grid-cols-3 gap-4">
+              <figure>
+                <div className="relative aspect-[11/8.5] overflow-hidden rounded-[2px] shadow-lift">
+                  <Art src={SHOWCASE.cover} alt={`Front cover: ${SHOWCASE.petName} ${year}`} sizes="(max-width: 768px) 33vw, 200px" />
+                  <CoverTitle petNames={[SHOWCASE.petName]} year={year} styleName={SHOWCASE.styleName} petType="dog" />
+                </div>
+                <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Front cover</figcaption>
+              </figure>
+              <figure>
+                <div className="overflow-hidden rounded-[2px] shadow-lift">
+                  <GridPage month={12} year={year} caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`} />
+                </div>
+                <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Twelve date pages</figcaption>
+              </figure>
+              <figure>
+                <BackCover petNames={[SHOWCASE.petName]} months={SHOWCASE.months.map((m) => m.src)} />
+                <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Back cover</figcaption>
+              </figure>
+            </div>
+          </Reveal>
+          <p className="mt-6 text-sm text-ink-soft">
+            The artwork is deliberately text-free: your pet’s name, each month and every date are typeset separately, so
+            nothing is ever misspelled or misnumbered. What you preview is what goes to press.
+          </p>
+        </div>
       </div>
     </WorldSection>
   )
@@ -454,18 +495,16 @@ export function HeavensWorld() {
         <Cutout name="balloon" className="right-[12%] top-[30%] hidden w-[clamp(4rem,8vw,8rem)] md:block" depth={0.35} rotate={5} bob={10} />
         <Cutout name="cherub" className={`left-[8%] top-[12%] ${size.md} max-sm:w-[26vw]`} depth={0.9} rotate={-8} bob={6} />
         <Cutout name="cherub2" className={`right-[9%] top-[9%] ${size.md} max-sm:w-[26vw]`} depth={0.8} rotate={6} bob={7} delay={0.2} />
-        <Cutout name="garland" className="left-1/2 top-[3%] -ml-[clamp(7rem,13vw,13rem)] w-[clamp(14rem,26vw,26rem)]" depth={0.2} bob={11} />
 
         <h2 className="collage-title relative z-10 !text-[clamp(3.2rem,11vw,11rem)] drop-shadow-[0_6px_30px_rgb(8_18_40/0.75)]">
-          <span className="serif">Make it</span>
-          <span className="sans">official</span>
+          <span className="serif">Their year</span>
+          <span className="sans">starts here</span>
         </h2>
-        <p className="relative z-10 mx-auto mt-7 max-w-md text-lg font-medium text-ivory drop-shadow-[0_2px_12px_rgb(8_18_40/0.9)] sm:text-xl">They’re already the star of the house.</p>
+        <p className="relative z-10 mx-auto mt-7 max-w-md text-lg font-medium text-ivory drop-shadow-[0_2px_12px_rgb(8_18_40/0.9)] sm:text-xl">Three photos. Five minutes. One very proud pet.</p>
         <div className="relative z-10 mt-8 flex flex-col items-center gap-4">
           <Link href="/create" className="btn btn-light btn-lg shadow-[0_18px_40px_-12px_rgb(8_18_40/0.7)]">
             Make your calendar <ArrowRight size={18} />
           </Link>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ivory/85 drop-shadow-[0_1px_8px_rgb(8_18_40/0.9)]">About five minutes · free to preview</p>
         </div>
 
         {/* the whole troupe, lined up along the bottom for the curtain call */}
