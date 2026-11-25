@@ -46,10 +46,21 @@ export function shotDirection(pageType: 'cover' | 'month' | 'back', month: numbe
 }
 
 /** The overall look: a real photograph, not the default glossy AI render. */
+/**
+ * Costumes and props tempt the model to add human arms on top of four legs.
+ * Spelled out on its own so revisions carry it too.
+ */
+export const ANATOMY_RULE = [
+  'Anatomy (strict): the pet keeps its real animal body. A dog or cat has exactly four legs in total — two front, two hind — and one tail. Count them: never five or six limbs.',
+  'No human arms, hands, fingers or shoulders, and no extra pair of forelegs coming out of a costume. Sleeves, robes, jackets and capes are cut for a four-legged animal and drape over its back and front legs; an empty or extra sleeve never contains a limb.',
+  'The pet stands, sits, lies, walks or runs the way that animal really does — not upright on its hind legs like a person unless the brief explicitly asks for it.',
+  'Props are never gripped in a hand. If the scene involves a wand, tool, instrument or other object, it is held in the mouth, rests under or against one front paw (which is then one of the four legs, lifted or planted), is strapped to the outfit, floats by magic, or lies beside the pet.',
+].join(' ')
+
 export const LOOK_RULES = [
   'Look: a real photograph by a skilled editorial animal photographer — not a digital painting, 3D render or glossy poster. One camera, one lens, believable depth of field.',
   'Colour and light: true-to-life colour and natural contrast. No HDR glow, no over-saturated orange-and-teal grade, no blanket golden haze, no added sparkles, light rays or lens flare unless the scene truly calls for them. Let the light fit the place and month — overcast, open shade, window light, bright midday, dusk, or night lit by lamps — rather than defaulting to sunset.',
   'Texture: real fur with individual hairs and slightly imperfect grooming, real fabric and materials, natural skin on noses and paws, a touch of fine film grain. Nothing airbrushed or waxy.',
   'Composition: off-centre and layered, with foreground, subject and background; honest scale between the pet and its surroundings. Where the brief says “cinematic” or “epic”, read that as scale and composition, not heavy colour grading.',
-  'Anatomy: believable for the species — the right number of legs, one tail, correct paws; no extra limbs.',
+  ANATOMY_RULE,
 ].join('\n')
