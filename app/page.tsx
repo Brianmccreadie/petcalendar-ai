@@ -1,4 +1,5 @@
 import Footer from '@/components/Footer'
+import CollageMotion from '@/components/landing/CollageMotion'
 import { faqs } from '@/components/landing/FAQ'
 import {
   AcademyWorld,
@@ -55,6 +56,7 @@ export default function Home() {
       <HearthWorld />
       <HeavensWorld />
       <Footer />
+      <CollageMotion />
     </>
   )
 }
