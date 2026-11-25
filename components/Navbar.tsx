@@ -66,8 +66,14 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 text-ivory transition-[background-color,border-color] duration-300 ${
-        open ? 'border-b border-ivory/10 bg-night' : scrolled ? 'border-b border-ivory/10 bg-night/80 backdrop-blur-xl' : pathname === '/' ? 'border-b border-transparent bg-transparent' : 'border-b border-transparent bg-night'
+      className={`sticky top-0 z-50 transition-[background-color,border-color,color] duration-300 ${
+        open
+          ? 'border-b border-ivory/10 bg-night text-ivory'
+          : scrolled
+            ? 'border-b border-ivory/10 bg-night/85 text-ivory backdrop-blur-xl'
+            : pathname === '/'
+              ? 'border-b border-transparent bg-transparent text-ink' // over the pale sky of the homepage hero
+              : 'border-b border-transparent bg-night text-ivory'
       }`}
     >
       <div className="mx-auto flex h-16 max-w-[84rem] items-center justify-between px-5 sm:px-8">
@@ -83,16 +89,16 @@ export default function Navbar() {
           <>
             <nav className="hidden items-center gap-9 md:flex" aria-label="Main">
               {links.map((link) => (
-                <Link key={link.href} href={link.href} className="text-sm font-medium text-ivory/85 transition-colors hover:text-ivory">
+                <Link key={link.href} href={link.href} className="text-sm font-semibold opacity-80 transition-opacity hover:opacity-100">
                   {link.label}
                 </Link>
               ))}
             </nav>
             <div className="hidden items-center gap-6 md:flex">
-              <Link href="/dashboard" className="text-sm font-medium text-ivory/85 transition-colors hover:text-ivory">
+              <Link href="/dashboard" className="text-sm font-semibold opacity-80 transition-opacity hover:opacity-100">
                 My calendars
               </Link>
-              <Link href="/create" className="btn btn-light btn-sm">
+              <Link href="/create" className={`btn btn-sm ${pathname === '/' && !scrolled && !open ? 'btn-primary' : 'btn-light'}`}>
                 Create yours
               </Link>
             </div>
@@ -108,8 +114,8 @@ export default function Navbar() {
                 <Close />
               ) : (
                 <span className="flex flex-col items-end gap-[6px]" aria-hidden="true">
-                  <span className="block h-px w-6 bg-ivory" />
-                  <span className="block h-px w-4 bg-ivory" />
+                  <span className="block h-px w-6 bg-current" />
+                  <span className="block h-px w-4 bg-current" />
                 </span>
               )}
             </button>

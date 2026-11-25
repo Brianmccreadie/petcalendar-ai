@@ -264,3 +264,77 @@ body {
 .world-title.world-title-sm {
   font-size: clamp(2.3rem, 6vw, 4.6rem);
 }
+
+/* ---------------------------------------------------------------------------
+   The collage: painted cut-outs pinned around the page (components/landing/Cutout).
+   Three nested boxes so three movements never fight over one transform:
+     .cutout      where it sits, plus pointer and scroll parallax
+     .cutout-in   the pop-in the first time it is seen
+     .cutout-img  the slow bob, the tilt and the paper shadow
+   --------------------------------------------------------------------------- */
+.cutout {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+  transform: translate3d(
+    calc(var(--mx, 0) * var(--depth, 0.5) * -26px),
+    calc(var(--my, 0) * var(--depth, 0.5) * -16px + var(--sy, 0) * var(--depth, 0.5) * -110px),
+    0
+  );
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.cutout-in {
+  display: block;
+  opacity: 0;
+  transform: translateY(26px) scale(0.9) rotate(calc(var(--rot, 0deg) - 6deg));
+  transition: opacity 0.7s ease-out var(--delay, 0s), transform 1s cubic-bezier(0.2, 1.2, 0.3, 1) var(--delay, 0s);
+}
+.cutout.is-in .cutout-in {
+  opacity: 1;
+  transform: rotate(var(--rot, 0deg));
+}
+.cutout-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 14px 14px rgb(15 33 64 / 0.22)) drop-shadow(0 2px 2px rgb(15 33 64 / 0.18));
+}
+.cutout-bob { animation: cutout-bob var(--bob, 8s) ease-in-out var(--delay, 0s) infinite; }
+@keyframes cutout-bob {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50% { translate: 0 -12px; rotate: 1.4deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cutout { transform: none; transition: none; }
+  .cutout-in { opacity: 1; transform: rotate(var(--rot, 0deg)); transition: none; }
+  .cutout-bob { animation: none; }
+}
+/* No script, no problem: without CollageMotion the pieces are simply there. */
+@media (scripting: none) {
+  .cutout-in { opacity: 1; transform: rotate(var(--rot, 0deg)); }
+}
+
+/* The hero title is set in two layers so animals can stand behind one and in front of the other. */
+.collage-title {
+  font-size: clamp(3.6rem, 12vw, 12.5rem);
+  line-height: 0.82;
+  text-transform: uppercase;
+  text-align: center;
+}
+.collage-title .serif { display: block; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.015em; }
+.collage-title .sans { display: block; font-family: var(--font-sans); font-weight: 800; letter-spacing: -0.05em; }
+
+/* A soft painted-paper grain over the flat section colours. */
+.paper-grain { position: relative; isolation: isolate; }
+.paper-grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: radial-gradient(rgb(18 34 63 / 0.045) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+}

@@ -12,7 +12,8 @@
     "render:reveal": "node scripts/render-reveal.mjs",
     "previews": "node scripts/regenerate-previews.mjs",
     "sample:year": "node scripts/generate-sample-year.mjs",
-    "brand:art": "node scripts/generate-brand-art.mjs"
+    "brand:art": "node scripts/generate-brand-art.mjs",
+    "brand:cutouts": "node scripts/generate-cutouts.mjs"
   },
   "dependencies": {
     "@google/genai": "^3.3.0",
