@@ -4,9 +4,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import BackCover from '@/components/calendar/BackCover'
 import CoverTitle from '@/components/calendar/CoverTitle'
 import WallCalendar from '@/components/calendar/WallCalendar'
-import { ArrowLeft, ArrowRight, Check, Pencil, Play, Refresh } from '@/components/icons'
+import { ArrowLeft, ArrowRight, Check, Play, Refresh } from '@/components/icons'
 import { MONTH_NAMES, joinPetNames, possessive } from '@/lib/calendar/layout'
 import { calendarSlots, useCalendar, type CalendarSlot } from '@/lib/client/use-calendar'
 import { LIMITS, PRICING, formatPrice } from '@/lib/config'
@@ -51,7 +52,9 @@ export default function ReviewStep() {
   const [index, setIndex] = useState(0)
   const [working, setWorking] = useState<Set<string>>(new Set())
   const [notice, setNotice] = useState<string | null>(null)
-  const [editing, setEditing] = useState(false)
+  const [scope, setScope] = useState<'page' | 'all'>('page')
+  const [showBack, setShowBack] = useState(false)
+  const [batch, setBatch] = useState<{ done: number; total: number } | null>(null)
   const [instructions, setInstructions] = useState('')
   const [newPhoto, setNewPhoto] = useState<File | null>(null)
   const [versionState, setVersionState] = useState<{ pageId: string; list: Version[] } | null>(null)
@@ -73,7 +76,7 @@ export default function ReviewStep() {
 
   const go = useCallback((delta: number) => {
     setIndex((i) => (i + delta + 13) % 13)
-    setEditing(false)
+    setShowBack(false)
     setNotice(null)
   }, [])
 
@@ -102,43 +105,88 @@ export default function ReviewStep() {
   }, [slot.id, slot.version_count, slot.image_url])
   const versions = versionState && versionState.pageId === slot.id && slot.version_count >= 2 ? versionState.list : []
 
-  async function regenerate(withChanges: boolean) {
-    if (!slot.id) return
-    const id = slot.id
-    setNotice(null)
-    setWorking((w) => new Set(w).add(id))
-    setEditing(false)
+  const setBusy = (id: string, busy: boolean) =>
+    setWorking((w) => {
+      const next = new Set(w)
+      if (busy) next.add(id)
+      else next.delete(id)
+      return next
+    })
+
+  /** One page: redo it, or revise it with a note and/or a clearer photo. Returns an error message, or null. */
+  async function revisePage(id: string, note: string, photo: File | null): Promise<string | null> {
+    setBusy(id, true)
     try {
       let res: Response
-      if (withChanges && newPhoto) {
+      if (photo) {
         const form = new FormData()
         form.append('calendar_page_id', id)
-        form.append('custom_instructions', instructions.trim())
-        form.append('new_reference', newPhoto)
+        form.append('custom_instructions', note)
+        form.append('new_reference', photo)
         res = await fetch('/api/regenerate', { method: 'POST', body: form })
       } else {
         res = await fetch('/api/regenerate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ calendar_page_id: id, custom_instructions: withChanges ? instructions.trim() : '' }),
+          body: JSON.stringify({ calendar_page_id: id, custom_instructions: note }),
         })
       }
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
-        setNotice(body.error || 'That didn’t work. Please try again.')
-      } else {
-        setInstructions('')
-        setNewPhoto(null)
-      }
+      if (res.ok) return null
+      const body = await res.json().catch(() => ({}))
+      return body.error || 'That didn’t work. Please try again.'
     } catch {
-      setNotice('Connection lost. Please try again.')
+      return 'Connection lost. Please try again.'
     } finally {
       await reload()
-      setWorking((w) => {
-        const next = new Set(w)
-        next.delete(id)
-        return next
-      })
+      setBusy(id, false)
+    }
+  }
+
+  /** "Try again" on the selected page: a fresh take with no note. */
+  async function redoPage() {
+    if (!slot.id) return
+    setNotice(null)
+    const error = await revisePage(slot.id, '', null)
+    if (error) setNotice(error)
+  }
+
+  /** Apply the note to the selected page, or to every page that still has a revision left. */
+  async function applyChange() {
+    const note = instructions.trim()
+    const photo = newPhoto
+    if (!note && !photo) return
+    setNotice(null)
+
+    if (scope === 'page') {
+      if (!slot.id) return
+      const error = await revisePage(slot.id, note, photo)
+      if (error) return setNotice(error)
+      setInstructions('')
+      setNewPhoto(null)
+      return
+    }
+
+    const ids = slots.filter((s) => s.id && s.status === 'complete' && s.revisions_left > 0).map((s) => s.id as string)
+    if (ids.length === 0) return
+    setBatch({ done: 0, total: ids.length })
+    let failures = 0
+    const settle = (error: string | null) => {
+      if (error) failures++
+      setBatch((b) => (b ? { ...b, done: b.done + 1 } : b))
+    }
+    // A new photo is stored with the first page; every later page then draws on it too.
+    const queue = [...ids]
+    if (photo) settle(await revisePage(queue.shift() as string, note, photo))
+    const worker = async () => {
+      while (queue.length) settle(await revisePage(queue.shift() as string, note, null))
+    }
+    await Promise.all(Array.from({ length: 3 }, worker))
+    setBatch(null)
+    if (failures) {
+      setNotice(`${failures} page${failures > 1 ? 's' : ''} could not be updated. Select ${failures > 1 ? 'them' : 'it'} and try again.`)
+    } else {
+      setInstructions('')
+      setNewPhoto(null)
     }
   }
 
@@ -178,6 +226,10 @@ export default function ReviewStep() {
   const canRevise = !ordered && slot.id && slot.status === 'complete' && !isWorking
   const canRetry = !ordered && slot.id && slot.status === 'failed' && !isWorking
   const outOfRevisions = slot.status === 'complete' && slot.revisions_left <= 0
+  const revisable = slots.filter((s) => s.id && s.status === 'complete' && s.revisions_left > 0).length
+  const anyBusy = working.size > 0 || batch !== null
+  const hasInput = Boolean(instructions.trim() || newPhoto)
+  const canApply = hasInput && !anyBusy && (scope === 'all' ? revisable > 0 : Boolean(canRevise) && !outOfRevisions)
 
   return (
     <div className="mx-auto max-w-6xl px-5 pb-40 pt-8 sm:px-8 sm:pt-12">
@@ -189,7 +241,7 @@ export default function ReviewStep() {
         </h1>
         <p className="lede mx-auto mt-4 max-w-xl">
           {allDone
-            ? 'Flip through every page. Anything not quite right? Try it again or ask for a change.'
+            ? 'Flip through every page. To change one, select it and tell us what to change — or apply one note to all of them.'
             : running
               ? 'Pages appear as they finish — usually a few minutes for all thirteen. You can leave this tab open or come back later.'
               : 'Some pages still need attention before you can order.'}
@@ -217,7 +269,9 @@ export default function ReviewStep() {
         {/* Viewer */}
         <section aria-label={`${slotLabel(slot)} preview`} className="lg:sticky lg:top-24">
           <div className="mx-auto max-w-[34rem]">
-            {slot.page_type === 'cover' ? (
+            {showBack ? (
+              <BackCover petNames={petNames} months={slots.slice(1).map((m) => (m.status === 'complete' ? m.image_url : null))} />
+            ) : slot.page_type === 'cover' ? (
               <div className="relative aspect-[11/8.5] overflow-hidden rounded-[3px] shadow-lift">
                 {slot.status === 'complete' && slot.image_url && !isWorking ? (
                   <>
@@ -246,7 +300,7 @@ export default function ReviewStep() {
                 <ArrowLeft size={18} />
               </button>
               <p className="font-display text-2xl" aria-live="polite">
-                {slotLabel(slot)} {slot.page_type === 'month' && <span className="text-muted">{year}</span>}
+                {showBack ? 'Back cover' : slotLabel(slot)} {!showBack && slot.page_type === 'month' && <span className="text-muted">{year}</span>}
               </p>
               <button type="button" className="btn btn-ghost btn-sm" onClick={() => go(1)} aria-label="Next page">
                 <ArrowRight size={18} />
@@ -258,7 +312,10 @@ export default function ReviewStep() {
         {/* Pages + actions */}
         <aside className="space-y-6">
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-muted">All pages</h2>
+            <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-muted">
+              <span className="grid h-5 w-5 place-items-center rounded-full bg-ink text-[0.65rem] text-ivory">1</span>
+              Choose a page
+            </h2>
             <ol className="mt-3 grid grid-cols-6 gap-2 lg:grid-cols-4">
               {slots.map((s, i) => {
                 const busy = Boolean(s.id && working.has(s.id)) || s.status === 'generating'
@@ -268,15 +325,15 @@ export default function ReviewStep() {
                       type="button"
                       onClick={() => {
                         setIndex(i)
-                        setEditing(false)
+                        setShowBack(false)
                         setNotice(null)
                       }}
                       aria-label={`${slotLabel(s)} — ${busy ? 'in progress' : s.status}`}
-                      aria-current={i === index}
+                      aria-current={i === index && !showBack}
                       className={`relative block overflow-hidden rounded-[4px] bg-paper-deep transition-shadow ${
                         i === 0 ? 'aspect-[11/8.5] w-1/3 lg:w-1/2' : 'aspect-[11/8.5] w-full'
                       } ${
-                        i === index ? 'shadow-[0_0_0_2px_var(--color-paper),0_0_0_4px_var(--color-ink)]' : 'hover:opacity-85'
+                        i === index && !showBack ? 'shadow-[0_0_0_2px_var(--color-paper),0_0_0_4px_var(--color-ink)]' : 'hover:opacity-85'
                       }`}
                     >
                       {s.image_url && s.status === 'complete' && !busy ? (
@@ -293,18 +350,54 @@ export default function ReviewStep() {
                   </li>
                 )
               })}
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowBack(true)
+                    setNotice(null)
+                  }}
+                  aria-label="Back cover"
+                  aria-current={showBack}
+                  className={`relative block aspect-[11/8.5] w-full overflow-hidden rounded-[4px] bg-[#fdfbf6] transition-shadow ${
+                    showBack ? 'shadow-[0_0_0_2px_var(--color-paper),0_0_0_4px_var(--color-ink)]' : 'hover:opacity-85'
+                  }`}
+                >
+                  <span className="absolute inset-x-1.5 top-1.5 grid grid-cols-4 gap-0.5" aria-hidden="true">
+                    {Array.from({ length: 12 }, (_, k) => (
+                      <span key={k} className="aspect-[11/8.5] bg-ink/15" />
+                    ))}
+                  </span>
+                  <span className="absolute inset-x-0 bottom-0 bg-ink/70 py-0.5 text-center text-[0.6rem] font-bold uppercase tracking-wide text-paper">
+                    Back
+                  </span>
+                </button>
+              </li>
             </ol>
           </div>
 
-          {!ordered && (
+          {!ordered && showBack && (
             <div className="card p-5">
-              <h2 className="font-display text-2xl">{slotLabel(slot)}</h2>
+              <h2 className="font-display text-2xl">Back cover</h2>
+              <p className="mt-2 text-sm text-ink-soft">
+                The back is an index of all twelve months. It’s built from your pages, so it updates by itself whenever you change one.
+              </p>
+            </div>
+          )}
+
+          {!ordered && !showBack && (
+            <div className="card p-5">
+              <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-muted">
+                <span className="grid h-5 w-5 place-items-center rounded-full bg-ink text-[0.65rem] text-ivory">2</span>
+                Tell us what to change
+              </h2>
+              <p className="mt-3 font-display text-2xl">{slotLabel(slot)}</p>
 
               {slot.status === 'complete' && (
                 <p className="mt-1 text-sm text-ink-soft">
                   {outOfRevisions
-                    ? `All ${LIMITS.maxRevisionsPerPage} revisions used for this page.`
-                    : `${slot.revisions_left} free revision${slot.revisions_left === 1 ? '' : 's'} left for this page.`}
+                    ? `All ${LIMITS.maxRevisionsPerPage} changes used for this page.`
+                    : `${slot.revisions_left} free change${slot.revisions_left === 1 ? '' : 's'} left for this page.`}
                 </p>
               )}
 
@@ -335,62 +428,93 @@ export default function ReviewStep() {
                 </div>
               )}
 
-              {editing ? (
-                <form
-                  className="mt-4 space-y-3"
-                  onSubmit={(e) => {
-                    e.preventDefault()
-                    if (instructions.trim() || newPhoto) regenerate(true)
-                  }}
-                >
-                  <label className="label" htmlFor="changes">
-                    What should change?
-                  </label>
-                  <textarea
-                    id="changes"
-                    className="field resize-none"
-                    rows={3}
-                    maxLength={LIMITS.maxInstructionLength}
-                    value={instructions}
-                    onChange={(e) => setInstructions(e.target.value)}
-                    placeholder="e.g. Brighter background, remove the hat, make the ears floppier"
-                    autoFocus
-                  />
-                  <label className="block cursor-pointer rounded-xl border-[1.5px] border-dashed border-ink/30 px-3 py-2.5 text-sm font-semibold text-ink-soft hover:border-ink">
-                    {newPhoto ? `Using new photo: ${newPhoto.name}` : 'Doesn’t look like them? Add a clearer photo (optional)'}
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      className="sr-only"
-                      onChange={(e) => setNewPhoto(e.target.files?.[0] ?? null)}
-                    />
-                  </label>
-                  <div className="flex gap-2">
-                    <button type="button" className="btn btn-ghost btn-sm flex-1" onClick={() => setEditing(false)}>
-                      Cancel
-                    </button>
-                    <button type="submit" className="btn btn-primary btn-sm flex-1" disabled={!instructions.trim() && !newPhoto}>
-                      Revise page
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-1">
-                  <button
-                    type="button"
-                    className="btn btn-ghost btn-sm"
-                    onClick={() => regenerate(false)}
-                    disabled={!(canRetry || (canRevise && !outOfRevisions))}
-                  >
-                    <Refresh size={16} /> Try again
-                  </button>
-                  <button type="button" className="btn btn-dark btn-sm" onClick={() => setEditing(true)} disabled={!canRevise || outOfRevisions}>
-                    <Pencil size={16} /> Request a change
-                  </button>
-                </div>
-              )}
+              <form
+                className="mt-4 space-y-3"
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  if (canApply) applyChange()
+                }}
+              >
+                <label className="sr-only" htmlFor="changes">
+                  What should change?
+                </label>
+                <textarea
+                  id="changes"
+                  className="field resize-none"
+                  rows={3}
+                  maxLength={LIMITS.maxInstructionLength}
+                  value={instructions}
+                  onChange={(e) => setInstructions(e.target.value)}
+                  placeholder="e.g. Brighter background, remove the hat, make the ears floppier"
+                  disabled={anyBusy}
+                />
 
-              {isWorking && <p className="mt-3 text-sm font-semibold text-ink-soft">Working on it — about a minute.</p>}
+                <fieldset>
+                  <legend className="text-xs font-bold uppercase tracking-[0.12em] text-muted">Apply to</legend>
+                  <div className="mt-2 grid grid-cols-2 gap-1 rounded-xl bg-paper-deep p-1" role="radiogroup">
+                    {(
+                      [
+                        ['page', `Just ${slot.page_type === 'cover' ? 'the cover' : slotLabel(slot)}`],
+                        ['all', 'All pages'],
+                      ] as const
+                    ).map(([value, label]) => (
+                      <button
+                        key={value}
+                        type="button"
+                        role="radio"
+                        aria-checked={scope === value}
+                        onClick={() => setScope(value)}
+                        disabled={anyBusy}
+                        className={`rounded-lg px-2 py-2 text-sm font-semibold transition-colors ${
+                          scope === value ? 'bg-card text-ink shadow-sm' : 'text-ink-soft hover:text-ink'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  {scope === 'all' && (
+                    <p className="mt-2 text-xs text-ink-soft">
+                      {revisable > 0
+                        ? `Updates ${revisable} page${revisable === 1 ? '' : 's'} and uses one free change on each. Takes a few minutes.`
+                        : 'No pages have free changes left.'}
+                    </p>
+                  )}
+                </fieldset>
+
+                <label className="block cursor-pointer rounded-xl border-[1.5px] border-dashed border-ink/30 px-3 py-2.5 text-sm font-semibold text-ink-soft hover:border-ink">
+                  {newPhoto ? `Using new photo: ${newPhoto.name}` : 'Doesn’t look like them? Add a clearer photo (optional)'}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="sr-only"
+                    disabled={anyBusy}
+                    onChange={(e) => setNewPhoto(e.target.files?.[0] ?? null)}
+                  />
+                </label>
+
+                <button type="submit" className="btn btn-primary btn-sm w-full" disabled={!canApply}>
+                  {batch
+                    ? `Updating ${Math.min(batch.done + 1, batch.total)} of ${batch.total}…`
+                    : scope === 'all'
+                      ? 'Apply to all pages'
+                      : `Apply to ${slot.page_type === 'cover' ? 'the cover' : slotLabel(slot)}`}
+                </button>
+              </form>
+
+              <div className="mt-4 border-t border-rule pt-4">
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm w-full"
+                  onClick={redoPage}
+                  disabled={anyBusy || !(canRetry || (canRevise && !outOfRevisions))}
+                >
+                  <Refresh size={16} /> Just redo this page
+                </button>
+                <p className="mt-2 text-center text-xs text-ink-soft">A fresh take on the same scene, no note needed.</p>
+              </div>
+
+              {isWorking && !batch && <p className="mt-3 text-sm font-semibold text-ink-soft">Working on it — about a minute.</p>}
               {notice && (
                 <p role="alert" className="mt-3 text-sm font-semibold text-signal">
                   {notice}
