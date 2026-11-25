@@ -27,6 +27,8 @@ export interface CalendarData {
   }
   pets: { id: string; name: string; pet_type: PetType }[]
   pages: CalendarPageView[]
+  /** The customer's uploaded reference photos, oldest first. */
+  photos?: { id: string; pet_id: string | null; url: string }[]
 }
 
 export type CalendarSlot = CalendarPageView | { id: null; page_type: 'cover' | 'month'; month_number: number | null; status: 'pending'; image_url: null; version_count: 0; revisions_left: 0; pet_id: null }

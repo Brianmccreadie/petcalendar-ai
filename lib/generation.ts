@@ -290,7 +290,7 @@ export async function regeneratePage(
     .select('id', { count: 'exact', head: true })
     .eq('calendar_page_id', pageId)
   if ((count ?? 0) >= 1 + LIMITS.maxRevisionsPerPage) {
-    throw new RevisionLimitError(`This page has used all ${LIMITS.maxRevisionsPerPage} free revisions.`)
+    throw new RevisionLimitError('This page has been changed a great many times. Please choose one of its versions.')
   }
 
   const subjects = page.pet_id ? ctx.pets.filter((p) => p.pet.id === page.pet_id) : ctx.pets

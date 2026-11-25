@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   if (!isUuid(projectId)) return jsonError('project_id is required.', 400)
 
   const supabase = createAdminSupabaseClient()
-  const [{ data: project }, { data: pets }, { data: pageRows, error }, { data: versions }] = await Promise.all([
+  const [{ data: project }, { data: pets }, { data: pageRows, error }, { data: versions }, { data: photoRows }] = await Promise.all([
     supabase
       .from('projects')
       .select('id, style, status, start_year, multi_pet_mode, pet_name, pet_type, created_at, updated_at')
@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
     supabase.from('pets').select('id, name, pet_type, sort_order').eq('project_id', projectId).order('sort_order'),
     supabase.from('calendar_pages').select('*').eq('project_id', projectId),
     supabase.from('page_versions').select('calendar_page_id').eq('project_id', projectId),
+    supabase.from('pet_photos').select('id, pet_id, cloudinary_url, created_at').eq('project_id', projectId).order('created_at'),
   ])
 
   if (!project) return jsonError('Calendar not found.', 404)
@@ -63,5 +64,6 @@ export async function GET(request: NextRequest) {
   }
 
   pages.sort((a, b) => (a.month_number ?? 0) - (b.month_number ?? 0))
-  return NextResponse.json({ project, pets: pets ?? [], pages }, { headers: { 'Cache-Control': 'no-store' } })
+  const photos = (photoRows ?? []).map((p) => ({ id: p.id, pet_id: p.pet_id, url: p.cloudinary_url }))
+  return NextResponse.json({ project, pets: pets ?? [], pages, photos }, { headers: { 'Cache-Control': 'no-store' } })
 }

@@ -32,7 +32,7 @@ function StatusArt({ slot, working }: { slot: CalendarSlot; working: boolean }) 
       <div className="grid h-full w-full place-items-center bg-paper-deep p-6 text-center">
         <div>
           <p className="font-display text-2xl">This page didn’t finish.</p>
-          <p className="mt-1 text-sm text-ink-soft">Use “Try again” — it won’t use up a revision.</p>
+          <p className="mt-1 text-sm text-ink-soft">Use “Just redo this page” to try it again.</p>
         </div>
       </div>
     )
@@ -306,6 +306,31 @@ export default function ReviewStep() {
                 <ArrowRight size={18} />
               </button>
             </div>
+
+            {(data.photos?.length ?? 0) > 0 && (
+              <div className="mt-8 border-t border-rule pt-5">
+                <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-muted">
+                  Made from your photo{data.photos!.length === 1 ? '' : 's'}
+                </h2>
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {data.photos!.map((photo) => {
+                    const pet = data.pets.find((p) => p.id === photo.pet_id)
+                    return (
+                      <li key={photo.id} className="w-16">
+                        <img
+                          src={photo.url}
+                          alt={`Reference photo${pet ? ` of ${pet.name}` : ''}`}
+                          className="aspect-square w-full rounded-lg object-cover"
+                          loading="lazy"
+                        />
+                        {data.pets.length > 1 && pet && <p className="mt-1 truncate text-center text-[0.65rem] font-semibold text-ink-soft">{pet.name}</p>}
+                      </li>
+                    )
+                  })}
+                </ul>
+                <p className="mt-2 text-xs text-ink-soft">Every page is drawn from these. Not a good likeness? Add a clearer photo with your change.</p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -393,19 +418,13 @@ export default function ReviewStep() {
               </h2>
               <p className="mt-3 font-display text-2xl">{slotLabel(slot)}</p>
 
-              {slot.status === 'complete' && (
-                <p className="mt-1 text-sm text-ink-soft">
-                  {outOfRevisions
-                    ? `All ${LIMITS.maxRevisionsPerPage} changes used for this page.`
-                    : `${slot.revisions_left} free change${slot.revisions_left === 1 ? '' : 's'} left for this page.`}
-                </p>
-              )}
+              {outOfRevisions && <p className="mt-1 text-sm text-ink-soft">This page has been changed a great many times. Pick your favourite version below.</p>}
 
               {versions.length > 1 && (
                 <div className="mt-4">
                   <p className="text-xs font-bold uppercase tracking-[0.12em] text-muted">Versions — tap to choose</p>
-                  <div className="mt-2 flex gap-2">
-                    {versions.map((v) => (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {versions.slice(-8).map((v) => (
                       <button
                         key={v.id}
                         type="button"
@@ -476,8 +495,8 @@ export default function ReviewStep() {
                   {scope === 'all' && (
                     <p className="mt-2 text-xs text-ink-soft">
                       {revisable > 0
-                        ? `Updates ${revisable} page${revisable === 1 ? '' : 's'} and uses one free change on each. Takes a few minutes.`
-                        : 'No pages have free changes left.'}
+                        ? `Updates ${revisable === 13 ? 'all 13 pages' : `${revisable} page${revisable === 1 ? '' : 's'}`}. Takes a few minutes; earlier versions are kept.`
+                        : 'No finished pages to update yet.'}
                     </p>
                   )}
                 </fieldset>

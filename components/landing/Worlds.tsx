@@ -7,7 +7,7 @@ import GridPage from '@/components/calendar/GridPage'
 import WallCalendar from '@/components/calendar/WallCalendar'
 import Reveal from '@/components/Reveal'
 import { ArrowRight, Plus } from '@/components/icons'
-import { LIMITS, PRICING, PRODUCT_SPECS, SITE, defaultCalendarYear, formatPrice } from '@/lib/config'
+import { PRICING, PRODUCT_SPECS, SITE, defaultCalendarYear, formatPrice } from '@/lib/config'
 import { SHOWCASE, SHOWCASE_PLACES } from '@/lib/showcase'
 import { WORLDS } from '@/lib/worlds'
 import { faqs } from './FAQ'
@@ -202,7 +202,7 @@ export function AcademyWorld() {
 
 const included = [
   'Cover and twelve months of custom artwork',
-  `Redo or revise any page — ${LIMITS.maxRevisionsPerPage} free rounds each`,
+  'Redo or revise any page, as often as you like',
   'Your pet’s name and every date typeset for print',
   'Free US shipping with tracking',
 ]
