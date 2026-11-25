@@ -1,3 +1,5 @@
+import { CALENDAR_STYLES, type Medium } from '../types'
+
 // ---------------------------------------------------------------------------
 // Art direction shared by every page: how each month is framed, and what the
 // pictures should look like. Without this the model falls back to its default —
@@ -82,3 +84,48 @@ export const LOOK_RULES = [
   'Composition: off-centre and layered, with foreground, subject and background; honest scale between the pet and its surroundings. Where the brief says “cinematic” or “epic”, read that as scale and composition, not heavy colour grading.',
   ANATOMY_RULE,
 ].join('\n')
+
+// ---------------------------------------------------------------------------
+// Art-style themes are not photographs: the same scene and the same pet, but
+// drawn, painted or sculpted. They swap the photographic look for their own.
+// ---------------------------------------------------------------------------
+
+const MEDIUM_LOOK: Record<Exclude<Medium, 'photo'>, string> = {
+  watercolor:
+    'a loose hand-painted watercolor on rough cold-pressed paper. Wet-into-wet washes bleed and bloom into each other, pigment pools at the edges of shapes, large areas of bare white paper are left around the subject, and detail is suggested with a few quick darker strokes. The pet itself is painted in soft washes, not rendered hair by hair',
+  oil: 'a classical 18th-century oil painting on canvas: deep glazed shadows, warm golden light, soft lost-and-found edges, a dark old-master palette and visible brushwork with a faint craquelure',
+  impressionist:
+    'an impressionist oil painting made of short, thick, separate dabs of unblended colour and palette-knife marks. Forms dissolve into flickering light; up close it is all strokes of paint. The pet is built from the same broken dabs, with no fine detail',
+  cartoon:
+    'a hand-drawn 2D cartoon in the style of a classic animated film cel: thick, even black ink outlines around every shape, completely flat colour fills with one tone of simple shadow, huge glossy eyes, a simplified rounded body and a big comic expression. The pet is a cartoon character, with no realistic fur or photographic texture at all',
+  storybook:
+    'a gouache and coloured-pencil illustration from a mid-century children’s picture book: flat matte shapes, visible dry-brush and pencil texture, simplified charming proportions, small dot eyes and a soft, limited, slightly muted palette on off-white paper',
+  popart: 'a pop-art screen print: flat saturated colour blocks, thick black contours, coarse halftone dots for shading and a clashing bright background',
+  sketch:
+    'a pencil and ink sketchbook drawing on cream paper: the image is mostly line — graphite hatching, cross-hatching and loose ink contours — with only a pale wash of two or three colours and plenty of bare paper. Unfinished edges trail off into the page',
+  woodblock: 'a traditional Japanese woodblock print: flat colour areas, flowing black keylines, subtle printed gradients and visible paper grain',
+  poster: 'a 1930s lithographic travel poster: bold simplified shapes, hard edges and four or five flat, slightly faded inks',
+  clay:
+    'a stop-motion claymation still: every single thing, the pet included, is a hand-sculpted figure of matte modelling clay with smooth rounded simplified forms, bead-like eyes, visible fingerprints and tool marks, standing on a miniature handmade tabletop set under soft studio lights. No real fur anywhere',
+  papercut:
+    'a layered cut-paper collage photographed from above: every shape, the pet included, is cut from flat coloured craft paper with crisp scissor edges and stacked in layers that cast small soft shadows on one another. No painted shading, no fur texture — only flat paper shapes',
+}
+
+/** The look rules for a theme: photographic by default, or the theme's own medium. */
+export function lookRules(styleId?: string | null): string {
+  const medium = CALENDAR_STYLES.find((style) => style.id === styleId)?.medium
+  if (!medium || medium === 'photo') return LOOK_RULES
+  return [
+    `Look: the whole image is ${MEDIUM_LOOK[medium]}. It must be unmistakably that medium at a glance — never a photograph, never a realistic digital painting, and never a photographic animal placed into an illustrated background.`,
+    'Likeness in this medium: redraw the pet in the medium itself. Simplify and stylise as far as the medium demands, but keep what makes this pet itself — coat colours and where they fall, markings, ear shape, eye colour, face shape and build — so its owner knows it at a glance.',
+    'Composition: off-centre and layered, with foreground, subject and background; let the light fit the place and the month.',
+    ANATOMY_RULE,
+  ].join('\n')
+}
+
+/** One line that leads the prompt for a painted or drawn theme, so the medium outranks the photographic reference. */
+export function mediumLead(styleId?: string | null): string | null {
+  const medium = CALENDAR_STYLES.find((style) => style.id === styleId)?.medium
+  if (!medium || medium === 'photo') return null
+  return `MEDIUM — decides everything about how this image looks: ${MEDIUM_LOOK[medium]}. The reference photos show who the pet is; they do not set the style. Do not reproduce their photographic look.`
+}

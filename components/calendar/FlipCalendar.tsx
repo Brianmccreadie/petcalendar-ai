@@ -1,7 +1,7 @@
 'use client'
 
-/* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useRef, useState } from 'react'
+import Art from './Art'
 import GridPage from './GridPage'
 
 interface FlipCalendarProps {
@@ -67,7 +67,7 @@ export default function FlipCalendar({ pages, year, caption, accent, intervalMs 
         <div className="relative rounded-[2px] shadow-lift">
           {/* top page: this month's artwork */}
           <div className="relative aspect-[11/8.5] overflow-hidden rounded-t-[2px] bg-night-3">
-            <img src={current.src} alt={`${current.name} artwork from a sample calendar`} className="h-full w-full object-cover" />
+            <Art src={current.src} alt={`${current.name} artwork from a sample calendar`} sizes="(max-width: 640px) 100vw, 432px" />
           </div>
 
           <div className="wire-o" aria-hidden="true" />
@@ -96,7 +96,7 @@ export default function FlipCalendar({ pages, year, caption, accent, intervalMs 
                 style={{ backfaceVisibility: 'hidden', transform: 'rotateX(180deg)' }}
                 aria-hidden="true"
               >
-                <img src={next.src} alt="" className="h-full w-full object-cover" />
+                <Art src={next.src} alt="" sizes="(max-width: 640px) 100vw, 432px" />
               </div>
             </div>
           </div>

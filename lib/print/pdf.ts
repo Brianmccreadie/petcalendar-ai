@@ -226,11 +226,11 @@ function drawGridPage(page: PDFPage, fonts: Fonts, month: number, input: PrintIn
   const rowHeight = (L.gridBottom - L.gridTop) / grid.rows
   for (let r = 0; r <= grid.rows; r++) {
     const y = Y(L.gridTop + r * rowHeight)
-    page.drawLine({ start: { x: X(L.left), y }, end: { x: X(L.right), y }, thickness: r === 0 ? 1.2 : 0.5, color: r === 0 ? ink : rule })
+    page.drawLine({ start: { x: X(L.left), y }, end: { x: X(L.right), y }, thickness: r === 0 ? 1.6 : 0.8, color: r === 0 ? ink : rule })
   }
-  for (let c = 1; c < 7; c++) {
+  for (let c = 0; c <= 7; c++) {
     const x = X(L.left + c * cellWidth)
-    page.drawLine({ start: { x, y: Y(L.gridTop) }, end: { x, y: Y(L.gridBottom) }, thickness: 0.5, color: rule })
+    page.drawLine({ start: { x, y: Y(L.gridTop) }, end: { x, y: Y(L.gridBottom) }, thickness: 0.8, color: rule })
   }
 
   // Days

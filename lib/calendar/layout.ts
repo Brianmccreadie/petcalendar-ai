@@ -121,8 +121,8 @@ export const ART_ASPECT = 4 / 3
 
 export const INK = '#14120f'
 export const PAPER = '#fdfbf6'
-export const RULE = '#d9d2c5'
-export const MUTED = '#8d867c'
+export const RULE = '#b9b1a3'
+export const MUTED = '#6f685e'
 
 export const GRID_PAGE = {
   left: 0.5,
@@ -132,12 +132,13 @@ export const GRID_PAGE = {
   yearSize: 0.5,
   captionSize: 0.1,
   weekdayBaseline: 1.68,
-  weekdaySize: 0.095,
+  weekdaySize: 0.13,
   gridTop: 1.8,
   gridBottom: 8.0,
-  dayInset: 0.11,
-  daySize: 0.19,
-  holidaySize: 0.09,
+  dayInset: 0.12,
+  // Big enough to read from across a kitchen, with room left to write in each box.
+  daySize: 0.3,
+  holidaySize: 0.105,
 }
 
 // Cover: the pet sits in the middle of the frame, the name to its left and

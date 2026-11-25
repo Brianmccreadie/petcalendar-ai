@@ -40,7 +40,6 @@ for (const style of CALENDAR_STYLES) {
   if (only.length && !only.includes(style.id)) continue
   for (const petType of ['dog', 'cat', 'other']) {
     const file = `${style.id}-${petType}.jpg`
-    if (!existsSync(path.join(dir, file))) continue
     if (done.has(file) && !force) continue
     jobs.push({ style: style.id, petType, file })
   }
@@ -56,10 +55,14 @@ const failures = []
 
 async function run(job) {
   const subject = { name: names[job.petType], petType: job.petType }
-  const reference = await readFile(path.join(dir, job.file))
+  // A theme with no sample yet borrows the standard model pet of that kind as its reference.
+  const own = path.join(dir, job.file)
+  // Art-style themes always start from the photographic model pet, so an earlier render's style cannot leak in.
+  const painted = Boolean(CALENDAR_STYLES.find((style) => style.id === job.style)?.medium)
+  const reference = await readFile(existsSync(own) && !painted ? own : path.join(dir, `pet-photoshoot-${job.petType}.jpg`))
   const scene = getCoverPrompt(job.style, describeSubjects([subject]))
   const prompt =
-    ai.buildScenePrompt(scene, [subject]) +
+    ai.buildScenePrompt(scene, [subject], undefined, job.style) +
     '\n\nThe reference shows the animal to depict. Keep that exact animal (species, breed, colouring, markings) but ignore the costume, props, signs and background in the reference — build the scene fresh from the brief above.'
   const image = await ai.generateImage({ prompt, references: [ai.petReference(subject, reference, 'image/jpeg')] })
   const out = await sharp(image.data).resize({ width: 1200 }).jpeg({ quality: 78, mozjpeg: true }).toBuffer()

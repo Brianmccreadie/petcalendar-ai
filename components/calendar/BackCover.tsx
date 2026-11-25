@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+import Art from './Art'
 import { MONTH_NAMES, joinPetNames } from '@/lib/calendar/layout'
 import { SITE } from '@/lib/config'
 
@@ -26,8 +26,8 @@ export default function BackCover({ petNames, months, className = '' }: BackCove
         <ol className="mt-[3cqw] grid flex-1 grid-cols-4 gap-x-[1.8cqw] gap-y-[1.2cqw]">
           {Array.from({ length: 12 }, (_, i) => (
             <li key={i} className="min-h-0">
-              <div className="aspect-[11/8.5] overflow-hidden bg-[#ece6da]">
-                {months[i] && <img src={months[i]!} alt="" className="h-full w-full object-cover" loading="lazy" />}
+              <div className="relative aspect-[11/8.5] overflow-hidden bg-[#ece6da]">
+                {months[i] && <Art src={months[i]!} alt="" sizes="(max-width: 768px) 25vw, 160px" />}
               </div>
               <p className="mt-[0.5cqw] font-semibold uppercase leading-none tracking-[0.1em] text-[#8a8378]" style={{ fontSize: '0.95cqw' }}>
                 {MONTH_NAMES[i]}

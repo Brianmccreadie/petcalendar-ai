@@ -1,8 +1,9 @@
 import { CALENDAR_STYLES, type PetType, type StyleId } from './types'
 
-export type StyleCategory = 'adventure' | 'funny' | 'glam' | 'cozy' | 'spooky'
+export type StyleCategory = 'art' | 'adventure' | 'funny' | 'glam' | 'cozy' | 'spooky'
 
 export const STYLE_CATEGORIES: { id: StyleCategory; label: string }[] = [
+  { id: 'art', label: 'Art styles' },
   { id: 'adventure', label: 'Adventure' },
   { id: 'funny', label: 'Funny' },
   { id: 'glam', label: 'Glam' },
@@ -61,6 +62,18 @@ const META: Record<StyleId, { emoji: string; category: StyleCategory }> = {
   'anime-world': { emoji: '🌸', category: 'adventure' },
   'galactic-emperor': { emoji: '👾', category: 'adventure' },
   'cottage-core': { emoji: '🏡', category: 'cozy' },
+  'studio-portrait': { emoji: '📷', category: 'art' },
+  'watercolor': { emoji: '🎨', category: 'art' },
+  'classic-oil': { emoji: '🖼️', category: 'art' },
+  'impressionist': { emoji: '🌻', category: 'art' },
+  'cartoon': { emoji: '😜', category: 'art' },
+  'storybook': { emoji: '📖', category: 'art' },
+  'pop-art': { emoji: '💥', category: 'art' },
+  'pencil-sketch': { emoji: '✏️', category: 'art' },
+  'woodblock': { emoji: '🌊', category: 'art' },
+  'vintage-poster': { emoji: '🧳', category: 'art' },
+  'claymation': { emoji: '🧱', category: 'art' },
+  'paper-cut': { emoji: '✂️', category: 'art' },
 }
 
 export function styleMeta(id: StyleId) {
@@ -72,6 +85,11 @@ export function styleById(id: string | null | undefined) {
 }
 
 // Sample images that don't exist for a given pet type fall back to the dog shot.
+/** Themes added most recently, flagged in the explorer. */
+export function isNewStyle(id: StyleId): boolean {
+  return META[id].category === 'art'
+}
+
 const MISSING_PREVIEWS = new Set(['galactic-emperor-cat'])
 
 export function previewSrc(styleId: string, petType: PetType = 'dog'): string {

@@ -65,7 +65,7 @@ export default function GridPage({ month, year, accent: rawAccent, caption, clas
           textAnchor="end"
           fill={MUTED}
           letterSpacing="1.6"
-          style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, textTransform: 'uppercase' }}
+          style={{ fontFamily: 'var(--font-grid)', fontWeight: 600, textTransform: 'uppercase' }}
         >
           {caption}
         </text>
@@ -79,7 +79,7 @@ export default function GridPage({ month, year, accent: rawAccent, caption, clas
           fontSize={L.weekdaySize * U}
           fill={column === 0 || column === 6 ? accent : MUTED}
           letterSpacing="1.4"
-          style={{ fontFamily: 'var(--font-sans)', fontWeight: 600, textTransform: 'uppercase' }}
+          style={{ fontFamily: 'var(--font-grid)', fontWeight: 600, textTransform: 'uppercase' }}
         >
           {label}
         </text>
@@ -93,18 +93,19 @@ export default function GridPage({ month, year, accent: rawAccent, caption, clas
           y1={L.gridTop * U + r * rowHeight}
           y2={L.gridTop * U + r * rowHeight}
           stroke={r === 0 ? INK : RULE}
-          strokeWidth={r === 0 ? 1.7 : 0.8}
+          strokeWidth={r === 0 ? 2.2 : 1.1}
         />
       ))}
-      {Array.from({ length: 6 }, (_, c) => (
+      {/* eight uprights: every day is a closed box you can write in */}
+      {Array.from({ length: 8 }, (_, c) => (
         <line
           key={`c${c}`}
-          x1={L.left * U + (c + 1) * cellWidth}
-          x2={L.left * U + (c + 1) * cellWidth}
+          x1={L.left * U + c * cellWidth}
+          x2={L.left * U + c * cellWidth}
           y1={L.gridTop * U}
           y2={L.gridBottom * U}
           stroke={RULE}
-          strokeWidth={0.8}
+          strokeWidth={1.1}
         />
       ))}
 
@@ -118,7 +119,7 @@ export default function GridPage({ month, year, accent: rawAccent, caption, clas
               y={(rect.y + L.dayInset + L.daySize * 0.78) * U}
               fontSize={L.daySize * U}
               fill={weekend ? accent : INK}
-              style={{ fontFamily: 'var(--font-sans)', fontWeight: 400 }}
+              style={{ fontFamily: 'var(--font-grid)', fontWeight: 500 }}
             >
               {cell.day}
             </text>
@@ -128,7 +129,7 @@ export default function GridPage({ month, year, accent: rawAccent, caption, clas
                 y={(rect.y + rect.height - L.dayInset) * U}
                 fontSize={L.holidaySize * U}
                 fill={MUTED}
-                style={{ fontFamily: 'var(--font-sans)' }}
+                style={{ fontFamily: 'var(--font-grid)' }}
               >
                 {cell.holiday}
               </text>
