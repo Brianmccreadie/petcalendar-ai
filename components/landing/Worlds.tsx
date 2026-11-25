@@ -12,7 +12,7 @@ import { SHOWCASE, SHOWCASE_PLACES } from '@/lib/showcase'
 import Cutout from './Cutout'
 import { faqs } from './FAQ'
 import ThemeExplorer from './ThemeExplorer'
-import WorldSection, { Statement } from './WorldSection'
+import WorldSection, { Backdrop, Seam, Statement } from './WorldSection'
 
 // The homepage is a paper collage: flat grounds of sky blue, white and blush,
 // with oil-painted animals cut out of their canvases and pinned around the
@@ -31,76 +31,95 @@ const size = {
 export function MuralWorld() {
   const year = defaultCalendarYear()
   return (
-    <section className="relative -mt-16 overflow-x-clip bg-gradient-to-b from-[#a9cff0] via-[#d7e9f8] to-white text-ink">
-      <div className="relative mx-auto flex min-h-[100svh] max-w-[110rem] flex-col items-center justify-center px-4 pb-[clamp(5rem,12vh,9rem)] pt-24">
-        {/* sky */}
-        <Cutout name="cloud1" eager className="-left-[8%] top-[9%] w-[46vw] max-w-[44rem] opacity-90" depth={0.12} bob={14} />
-        <Cutout name="cloud2" eager className="-right-[10%] top-[34%] w-[52vw] max-w-[50rem] opacity-90" depth={0.18} bob={17} delay={0.2} />
-        <Cutout name="cloud2" eager flip className="-left-[14%] bottom-[14%] hidden w-[40vw] max-w-[38rem] opacity-80 md:block" depth={0.1} bob={19} />
-
-        {/* behind the headline */}
-        <Cutout name="astronaut" eager className={`left-[2%] top-[13%] ${size.lg} max-sm:w-[34vw]`} depth={0.7} rotate={-9} bob={9} delay={0.15} />
-        <Cutout name="cherub" eager className={`right-[5%] top-[12%] ${size.md} max-sm:w-[26vw]`} depth={0.85} rotate={6} bob={6} delay={0.3} />
-        <Cutout name="cherub2" eager className={`left-[27%] top-[8%] hidden ${size.sm} sm:block`} depth={0.5} rotate={-4} bob={7} delay={0.45} />
-        <Cutout name="corgi" eager className={`right-[22%] top-[17%] hidden ${size.md} md:block`} depth={0.9} rotate={-6} bob={7} delay={0.5} />
-        <Cutout
-          name="king"
-          eager
-          className="left-1/2 top-[clamp(4.5rem,9vh,6rem)] -ml-[clamp(5rem,11vw,11rem)] w-[clamp(10rem,22vw,22rem)]"
-          depth={0.3}
-          bob={0}
-          delay={0.05}
-        />
-
-        <div className="relative z-10 mt-[clamp(8rem,19vh,12rem)] text-center">
-          <h1 className="collage-title drop-shadow-[0_2px_0_rgb(255_255_255/0.35)]">
-            <span className="serif">Your pet’s</span>
-            <span className="sans">calendar</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-ink-soft sm:text-xl">
-            A custom wall calendar starring your pet, in any world you choose. Upload a few photos and preview the whole
-            year for free.
-          </p>
-          <div className="mt-8 flex flex-col items-center gap-4">
-            <Link href="/create" className="btn btn-primary btn-lg">
-              Make your calendar <ArrowRight size={18} />
-            </Link>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink/55">
-              Free to preview · {formatPrice(PRICING.firstCopyCents)} printed and delivered
-            </p>
-          </div>
+    <>
+      <section className="relative isolate -mt-16 overflow-x-clip text-ivory">
+        {/* the painted world everything else is pinned onto */}
+        <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden bg-[#27406b]">
+          <Image src="/art/panorama.jpg" alt="" fill priority sizes="100vw" className="object-cover object-[50%_60%]" />
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0f2140]/55 to-transparent" />
         </div>
 
-        {/* in front, flanking the call to action */}
-        <Cutout name="pirate" eager className={`bottom-[3%] left-[2%] z-20 ${size.lg} max-sm:w-[30vw]`} depth={0.55} rotate={-3} bob={0} delay={0.35} />
-        <Cutout name="wizard" eager className={`bottom-0 left-[14%] z-20 hidden ${size.md} sm:block`} depth={0.75} rotate={4} bob={0} delay={0.5} />
-        <Cutout name="bunny" eager className={`-bottom-[1%] left-[25%] z-20 hidden ${size.sm} lg:block`} depth={0.9} rotate={-5} bob={0} delay={0.65} />
-        <Cutout name="pig" eager className={`bottom-[1%] right-[22%] z-20 hidden ${size.md} md:block`} depth={0.9} rotate={3} bob={0} delay={0.6} />
-        <Cutout name="duchess" eager className={`bottom-[1%] right-[11%] z-20 hidden ${size.md} sm:block`} depth={0.7} rotate={-2} bob={0} delay={0.45} />
-        <Cutout name="sheriff" eager flip className={`bottom-[3%] right-[1%] z-20 ${size.lg} max-sm:w-[30vw]`} depth={0.5} rotate={3} bob={0} delay={0.3} />
-      </div>
+        <div className="relative mx-auto flex min-h-[100svh] max-w-[110rem] flex-col items-center justify-center px-4 pb-[clamp(8rem,20vh,13rem)] pt-20">
+          {/* far away */}
+          <Cutout name="saturn" eager className="-left-[3%] top-[6%] w-[clamp(7rem,17vw,17rem)]" depth={0.14} rotate={-8} bob={20} />
+          <Cutout name="moon" eager className="left-[19%] top-[30%] hidden w-[clamp(2.5rem,4.5vw,4.5rem)] md:block" depth={0.1} bob={0} />
+          <Cutout name="castle" eager className="right-[13%] top-[30%] hidden w-[clamp(7rem,15vw,15rem)] md:block" depth={0.2} bob={16} delay={0.2} />
+          <Cutout name="balloon" eager className="right-[2%] top-[26%] hidden w-[clamp(4rem,8vw,8rem)] lg:block" depth={0.3} rotate={4} bob={11} delay={0.4} />
+          <Cutout name="galleon" eager className="left-[6%] top-[44%] hidden w-[clamp(7rem,15vw,15rem)] sm:block" depth={0.22} rotate={-2} bob={9} delay={0.3} />
+          <Cutout name="cloud1" eager className="-left-[10%] top-[16%] w-[42vw] max-w-[40rem]" depth={0.18} bob={14} />
+          <Cutout name="cloud2" eager className="-right-[12%] top-[40%] w-[50vw] max-w-[48rem]" depth={0.24} bob={17} delay={0.2} />
+
+          {/* in the air */}
+          <Cutout name="astronaut" eager className={`left-[4%] top-[13%] ${size.lg} max-sm:w-[34vw]`} depth={0.7} rotate={-9} bob={9} delay={0.15} />
+          <Cutout name="cherub" eager className={`right-[5%] top-[10%] ${size.md} max-sm:w-[26vw]`} depth={0.85} rotate={6} bob={6} delay={0.3} />
+          <Cutout name="cherub2" eager className={`left-[29%] top-[8%] hidden ${size.sm} sm:block`} depth={0.5} rotate={-4} bob={7} delay={0.45} />
+          <Cutout name="corgi" eager className={`right-[24%] top-[16%] hidden ${size.md} md:block`} depth={0.9} rotate={-6} bob={7} delay={0.5} />
+
+          {/* behind the headline */}
+          <Cutout
+            name="king"
+            eager
+            className="left-1/2 top-[clamp(4.5rem,9vh,6rem)] -ml-[clamp(5rem,11vw,11rem)] w-[clamp(10rem,22vw,22rem)]"
+            depth={0.3}
+            bob={0}
+            delay={0.05}
+          />
+
+          <div className="relative z-10 mt-[clamp(8rem,19vh,12rem)] text-center">
+            <h1 className="collage-title drop-shadow-[0_6px_30px_rgb(8_18_40/0.75)]">
+              <span className="serif">Your pet’s</span>
+              <span className="sans">calendar</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-xl text-lg font-medium text-ivory drop-shadow-[0_2px_12px_rgb(8_18_40/0.9)] sm:text-xl">
+              A custom wall calendar starring your pet, in any world you choose. Upload a few photos and preview the
+              whole year for free.
+            </p>
+            <div className="mt-8 flex flex-col items-center gap-4">
+              <Link href="/create" className="btn btn-light btn-lg shadow-[0_18px_40px_-12px_rgb(8_18_40/0.7)]">
+                Make your calendar <ArrowRight size={18} />
+              </Link>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ivory/85 drop-shadow-[0_1px_8px_rgb(8_18_40/0.9)]">
+                Free to preview · {formatPrice(PRICING.firstCopyCents)} printed and delivered
+              </p>
+            </div>
+          </div>
+
+          {/* on the ground, flanking the call to action */}
+          <Cutout name="pirate" eager className={`bottom-[3%] left-[2%] z-20 ${size.lg} max-sm:w-[30vw]`} depth={0.55} rotate={-3} bob={0} delay={0.35} />
+          <Cutout name="wizard" eager className={`bottom-0 left-[14%] z-20 hidden ${size.md} sm:block`} depth={0.75} rotate={4} bob={0} delay={0.5} />
+          <Cutout name="bunny" eager className={`-bottom-[1%] left-[25%] z-20 hidden ${size.sm} lg:block`} depth={0.9} rotate={-5} bob={0} delay={0.65} />
+          <Cutout name="pig" eager className={`bottom-[1%] right-[22%] z-20 hidden ${size.md} md:block`} depth={0.9} rotate={3} bob={0} delay={0.6} />
+          <Cutout name="duchess" eager className={`bottom-[1%] right-[11%] z-20 hidden ${size.md} sm:block`} depth={0.7} rotate={-2} bob={0} delay={0.45} />
+          <Cutout name="sheriff" eager flip className={`bottom-[3%] right-[1%] z-20 ${size.lg} max-sm:w-[30vw]`} depth={0.5} rotate={3} bob={0} delay={0.3} />
+        </div>
+      </section>
 
       {/* the product itself, hung right under the headline */}
-      <div className="relative mx-auto max-w-5xl px-5 pb-24 pt-10 sm:px-8 sm:pt-20 lg:pb-32">
-        <Cutout name="musketeer" className={`left-[40%] top-[calc(2.9rem-clamp(6rem,13vw,13rem)*1.08)] z-10 sm:top-[calc(4.9rem-clamp(6rem,13vw,13rem)*1.08)] ${size.md}`} depth={0.15} bob={0} />
-        <Cutout name="dachshund" flip className={`-bottom-2 right-[2%] z-10 hidden ${size.md} md:block`} depth={0.4} bob={0} />
-        <Reveal>
-          <div className="grid grid-cols-3 items-start gap-4 sm:gap-10">
-            {[0, 5, 9].map((m, i) => (
-              <WallCalendar
-                key={m}
-                imageUrl={SHOWCASE.months[m].src}
-                imageAlt={`${SHOWCASE.months[m].name} page of a sample calendar: ${SHOWCASE.petName} in ${SHOWCASE_PLACES[m]}`}
-                month={m + 1}
-                year={year}
-                caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`}
-                className={['-rotate-2 sm:mt-8', 'sm:-mt-2', 'rotate-2 sm:mt-8'][i]}
-              />
-            ))}
-          </div>
-        </Reveal>
-      </div>
-    </section>
+      <section className="relative isolate overflow-x-clip text-ink">
+        <Backdrop name="sky-cream" />
+        <Seam />
+        <div className="relative mx-auto max-w-5xl px-5 pb-24 pt-28 sm:px-8 sm:pt-40 lg:pb-32">
+          <Cutout name="musketeer" className={`left-[40%] top-[calc(7rem-clamp(6rem,13vw,13rem)*1.08)] z-20 sm:top-[calc(10rem-clamp(6rem,13vw,13rem)*1.08)] ${size.md}`} depth={0.15} bob={0} />
+          <Cutout name="dachshund" flip className={`-bottom-2 right-[2%] z-10 hidden ${size.md} md:block`} depth={0.4} bob={0} />
+          <Cutout name="balloon" className="-left-[9%] top-[30%] hidden w-[clamp(5rem,10vw,10rem)] xl:block" depth={0.5} rotate={-5} bob={10} />
+          <Reveal>
+            <div className="grid grid-cols-3 items-start gap-4 sm:gap-10">
+              {[0, 5, 9].map((m, i) => (
+                <WallCalendar
+                  key={m}
+                  imageUrl={SHOWCASE.months[m].src}
+                  imageAlt={`${SHOWCASE.months[m].name} page of a sample calendar: ${SHOWCASE.petName} in ${SHOWCASE_PLACES[m]}`}
+                  month={m + 1}
+                  year={year}
+                  caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`}
+                  className={['-rotate-2 sm:mt-8', 'sm:-mt-2', 'rotate-2 sm:mt-8'][i]}
+                />
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    </>
   )
 }
 
@@ -109,14 +128,15 @@ export function VoyageWorld() {
   return (
     <WorldSection
       id="the-year"
-      bg="bg-white"
+      backdrop="sky-cream"
       serif="One dog,"
       sans="twelve looks"
       roomy
       headingCast={<Cutout name="garland" className="bottom-[78%] left-1/2 -ml-[36%] w-[72%]" depth={0.15} bob={10} />}
       cast={
         <>
-          <Cutout name="cloud1" className="-right-[12%] top-[2%] w-[38vw] max-w-[34rem] opacity-70" depth={0.15} bob={16} />
+          <Cutout name="balloon" className="right-[4%] top-[9%] hidden w-[clamp(5rem,10vw,10rem)] md:block" depth={0.6} rotate={5} bob={10} />
+          <Cutout name="temple" className="-left-[4%] bottom-0 hidden w-[clamp(10rem,22vw,22rem)] xl:block" depth={0.2} bob={0} />
           <Cutout name="corgi" flip className={`-left-[2%] top-[46%] hidden ${size.lg} xl:block`} depth={0.8} rotate={8} bob={7} />
           <Cutout name="siamese" className={`-right-[3%] bottom-[4%] hidden ${size.lg} xl:block`} depth={0.6} rotate={-4} bob={0} />
         </>
@@ -188,13 +208,15 @@ export function CosmosWorld() {
   return (
     <WorldSection
       id="how-it-works"
-      bg="bg-[#e6f2fc]"
+      backdrop="sky-blue"
       serif="Three"
       sans="small steps"
       cast={
         <>
           <Cutout name="astronaut" flip className={`-right-[3%] top-[3%] ${size.lg} max-sm:w-[30vw]`} depth={0.8} rotate={10} bob={9} />
-          <Cutout name="cloud2" className="-left-[14%] top-[10%] w-[44vw] max-w-[40rem] opacity-80" depth={0.15} bob={18} />
+          <Cutout name="saturn" className="-left-[5%] top-[14%] w-[clamp(8rem,20vw,20rem)]" depth={0.2} rotate={-10} bob={20} />
+          <Cutout name="moon" className="right-[20%] top-[10%] hidden w-[clamp(3rem,6vw,6rem)] md:block" depth={0.3} bob={0} />
+          <Cutout name="galleon" flip className="-right-[3%] bottom-[2%] hidden w-[clamp(9rem,18vw,18rem)] lg:block" depth={0.35} rotate={2} bob={9} />
         </>
       }
     >
@@ -231,13 +253,14 @@ export function DeepWorld() {
   return (
     <WorldSection
       id="themes"
-      bg="bg-[#fdeef3]"
+      backdrop="sky-blush"
       serif="Fifty"
       sans="worlds"
       cast={
         <>
           <Cutout name="pirate" flip className={`-left-[1%] top-[5%] hidden ${size.lg} lg:block`} depth={0.6} rotate={4} bob={0} />
           <Cutout name="cherub2" flip className={`right-[6%] top-[4%] ${size.md} max-sm:w-[24vw]`} depth={0.9} rotate={8} bob={6} />
+          <Cutout name="castle" className="right-[16%] top-[7%] hidden w-[clamp(8rem,16vw,16rem)] lg:block" depth={0.25} bob={16} />
           <Cutout name="bunny" className={`-right-[1%] bottom-[3%] hidden ${size.md} lg:block`} depth={0.5} bob={0} />
         </>
       }
@@ -260,10 +283,15 @@ export function AcademyWorld() {
   const year = defaultCalendarYear()
   return (
     <WorldSection
-      bg="bg-white"
+      backdrop="sky-cream"
       serif="Set in"
       sans="real type"
-      cast={<Cutout name="cloud1" flip className="-left-[10%] top-[4%] w-[36vw] max-w-[32rem] opacity-70" depth={0.15} bob={15} />}
+      cast={
+        <>
+          <Cutout name="mesa" className="-right-[6%] bottom-0 hidden w-[clamp(12rem,26vw,26rem)] lg:block" depth={0.15} bob={0} />
+          <Cutout name="corgi" className={`right-[7%] top-[12%] hidden ${size.md} md:block`} depth={0.8} rotate={-6} bob={7} />
+        </>
+      }
     >
       <Reveal>
         <Statement lead="AI paints the picture.">We set the type.</Statement>
@@ -310,13 +338,14 @@ export function CourtWorld() {
   return (
     <WorldSection
       id="pricing"
-      bg="bg-[#e6f2fc]"
+      backdrop="sky-blue"
       serif="A royal"
       sans="bargain"
       cast={
         <>
           <Cutout name="cherub" flip className={`left-[5%] top-[6%] ${size.md} max-sm:w-[24vw]`} depth={0.9} rotate={-8} bob={6} />
-          <Cutout name="cloud1" className="-right-[10%] top-[16%] w-[40vw] max-w-[36rem] opacity-80" depth={0.15} bob={17} />
+          <Cutout name="castle" flip className="-right-[2%] top-[12%] w-[clamp(8rem,18vw,18rem)] max-sm:hidden" depth={0.25} bob={16} />
+          <Cutout name="balloon" className="left-[20%] top-[26%] hidden w-[clamp(4rem,7vw,7rem)] lg:block" depth={0.5} rotate={-4} bob={10} />
         </>
       }
     >
@@ -376,14 +405,15 @@ export function HearthWorld() {
   return (
     <WorldSection
       id="faq"
-      bg="bg-[#fdeef3]"
+      backdrop="sky-blush"
       serif="Good"
       sans="to know"
       cast={
         <>
           <Cutout name="sheriff" className={`-left-[1%] bottom-[10%] hidden ${size.lg} xl:block`} depth={0.5} rotate={-3} bob={0} />
           <Cutout name="musketeer" flip className={`right-[1%] top-[20%] hidden ${size.lg} xl:block`} depth={0.7} rotate={3} bob={0} />
-          <Cutout name="cloud2" flip className="-right-[16%] top-[2%] w-[42vw] max-w-[38rem] opacity-70" depth={0.15} bob={18} />
+          <Cutout name="temple" flip className="-right-[5%] bottom-0 hidden w-[clamp(10rem,20vw,20rem)] lg:block" depth={0.2} bob={0} />
+          <Cutout name="galleon" className="-left-[4%] top-[12%] hidden w-[clamp(8rem,15vw,15rem)] lg:block" depth={0.3} rotate={-2} bob={9} />
         </>
       }
     >
@@ -414,24 +444,28 @@ export function HearthWorld() {
 
 export function HeavensWorld() {
   return (
-    <section className="relative overflow-x-clip bg-gradient-to-b from-white via-[#d7e9f8] to-[#a9cff0] text-ink">
+    <section className="relative isolate overflow-x-clip text-ivory">
+      <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden bg-[#27406b]">
+        <Image src="/art/panorama.jpg" alt="" fill sizes="100vw" className="object-cover object-[50%_70%]" />
+      </div>
+      <Seam />
       <div className="relative mx-auto flex min-h-[46rem] max-w-[110rem] flex-col items-center justify-center px-4 pb-[clamp(9rem,24vh,16rem)] pt-56 text-center sm:min-h-[56rem] lg:pt-72">
-        <Cutout name="cloud1" className="-left-[8%] top-[18%] w-[46vw] max-w-[42rem] opacity-90" depth={0.14} bob={15} />
-        <Cutout name="cloud2" className="-right-[12%] top-[40%] w-[50vw] max-w-[46rem] opacity-90" depth={0.2} bob={18} />
+        <Cutout name="castle" className="left-[8%] top-[34%] hidden w-[clamp(8rem,15vw,15rem)] md:block" depth={0.2} bob={16} />
+        <Cutout name="balloon" className="right-[12%] top-[30%] hidden w-[clamp(4rem,8vw,8rem)] md:block" depth={0.35} rotate={5} bob={10} />
         <Cutout name="cherub" className={`left-[8%] top-[12%] ${size.md} max-sm:w-[26vw]`} depth={0.9} rotate={-8} bob={6} />
         <Cutout name="cherub2" className={`right-[9%] top-[9%] ${size.md} max-sm:w-[26vw]`} depth={0.8} rotate={6} bob={7} delay={0.2} />
         <Cutout name="garland" className="left-1/2 top-[3%] -ml-[clamp(7rem,13vw,13rem)] w-[clamp(14rem,26vw,26rem)]" depth={0.2} bob={11} />
 
-        <h2 className="collage-title relative z-10 !text-[clamp(3.2rem,11vw,11rem)]">
+        <h2 className="collage-title relative z-10 !text-[clamp(3.2rem,11vw,11rem)] drop-shadow-[0_6px_30px_rgb(8_18_40/0.75)]">
           <span className="serif">Make it</span>
           <span className="sans">official</span>
         </h2>
-        <p className="relative z-10 mx-auto mt-7 max-w-md text-lg text-ink-soft sm:text-xl">They’re already the star of the house.</p>
+        <p className="relative z-10 mx-auto mt-7 max-w-md text-lg font-medium text-ivory drop-shadow-[0_2px_12px_rgb(8_18_40/0.9)] sm:text-xl">They’re already the star of the house.</p>
         <div className="relative z-10 mt-8 flex flex-col items-center gap-4">
-          <Link href="/create" className="btn btn-primary btn-lg">
+          <Link href="/create" className="btn btn-light btn-lg shadow-[0_18px_40px_-12px_rgb(8_18_40/0.7)]">
             Make your calendar <ArrowRight size={18} />
           </Link>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink/55">About five minutes · free to preview</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ivory/85 drop-shadow-[0_1px_8px_rgb(8_18_40/0.9)]">About five minutes · free to preview</p>
         </div>
 
         {/* the whole troupe, lined up along the bottom for the curtain call */}

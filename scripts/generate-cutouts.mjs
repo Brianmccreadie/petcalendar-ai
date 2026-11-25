@@ -49,7 +49,26 @@ const CHARACTERS = {
   poodle: ['4:5', 'A white standard poodle standing elegantly in profile facing right, head held high, wearing a powdered-wig-like topknot with a pink silk bow, a pearl choker and a short rose brocade coat over its back.'],
   cloud1: ['5:4', 'A single large billowing cumulus cloud painted in cream, pale gold and soft rose, with a blue-grey shadowed underside. No animal in this one: only the cloud.'],
   cloud2: ['5:4', 'A single long, low drift of soft cloud painted in white and pale sky blue with a warm peach highlight along the top edge. No animal in this one: only the cloud.'],
+  galleon: ['5:4', 'A 17th-century galleon under full cream sails with a long red pennant, heeling slightly as it sails toward the right, seen from the side with a little white foam at its waterline and nothing else of the sea. No animal in this one: only the ship.'],
+  saturn: ['5:4', 'A ringed planet as an old astronomer might have painted it: a banded ochre and cream globe with broad pale rings tilted at an angle, softly lit from the upper left. No animal in this one: only the planet.'],
+  moon: ['1:1', 'A large full moon painted in pearl, cream and pale blue-grey with soft craters and a faint warm glow at its edge. No animal in this one: only the moon.'],
+  balloon: ['4:5', 'An 18th-century hot-air balloon with a rose-and-gold striped silk envelope decorated with swags and tassels, and a small empty wicker gondola draped with ribbons hanging beneath it. No animal and no person in this one: only the balloon.'],
+  castle: ['5:4', 'A fairy-tale castle of pale stone with many slender towers and blue-grey conical roofs and tiny flying pennants, standing on a rocky crag wrapped in a ring of soft cloud at its base, as if floating. No animal in this one: only the castle on its crag.'],
+  mesa: ['5:4', 'A cluster of red sandstone desert buttes and mesas glowing in warm evening light, with a few tiny cypress-like shrubs at the base, ending in a soft edge of dusty haze at the bottom. No animal in this one: only the rock formation.'],
+  temple: ['5:4', 'A small round classical temple ruin with six marble columns, a broken domed roof overgrown with ivy and climbing roses, standing on a low grassy mound with two dark cypress trees beside it. No animal in this one: only the ruin.'],
   garland: ['5:4', 'A swag of roses, peonies and laurel leaves tied with trailing rose-pink silk ribbons, hanging in a gentle curve as if suspended from its two ends. No animal in this one: only the garland.'],
+}
+
+/** Full paintings with no figures, kept whole (no cut-out) and saved to public/art. */
+const BACKDROPS = {
+  panorama:
+    'A sweeping panoramic landscape with no animals and no people at all, like the background of a grand allegorical fresco. Far left: deep indigo night sky with stars and one or two small pale planets, above a dark sea with white-capped waves. Centre: a vast glowing evening sky, apricot and rose near the horizon rising to soft blue, with tall cloud banks to the sides but the middle band of sky calm and open; far away a hazy coastline with a tiny lighthouse. Right: desert mesas and canyons in warm golden light fading into the distance. Along the whole bottom fifth: a continuous foreground of rolling grassy hillocks and weathered rock ledges scattered with wildflowers, in shadowed greens and umbers, like a stage for figures to stand on. Rich, saturated but harmonious colour.',
+  'sky-blue':
+    'A very pale, high-key painted sky with no animals, people, land or objects: soft light blue with large, gentle, low-contrast cream and white clouds drifting across, a little warmer near the bottom. Airy and quiet, like a detail of a ceiling fresco; nothing dark anywhere, so dark text placed over it stays easy to read.',
+  'sky-blush':
+    'A very pale, high-key painted dawn sky with no animals, people, land or objects: soft blush pink and peach with gentle, low-contrast cream clouds touched with pale gold, fading to the faintest lavender at the top. Airy and quiet, like a detail of a ceiling fresco; nothing dark anywhere, so dark text placed over it stays easy to read.',
+  'sky-cream':
+    'A very pale, high-key painted sky with no animals, people, land or objects: warm ivory and cream with the softest, low-contrast white clouds and faint hints of pale blue and gold between them. Airy and quiet, like a detail of a ceiling fresco; nothing dark anywhere, so dark text placed over it stays easy to read.',
 }
 
 const SIZES = { '1:1': [1536, 1536], '4:5': [1536, 1920], '5:4': [1920, 1536] }
@@ -96,10 +115,31 @@ async function make(name) {
   console.log(`done ${name} ${meta.width}x${meta.height} ${(trimmed.length / 1024).toFixed(0)}KB`)
 }
 
+async function makeBackdrop(name) {
+  const painted = await run(PAINT_MODEL, {
+    prompt: `Image 1: a painting, for style reference only.\n\nPaint a grand classical oil painting in the manner of a 17th-century Italian master, matching the brushwork and glazing of image 1 (use image 1 for painting style only, not its subject). Visible confident brushwork; it must read as a real painting on canvas. Very wide composition that fills the whole canvas edge to edge. No text, signature, border or frame.\n\nSubject: ${BACKDROPS[name]}`,
+    image_urls: [styleRef],
+    num_images: 1,
+    output_format: 'png',
+    image_size: { width: 2560, height: 1440 },
+    quality: 'high',
+  })
+  const url = painted.images?.[0]?.url
+  if (!url) throw new Error(`no image for ${name}`)
+  const jpg = await sharp(Buffer.from(await (await fetch(url)).arrayBuffer())).jpeg({ quality: 84, mozjpeg: true }).toBuffer()
+  await writeFile(path.join('public/art', `${name}.jpg`), jpg)
+  const meta = await sharp(jpg).metadata()
+  console.log(`done ${name} (backdrop) ${meta.width}x${meta.height} ${(jpg.length / 1024).toFixed(0)}KB`)
+}
+
 await mkdir(OUT, { recursive: true })
 const asked = process.argv.slice(2).filter((a) => !a.startsWith('-'))
-const names = asked.length ? asked : Object.keys(CHARACTERS).filter((n) => !existsSync(path.join(OUT, `${n}.webp`)))
-for (const n of names) if (!CHARACTERS[n]) throw new Error(`Unknown character "${n}". Options: ${Object.keys(CHARACTERS).join(', ')}`)
+const missing = [
+  ...Object.keys(CHARACTERS).filter((n) => !existsSync(path.join(OUT, `${n}.webp`))),
+  ...Object.keys(BACKDROPS).filter((n) => !existsSync(path.join('public/art', `${n}.jpg`))),
+]
+const names = asked.length ? asked : missing
+for (const n of names) if (!CHARACTERS[n] && !BACKDROPS[n]) throw new Error(`Unknown piece "${n}". Options: ${[...Object.keys(CHARACTERS), ...Object.keys(BACKDROPS)].join(', ')}`)
 
 let failed = 0
 const queue = [...names]
@@ -108,7 +148,7 @@ await Promise.all(
     while (queue.length) {
       const name = queue.shift()
       try {
-        await make(name)
+        await (BACKDROPS[name] ? makeBackdrop(name) : make(name))
       } catch (error) {
         failed++
         console.error(`FAILED ${name}: ${error.message}`)
