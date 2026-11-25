@@ -65,6 +65,14 @@ export function saveProject(project: SavedProject): void {
   write([project, ...getSavedProjects().filter((p) => p.id !== project.id)])
 }
 
+/**
+ * Remember a calendar this browser has opened, if it is not already listed.
+ * Covers calendars reached by link, or made before this browser kept a list.
+ */
+export function rememberProject(project: SavedProject): void {
+  if (!getSavedProjects().some((p) => p.id === project.id)) write([project, ...getSavedProjects()])
+}
+
 export function removeProject(id: string): void {
   write(getSavedProjects().filter((p) => p.id !== id))
 }

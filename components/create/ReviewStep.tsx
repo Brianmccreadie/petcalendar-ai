@@ -10,6 +10,7 @@ import WallCalendar from '@/components/calendar/WallCalendar'
 import { ArrowLeft, ArrowRight, Check, Play, Refresh } from '@/components/icons'
 import { MONTH_NAMES, joinPetNames, possessive } from '@/lib/calendar/layout'
 import { preparePhoto } from '@/lib/client/prepare-photo'
+import { rememberProject } from '@/lib/client/project-store'
 import { calendarSlots, useCalendar, type CalendarSlot } from '@/lib/client/use-calendar'
 import { LIMITS, PRICING, formatPrice } from '@/lib/config'
 import { styleById } from '@/lib/style-meta'
@@ -63,6 +64,17 @@ export default function ReviewStep() {
   const [copied, setCopied] = useState(false)
 
   const slots = useMemo(() => calendarSlots(data), [data])
+
+  // Opening a calendar puts it in "My calendars" for this browser, however it was reached.
+  useEffect(() => {
+    if (!data) return
+    rememberProject({
+      id: data.project.id,
+      petNames: data.pets.map((p) => p.name),
+      petType: data.project.pet_type,
+      createdAt: data.project.created_at,
+    })
+  }, [data])
   const slot = slots[index]
   const petNames = data?.pets.map((p) => p.name) ?? []
   const names = joinPetNames(petNames.length ? petNames : [data?.project.pet_name ?? ''])
