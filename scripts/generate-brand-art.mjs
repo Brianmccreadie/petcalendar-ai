@@ -17,6 +17,7 @@ const refs = {
   cat: ['public/previews/royal-portrait-cat.jpg', 'a grey British shorthair cat with amber eyes (ignore its costume)'],
   golden: ['public/previews/mythical-quest-dog.jpg', 'a golden retriever (ignore its costume)'],
   pom: ['public/previews/superhero-origin-dog.jpg', 'a small orange Pomeranian (ignore its costume)'],
+  doodle: ['public/sample-bonnie/reference.jpg', 'a small cream-coloured goldendoodle with a curly coat, dark button eyes and a black nose'],
 }
 
 const PAINT =
@@ -41,6 +42,15 @@ Each animal is painted naturalistically, with correct anatomy, and the costumes 
 Palette: ochre, umber, sea green, cream and smoky rose, with vermilion and gold accents; the different worlds are unified by one warm evening light.
 
 Composition: very wide and balanced, like a frieze. All of the animals sit in the lower half of the canvas, their heads no higher than the middle; the whole upper 45% is open, calm evening sky with only soft cloud and the two small puppy cherubs near the top corners — a very large title will be set across that sky. No human figures anywhere, including the cherubs: they are puppies with wings. The lower third of the canvas dissolves into heavy billowing twilight clouds in dusky blue and indigo, growing darker toward the bottom edge until the bottom is an almost solid deep twilight blue (#16305a). No red or burgundy in the lower clouds.`,
+  },
+  runway: {
+    size: '2560x1440',
+    refs: ['doodle'],
+    prompt: `${PAINT}
+
+Subject: a couture show staged in a baroque palace gallery. The cream goldendoodle from image 1 walks a long marble catwalk on all four legs toward the left, mid-stride, wearing a pale rose silk cape that trails behind and a small collar of pearls. Tall mirrors, swags of blush and ivory drapery, great urns of peonies and roses, crystal chandeliers, soft daylight from high windows. The only living creature is the dog: no people, no audience, no other animals, no statues of people. Palette: ivory, blush pink, pale gold and soft sky blue.
+
+Composition: very wide. The dog is in the left third of the canvas with its head no higher than the middle; keep the upper-middle of the canvas calm and open. The lower third of the canvas dissolves into soft pale mist that thins toward the bottom edge until the bottom is an almost solid white (#ffffff).`,
   },
   voyage: {
     size: '2560x1440',

@@ -18,7 +18,7 @@ const structuredData = [
     '@type': 'Product',
     name: 'Custom pet wall calendar',
     description: SITE.description,
-    image: `${SITE.url}/sample-year/cover.jpg`,
+    image: `${SITE.url}/sample-bonnie/cover.jpg`,
     brand: { '@type': 'Brand', name: SITE.name },
     offers: {
       '@type': 'Offer',

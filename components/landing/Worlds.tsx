@@ -66,26 +66,26 @@ export function MuralWorld() {
 export function VoyageWorld() {
   const year = defaultCalendarYear()
   return (
-    <WorldSection world={WORLDS.academy} id="the-year" index="02" serif="One dog," sans="a year of magic">
+    <WorldSection world={WORLDS.runway} id="the-year" index="02" serif="One dog," sans="twelve looks">
       <div className="grid items-center gap-16 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
         <Reveal>
           <p className="text-3xl font-bold tracking-tight sm:text-[2.6rem]">This is the real thing.</p>
           <p className="mt-2 font-display text-[2.1rem] leading-[1.08] sm:text-[3.3rem]">
-            One photo of {SHOWCASE.petName}, one theme, and a whole year of her — same markings, same blue eyes, twelve
-            different scenes.
+            A photo of {SHOWCASE.petName}, one theme, and a whole year of {SHOWCASE.petName} — same curls, same button
+            nose, twelve different looks.
           </p>
           <div className="mt-9 flex items-center gap-5">
             <Image
-              src="/previews/pet-photoshoot-dog.jpg"
-              alt={`The single reference photo of ${SHOWCASE.petName}`}
+              src={SHOWCASE.reference}
+              alt={`The reference photo of ${SHOWCASE.petName}`}
               width={160}
               height={160}
               sizes="80px"
               className="h-20 w-20 shrink-0 rounded-full object-cover"
             />
             <p className="max-w-xs text-sm text-ink-soft">
-              The only thing we started with. Everything else on this page is her finished{' '}
-              <strong className="font-semibold text-ink">{SHOWCASE.styleName}</strong> calendar.
+              Where it started. This is {SHOWCASE.petName}’s finished{' '}
+              <strong className="font-semibold text-ink">{SHOWCASE.styleName}</strong> calendar, made right here.
             </p>
           </div>
         </Reveal>
