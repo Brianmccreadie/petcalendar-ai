@@ -26,6 +26,19 @@ interface Version {
   custom_instructions: string | null
 }
 
+/**
+ * The corrections people ask for most. The label is what the customer taps;
+ * the instruction is what the artist is told, written to actually fix it.
+ */
+const QUICK_FIXES: { id: string; label: string; instruction: string }[] = [
+  { id: 'hands', label: 'Paws used as hands', instruction: 'The pet is using its front paws like human hands or arms. Redraw it so nothing is held, gripped or worn on the front paws; any object goes in its mouth or beside it, and it moves on four legs.' },
+  { id: 'limbs', label: 'Too many legs', instruction: 'The pet has extra or missing limbs. Redraw its body with exactly four legs and one tail, and no arms.' },
+  { id: 'likeness', label: 'Doesn’t look like my pet', instruction: 'The pet does not look like the reference photos. Redraw its face, coat colour, markings, ears and build to match the reference photos exactly; do not copy the likeness from the current version.' },
+  { id: 'upright', label: 'Standing like a person', instruction: 'The pet is posed upright like a person. Redraw it in a natural animal posture on four legs, sitting or lying down.' },
+  { id: 'face', label: 'Face is hidden', instruction: 'The pet’s face is covered or turned away. Show its whole face clearly, with nothing over the eyes.' },
+  { id: 'text', label: 'Words or a logo in it', instruction: 'Remove all lettering, numbers, signs and logos from the picture.' },
+]
+
 const slotLabel = (slot: CalendarSlot) => (slot.page_type === 'cover' ? 'Cover' : MONTH_NAMES[(slot.month_number ?? 1) - 1])
 
 function StatusArt({ slot, working }: { slot: CalendarSlot; working: boolean }) {
@@ -61,6 +74,7 @@ export default function ReviewStep() {
   const [editing, setEditing] = useState(false)
   const [batch, setBatch] = useState<{ done: number; total: number } | null>(null)
   const [instructions, setInstructions] = useState('')
+  const [fixes, setFixes] = useState<string[]>([])
   const [newPhoto, setNewPhoto] = useState<File | null>(null)
   const [versionState, setVersionState] = useState<{ pageId: string; list: Version[] } | null>(null)
   const [retrying, setRetrying] = useState(false)
@@ -169,7 +183,8 @@ export default function ReviewStep() {
 
   /** Apply the note to the selected page, or to every page that still has a revision left. */
   async function applyChange() {
-    const note = instructions.trim()
+    // Ticked fixes first, then anything typed.
+    const note = [...QUICK_FIXES.filter((f) => fixes.includes(f.id)).map((f) => f.instruction), instructions.trim()].filter(Boolean).join(' ')
     const photo = newPhoto
     if (!note && !photo) return
     setNotice(null)
@@ -179,6 +194,7 @@ export default function ReviewStep() {
       const error = await revisePage(slot.id, note, photo)
       if (error) return setNotice(error)
       setInstructions('')
+      setFixes([])
       setNewPhoto(null)
       return
     }
@@ -203,6 +219,7 @@ export default function ReviewStep() {
       setNotice(`${failures} page${failures > 1 ? 's' : ''} could not be updated. Select ${failures > 1 ? 'them' : 'it'} and try again.`)
     } else {
       setInstructions('')
+      setFixes([])
       setNewPhoto(null)
     }
   }
@@ -262,7 +279,7 @@ export default function ReviewStep() {
   const outOfRevisions = slot.status === 'complete' && slot.revisions_left <= 0
   const revisable = slots.filter((s) => s.id && s.status === 'complete' && s.revisions_left > 0).length
   const anyBusy = working.size > 0 || batch !== null
-  const hasInput = Boolean(instructions.trim() || newPhoto)
+  const hasInput = Boolean(instructions.trim() || newPhoto || fixes.length)
   const pageName = slot.page_type === 'cover' ? 'the cover' : slotLabel(slot)
   // A page that failed, or one being worked on, always shows its controls.
   const formOpen = editing || slot.status === 'failed' || anyBusy || Boolean(notice)
@@ -514,14 +531,34 @@ export default function ReviewStep() {
                   if (canApply) applyChange()
                 }}
               >
+                <fieldset>
+                  <legend className="label">What’s wrong? Tap any that apply.</legend>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {QUICK_FIXES.map((fix) => {
+                      const on = fixes.includes(fix.id)
+                      return (
+                        <button
+                          key={fix.id}
+                          type="button"
+                          className="chip"
+                          aria-pressed={on}
+                          disabled={anyBusy}
+                          onClick={() => setFixes((list) => (on ? list.filter((id) => id !== fix.id) : [...list, fix.id]))}
+                        >
+                          {fix.label}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </fieldset>
                 <label className="label" htmlFor="changes">
-                  What should be different?
+                  Or describe it yourself
                 </label>
                 <textarea
                   id="changes"
                   className="field resize-none"
-                  rows={3}
-                  maxLength={LIMITS.maxInstructionLength}
+                  rows={2}
+                  maxLength={LIMITS.maxNoteLength}
                   value={instructions}
                   onChange={(e) => setInstructions(e.target.value)}
                   placeholder="e.g. Brighter background, remove the hat, make the ears floppier"
