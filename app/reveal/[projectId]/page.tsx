@@ -52,17 +52,16 @@ export default async function RevealPage(props: PageProps<'/reveal/[projectId]'>
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-14">
-      <p className="eyebrow">The film</p>
-      <h1 className="display mt-3 text-5xl sm:text-6xl">
+      <h1 className="display text-center text-5xl sm:text-6xl">
         {possessive(film.who)} {film.year}
       </h1>
-      <p className="lede mt-3 max-w-2xl">From a few photos to twelve months, in under half a minute.</p>
+      <p className="lede mx-auto mt-3 max-w-2xl text-center">From a few photos to twelve months, in under half a minute.</p>
 
       <div className="mt-8 overflow-hidden rounded-[6px] bg-ink shadow-lift">
         <RevealPlayer src={`/reveal/${film.token}/composition`} width={REVEAL.width} height={REVEAL.height} />
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         <CopyLinkButton title={`${possessive(film.who)} ${film.year} calendar`} />
         <Link href={`/share/${film.token}`} className="btn btn-ghost btn-sm">
           Flip through the calendar <ArrowRight size={16} />
