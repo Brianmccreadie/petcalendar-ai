@@ -20,14 +20,14 @@ export function LogoMark({ size = 44 }: { size?: number }) {
   )
 }
 
-/** Two voices, like the headlines: a light serif "Epic Pet" against a heavy grotesk "CALENDARS". */
+/** Both words are set to the same capital height. Two voices, like the headlines: a light serif "Epic Pet" against a heavy grotesk "CALENDARS". */
 export function Logo({ className = '' }: { className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <LogoMark />
       <span className="flex items-baseline leading-none">
-        <span className="font-display text-[1.6rem] tracking-tight">Epic Pet</span>
-        <span className="ml-[0.2em] text-[0.98rem] font-black uppercase tracking-[-0.01em]">Calendars</span>
+        <span className="font-display text-[1.25rem] tracking-tight sm:text-[1.5rem]">Epic Pet</span>
+        <span className="ml-[0.22em] text-[1.27rem] font-black uppercase tracking-[-0.02em] sm:text-[1.52rem]">Calendars</span>
       </span>
     </span>
   )
@@ -71,14 +71,14 @@ export default function Navbar() {
           </Link>
         ) : (
           <>
-            <nav className="hidden items-center gap-9 md:flex" aria-label="Main">
+            <nav className="hidden items-center gap-9 lg:flex" aria-label="Main">
               {links.map((link) => (
                 <Link key={link.href} href={link.href} className="text-sm font-semibold opacity-80 transition-opacity hover:opacity-100">
                   {link.label}
                 </Link>
               ))}
             </nav>
-            <div className="hidden items-center gap-6 md:flex">
+            <div className="hidden items-center gap-6 lg:flex">
               <Link href="/dashboard" className="text-sm font-semibold opacity-80 transition-opacity hover:opacity-100">
                 My calendars
               </Link>
@@ -88,7 +88,7 @@ export default function Navbar() {
             </div>
             <button
               type="button"
-              className="grid h-11 w-11 place-items-center rounded-full md:hidden"
+              className="grid h-11 w-11 place-items-center rounded-full lg:hidden"
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? 'Close menu' : 'Open menu'}
@@ -108,7 +108,7 @@ export default function Navbar() {
       </div>
 
       {!focused && open && (
-        <nav id="mobile-menu" className="px-5 pb-8 pt-2 md:hidden" aria-label="Mobile">
+        <nav id="mobile-menu" className="px-5 pb-8 pt-2 lg:hidden" aria-label="Mobile">
           {[...links, { href: '/dashboard', label: 'My calendars' }].map((link) => (
             <Link
               key={link.href}
