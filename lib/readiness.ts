@@ -1,6 +1,7 @@
 import { resolveProviderName, falApiKey, falKeyShape, geminiApiKey } from './ai/config'
 import { imageProcessingStatus } from './images'
 import { isLuluConfigured } from './lulu'
+import { stripeMode, stripeWebhookSecret } from './stripe'
 import { BUCKETS } from './storage'
 import { createAdminSupabaseClient } from './supabase-admin'
 
@@ -87,8 +88,11 @@ export async function readiness() {
     // Optional: the site works without it, with slightly larger stored files.
     image_processing: imageProcessing.ok,
     ...(imageProcessing.error ? { image_processing_error: imageProcessing.error } : {}),
-    stripe: Boolean(process.env.STRIPE_SECRET_KEY),
-    stripe_webhook: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
+    // True only when the value is recognisably a Stripe key, not merely present.
+    stripe: stripeMode() !== null,
+    stripe_mode: stripeMode(),
+    stripe_webhook: stripeWebhookSecret().startsWith('whsec_'),
+    lulu_environment: process.env.LULU_API_ENVIRONMENT === 'sandbox' ? 'sandbox' : 'production',
     lulu: isLuluConfigured(),
     email: Boolean(process.env.RESEND_API_KEY),
     app_url: Boolean(process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL),

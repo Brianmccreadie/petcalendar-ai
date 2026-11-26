@@ -369,8 +369,38 @@ export default function ReviewStep() {
                 This is the printed page as it hangs: your artwork on top, {slotLabel(slot)}’s dates underneath. 11 × 17 in open.
               </p>
             )}
-            {!showBack && slot.page_type === 'cover' && (
-              <p className="mt-4 text-center text-sm text-ink-soft">The front cover, 11 × 8.5 in. Pick a month to see its dated page.</p>
+            {!showBack && slot.page_type === 'cover' && <p className="mt-4 text-center text-sm text-ink-soft">The front cover, 11 × 8.5 in.</p>}
+
+            {/* On the cover or the back, show what an inside page looks like so the dated grid is never a surprise. */}
+            {(showBack || slot.page_type === 'cover') && slots[1]?.status === 'complete' && slots[1].image_url && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIndex(1)
+                  setShowBack(false)
+                }}
+                className="card mt-8 grid w-full grid-cols-[minmax(0,11rem)_1fr] items-center gap-5 p-4 text-left transition-colors hover:border-ink sm:grid-cols-[minmax(0,13rem)_1fr] sm:p-5"
+              >
+                <WallCalendar
+                  className="mt-3"
+                  month={1}
+                  year={year}
+                  accent={style?.accentColor}
+                  caption={`${names} · ${style?.name ?? ''}`}
+                  imageUrl={slots[1].image_url}
+                  imageAlt={`January page of ${possessive(names)} calendar, open`}
+                  sizes="210px"
+                />
+                <span>
+                  <span className="block font-display text-2xl leading-tight">What each month looks like</span>
+                  <span className="mt-1.5 block text-sm text-ink-soft">
+                    Open on the wall, every month is your artwork on top and a full page of dates underneath, with room to write.
+                  </span>
+                  <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold">
+                    See January full size <ArrowRight size={15} />
+                  </span>
+                </span>
+              </button>
             )}
 
             <ProductDetails className="mt-8" />
