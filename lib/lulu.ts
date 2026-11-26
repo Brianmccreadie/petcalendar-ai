@@ -338,7 +338,7 @@ async function pollValidation(path: string, id: unknown): Promise<unknown> {
  */
 export async function validatePrintFiles(interiorPdfUrl: string, coverPdfUrl: string) {
   const sku = CALENDAR_POD_PACKAGE_ID
-  const started = await luluJson('/validate-interior/', { method: 'POST', body: JSON.stringify({ file_url: interiorPdfUrl, pod_package_id: sku }) })
+  const started = await luluJson('/validate-interior/', { method: 'POST', body: JSON.stringify({ source_url: interiorPdfUrl, pod_package_id: sku }) })
   const interiorId = (started.body as { id?: unknown })?.id
   const interior = interiorId ? await pollValidation('/validate-interior/', interiorId) : started
   const pageCount = (interior as { page_count?: number })?.page_count
@@ -347,7 +347,7 @@ export async function validatePrintFiles(interiorPdfUrl: string, coverPdfUrl: st
     ? await luluJson('/cover-dimensions/', { method: 'POST', body: JSON.stringify({ pod_package_id: sku, interior_page_count: pageCount }) })
     : null
   const coverStarted = pageCount
-    ? await luluJson('/validate-cover/', { method: 'POST', body: JSON.stringify({ file_url: coverPdfUrl, pod_package_id: sku, interior_page_count: pageCount }) })
+    ? await luluJson('/validate-cover/', { method: 'POST', body: JSON.stringify({ source_url: coverPdfUrl, pod_package_id: sku, interior_page_count: pageCount }) })
     : null
   const coverId = (coverStarted?.body as { id?: unknown })?.id
   const cover = coverId ? await pollValidation('/validate-cover/', coverId) : coverStarted
