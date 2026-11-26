@@ -275,8 +275,7 @@ body {
      .cutout-img  the slow bob, the tilt and the paper shadow
    --------------------------------------------------------------------------- */
 .cutout {
-  position: absolute;
-  display: block;
+  position: absolute; /* which also makes the span a block; no display rule, so `hidden` can still hide it */
   pointer-events: none;
   user-select: none;
   will-change: transform;

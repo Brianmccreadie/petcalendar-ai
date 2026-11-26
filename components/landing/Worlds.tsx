@@ -135,7 +135,7 @@ export function VoyageWorld() {
     <WorldSection
       id="the-year"
       backdrop="sky-cream"
-      serif="One dog,"
+      serif="One pet,"
       sans="twelve looks"
       roomy
       headingCast={<Cutout name="garland" className="bottom-[78%] left-1/2 -ml-[36%] w-[72%]" depth={0.15} bob={10} />}
@@ -152,8 +152,8 @@ export function VoyageWorld() {
         <Reveal>
           <p className="text-3xl font-bold tracking-tight sm:text-[2.6rem]">This is the real thing.</p>
           <p className="mt-2 font-display text-[2.1rem] leading-[1.08] sm:text-[3.3rem]">
-            A photo of {SHOWCASE.petName}, one theme, and a whole year of {SHOWCASE.petName} — same curls, same button
-            nose, twelve different looks.
+            A photo of your pet, one theme, and a whole year of them — same face, same markings, twelve different
+            looks.
           </p>
           <div className="mt-9 flex items-center gap-5">
             <Image
@@ -165,8 +165,8 @@ export function VoyageWorld() {
               className="h-20 w-20 shrink-0 rounded-full object-cover"
             />
             <p className="max-w-xs text-sm text-ink-soft">
-              Where it started. This is {SHOWCASE.petName}’s finished{' '}
-              <strong className="font-semibold text-ink">{SHOWCASE.styleName}</strong> calendar, made right here.
+              A real example. This one photo of {SHOWCASE.petName} became the{' '}
+              <strong className="font-semibold text-ink">{SHOWCASE.styleName}</strong> calendar below.
             </p>
           </div>
         </Reveal>
@@ -220,7 +220,7 @@ export function CosmosWorld() {
       cast={
         <>
           <Cutout name="astronaut" flip className={`-right-[3%] top-[3%] ${size.lg} max-sm:w-[30vw]`} depth={0.8} rotate={10} bob={9} />
-          <Cutout name="saturn" className="-left-[5%] top-[14%] w-[clamp(8rem,20vw,20rem)]" depth={0.2} rotate={-10} bob={20} />
+          <Cutout name="saturn" className="-left-[5%] top-[14%] hidden w-[clamp(8rem,20vw,20rem)] md:block" depth={0.2} rotate={-10} bob={20} />
           <Cutout name="moon" className="right-[20%] top-[10%] hidden w-[clamp(3rem,6vw,6rem)] md:block" depth={0.3} bob={0} />
           <Cutout name="galleon" flip className="-right-[3%] bottom-[2%] hidden w-[clamp(9rem,18vw,18rem)] lg:block" depth={0.35} rotate={2} bob={9} />
         </>
