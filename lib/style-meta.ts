@@ -1,13 +1,14 @@
 import { CALENDAR_STYLES, type PetType, type StyleId } from './types'
 
-export type StyleCategory = 'adventure' | 'funny' | 'glam' | 'cozy' | 'spooky'
+export type StyleCategory = 'outdoors' | 'adventure' | 'funny' | 'glam' | 'cozy' | 'spooky'
 
 export const STYLE_CATEGORIES: { id: StyleCategory; label: string }[] = [
   { id: 'adventure', label: 'Adventure' },
   { id: 'funny', label: 'Funny' },
   { id: 'glam', label: 'Glam' },
-  { id: 'cozy', label: 'Cozy' },
-  { id: 'spooky', label: 'Spooky' },
+  { id: 'outdoors', label: 'Outdoors & travel' },
+  { id: 'cozy', label: 'Cozy & seasonal' },
+  { id: 'spooky', label: 'Mystery & spooky' },
 ]
 
 const META: Record<StyleId, { emoji: string; category: StyleCategory }> = {
@@ -31,8 +32,8 @@ const META: Record<StyleId, { emoji: string; category: StyleCategory }> = {
   'fashion-week': { emoji: '👗', category: 'glam' },
   'office-life': { emoji: '💼', category: 'funny' },
   'sports-mvp': { emoji: '🏆', category: 'adventure' },
-  'around-the-world': { emoji: '🌍', category: 'adventure' },
-  'fairy-tale': { emoji: '🏰', category: 'cozy' },
+  'around-the-world': { emoji: '🌍', category: 'outdoors' },
+  'fairy-tale': { emoji: '🏰', category: 'adventure' },
   'zombie-apocalypse': { emoji: '🧟', category: 'spooky' },
   'renaissance-pet': { emoji: '🎨', category: 'glam' },
   'sitcom-star': { emoji: '📺', category: 'funny' },
@@ -42,9 +43,9 @@ const META: Record<StyleId, { emoji: string; category: StyleCategory }> = {
   'fitness-journey': { emoji: '💪', category: 'funny' },
   'art-museum': { emoji: '🖼️', category: 'glam' },
   'holiday-card': { emoji: '🎄', category: 'cozy' },
-  'camping-adventures': { emoji: '⛺', category: 'cozy' },
+  'camping-adventures': { emoji: '⛺', category: 'outdoors' },
   'noir-detective': { emoji: '🎞️', category: 'spooky' },
-  'tropical-paradise': { emoji: '🌴', category: 'cozy' },
+  'tropical-paradise': { emoji: '🌴', category: 'outdoors' },
   'horror-movie': { emoji: '👻', category: 'spooky' },
   'dating-profile': { emoji: '💘', category: 'funny' },
   'true-crime': { emoji: '🔎', category: 'spooky' },
@@ -56,7 +57,7 @@ const META: Record<StyleId, { emoji: string; category: StyleCategory }> = {
   'broadway-star': { emoji: '🎭', category: 'glam' },
   'garden-party': { emoji: '🌷', category: 'cozy' },
   'snow-day': { emoji: '❄️', category: 'cozy' },
-  'national-park': { emoji: '🏔️', category: 'adventure' },
+  'national-park': { emoji: '🏔️', category: 'outdoors' },
   'tiny-human': { emoji: '🧑', category: 'funny' },
   'anime-world': { emoji: '🌸', category: 'adventure' },
   'galactic-emperor': { emoji: '👾', category: 'adventure' },
