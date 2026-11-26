@@ -112,3 +112,21 @@ export function mediumLead(styleId?: string | null): string | null {
   if (!medium || medium === 'photo') return null
   return `MEDIUM — decides everything about how this image looks: ${MEDIUM_LOOK[medium]}. The reference photos show who the pet is; they do not set the style. Do not reproduce their photographic look.`
 }
+
+/**
+ * Leads every page prompt. Many scene briefs were written loosely, in human
+ * terms ("swinging a bat", "wearing boxing gloves", "arms raised"); taken
+ * literally they produce a dog with arms. This tells the model how to read
+ * them before it reads them.
+ */
+export const BODY_LEAD = [
+  'BODY — the first rule, and it overrides the scene brief below wherever the two disagree:',
+  'The pet is a real animal with its real body. A dog or cat has exactly four legs and nothing else: no arms, no hands, no fifth or sixth limb, and no second pair of front legs coming out of clothing. Before finishing, count the legs: four.',
+  'The scene brief may be written in human terms. Never draw the human action literally. Read it as the setting, the costume and the mood, then show what this animal would really be doing there:',
+  '- "swinging a bat / racket / club", "holding", "carrying", "lifting", "raising a trophy": the object is in its mouth, lying or standing beside it, or under one planted front paw. Nothing is gripped and nothing is swung by a foreleg.',
+  '- "wearing gloves / boxing gloves / mittens": no gloves on the paws at all. Put a pair hanging round its neck by the laces, or lying beside it.',
+  '- "arms raised", "waving", "pointing", "punching", "throwing", "catching", "dunking", "serving": the pet runs, leaps, pounces, or catches the ball in its mouth, on four legs.',
+  '- "playing an instrument", "cooking", "typing", "reading", "driving": the pet sits or stands at it like an animal — a paw resting on it, nose to it — while the object does the rest.',
+  '- Sitting or standing upright like a person, chest to camera with forelegs hanging or working in front, is always wrong.',
+  'Clothing is cut for a four-legged animal: it covers the back and chest, and any sleeve sits on a front leg that is still plainly a leg, ending in a bare paw on the ground or in mid-stride.',
+].join('\n')
