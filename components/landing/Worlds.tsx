@@ -177,29 +177,6 @@ export function VoyageWorld() {
           </div>
         </Reveal>
       </div>
-
-      <ol className="mt-24 grid grid-cols-2 gap-x-4 gap-y-14 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-16">
-        {SHOWCASE.months.map((page, i) => (
-          <li key={page.month}>
-            <Reveal delay={(i % 4) * 90}>
-              <figure className="group">
-                <WallCalendar
-                  imageUrl={page.src}
-                  imageAlt={`${page.name}: ${SHOWCASE.petName} in ${SHOWCASE_PLACES[i]}`}
-                  month={page.month}
-                  year={year}
-                  caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`}
-                  className="transition-transform duration-500 ease-out group-hover:-translate-y-1.5"
-                />
-                <figcaption className="mt-5 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-                  <span className="font-display text-2xl">{page.name}</span>
-                  <span className="text-xs font-medium uppercase tracking-[0.16em] text-ink/75">{SHOWCASE_PLACES[i]}</span>
-                </figcaption>
-              </figure>
-            </Reveal>
-          </li>
-        ))}
-      </ol>
     </WorldSection>
   )
 }
