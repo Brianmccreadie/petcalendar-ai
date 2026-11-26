@@ -34,8 +34,35 @@ function lastWeekday(year: number, month: number, weekday: number): number {
   return days - ((last - weekday + 7) % 7)
 }
 
-/** Fixed and floating US holidays, plus a few pet days. Keyed by day of month. */
+/** Easter Sunday for a year, as [month, day] (the anonymous Gregorian algorithm). */
+export function easter(year: number): [number, number] {
+  const a = year % 19
+  const b = Math.floor(year / 100)
+  const c = year % 100
+  const d = Math.floor(b / 4)
+  const e = b % 4
+  const f = Math.floor((b + 8) / 25)
+  const g = Math.floor((b - f + 1) / 3)
+  const h = (19 * a + b - d - g + 15) % 30
+  const i = Math.floor(c / 4)
+  const k = c % 4
+  const l = (32 + 2 * e + 2 * i - h - k) % 7
+  const m = Math.floor((a + 11 * h + 22 * l) / 451)
+  const month = Math.floor((h + l - 7 * m + 114) / 31)
+  const day = ((h + l - 7 * m + 114) % 31) + 1
+  return [month, day]
+}
+
+/** Fixed and floating US holidays, plus six pet days. Keyed by day of month. Computed for any year. */
 export function holidaysFor(month: number, year: number): Record<number, string> {
+  const days = fixedAndFloating(month, year)
+  // Easter moves between March and April; it takes the box over anything else that day.
+  const [easterMonth, easterDay] = easter(year)
+  if (easterMonth === month) days[easterDay] = 'Easter'
+  return days
+}
+
+function fixedAndFloating(month: number, year: number): Record<number, string> {
   switch (month) {
     case 1:
       return { 1: "New Year's Day", [nthWeekday(year, 1, 1, 3)]: 'MLK Day' }
@@ -56,11 +83,11 @@ export function holidaysFor(month: number, year: number): Record<number, string>
     case 9:
       return { [nthWeekday(year, 9, 1, 1)]: 'Labor Day' }
     case 10:
-      return { 29: 'National Cat Day', 31: 'Halloween' }
+      return { [nthWeekday(year, 10, 1, 2)]: "Indigenous Peoples' Day", 29: 'National Cat Day', 31: 'Halloween' }
     case 11:
       return { 11: 'Veterans Day', [nthWeekday(year, 11, 4, 4)]: 'Thanksgiving' }
     case 12:
-      return { 25: 'Christmas Day', 31: "New Year's Eve" }
+      return { 24: 'Christmas Eve', 25: 'Christmas Day', 31: "New Year's Eve" }
     default:
       return {}
   }

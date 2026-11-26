@@ -196,6 +196,9 @@ body {
   .prose-legal h2 { font-family: var(--font-display); font-size: 1.7rem; margin-top: 2.5rem; margin-bottom: 0.5rem; color: var(--color-ink); }
   .prose-legal p { color: var(--color-ink-soft); line-height: 1.75; }
   .prose-legal a { color: var(--color-ink); text-decoration: underline; text-underline-offset: 3px; }
+  .prose-legal ul { list-style: disc; padding-left: 1.3rem; color: var(--color-ink-soft); line-height: 1.7; }
+  .prose-legal li + li { margin-top: 0.4rem; }
+  .prose-legal strong { color: var(--color-ink); font-weight: 600; }
 
   /* Hairline link with an animated underline. */
   .link-line { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; padding-bottom: 2px; transition: background-size 0.4s var(--ease-out-expo); }
