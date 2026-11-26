@@ -298,63 +298,55 @@ async function embedThumb(doc: PDFDocument, input: Buffer, width = 660, height =
 async function drawBackCover(doc: PDFDocument, page: PDFPage, fonts: Fonts, input: PrintInput) {
   const ink = hex(INK)
   const muted = hex(MUTED)
+  const B = BACK_COVER
+  const caps = (text: string, x: number, baseline: number, size = 7.5) =>
+    page.drawText(text.toUpperCase(), { x: X(x), y: Y(baseline), size, font: fonts.sansBold, color: muted, characterSpacing: 1 } as Parameters<PDFPage['drawText']>[1])
+
   page.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: PAGE_H, color: hex(PAPER) })
+  // The story panel runs off the left, top and bottom edges into the bleed.
+  page.drawRectangle({ x: 0, y: 0, width: X(B.panelWidth), height: PAGE_H, color: hex(B.panelColor) })
 
-  const heading = safeText(fonts.display, `Twelve months of ${joinPetNames(input.petNames)}`)
-  const headingSize = fitSize(fonts.display, heading, 40, 10 * PT)
-  page.drawText(heading, { x: X(0.5), y: Y(0.95), size: headingSize, font: fonts.display, color: ink })
+  const photos = (input.photos ?? []).slice(0, B.maxPhotos)
+  const L = backCoverLayout(photos.length)
 
-  // Index of the months: two rows of six above the customer's photos, or three rows of four without any.
-  const photos = (input.photos ?? []).slice(0, BACK_COVER.maxPhotos)
-  const B = backCoverLayout(photos.length)
-  for (let i = 0; i < input.months.length && i < 12; i++) {
-    const col = i % B.columns
-    const row = Math.floor(i / B.columns)
-    const x = BACK_COVER.left + col * (B.thumbW + BACK_COVER.gap)
-    const y = BACK_COVER.gridTop + row * B.rowPitch
-    const thumb = await embedThumb(doc, input.months[i])
-    drawCover(page, thumb, X(x), Y(y + B.thumbH), B.thumbW * PT, B.thumbH * PT)
-    page.drawText(MONTH_NAMES[i].toUpperCase(), {
-      x: X(x),
-      y: Y(y + B.thumbH + 0.16),
-      size: 7,
-      font: fonts.sansBold,
-      color: muted,
-      characterSpacing: 0.8,
-    } as Parameters<PDFPage['drawText']>[1])
-  }
-
-  if (B.photos > 0) {
-    page.drawText(B.photos === 1 ? 'THE PHOTO IT STARTED WITH' : 'THE PHOTOS IT STARTED WITH', {
-      x: X(BACK_COVER.left),
-      y: Y(B.photoLabelBaseline),
-      size: 7.5,
-      font: fonts.sansBold,
-      color: muted,
-      characterSpacing: 0.9,
-    } as Parameters<PDFPage['drawText']>[1])
-    for (let i = 0; i < photos.length; i++) {
-      try {
-        const photo = await embedThumb(doc, photos[i], 900, 900)
-        const x = BACK_COVER.left + i * (B.photoSize + B.photoGap)
-        drawCover(page, photo, X(x), Y(B.photoTop + B.photoSize), B.photoSize * PT, B.photoSize * PT)
-      } catch (error) {
-        // A photo that cannot be read must never stop an order from printing.
-        console.error('[print] back-cover photo skipped:', error)
-      }
+  if (L.photos.length > 0) caps(L.photos.length === 1 ? 'The photo it started with' : 'The photos it started with', B.panelLeft, B.labelBaseline)
+  for (let i = 0; i < L.photos.length; i++) {
+    const box = L.photos[i]
+    try {
+      const w = Math.round(box.width * 300)
+      const photo = await embedThumb(doc, photos[i], w, Math.round(box.height * 300))
+      // a white print border, then the photo
+      page.drawRectangle({
+        x: X(box.x - B.frame),
+        y: Y(box.y + box.height + B.frame),
+        width: (box.width + B.frame * 2) * PT,
+        height: (box.height + B.frame * 2) * PT,
+        color: rgb(1, 1, 1),
+        borderColor: hex('#d8cfbd'),
+        borderWidth: 0.5,
+      })
+      drawCover(page, photo, X(box.x), Y(box.y + box.height), box.width * PT, box.height * PT)
+    } catch (error) {
+      // A photo that cannot be read must never stop an order from printing.
+      console.error('[print] back-cover photo skipped:', error)
     }
   }
 
-  const footer = `Made with ${SITE.name}`
-  page.drawText(footer, { x: X(0.5), y: Y(8.05), size: 9, font: fonts.sansBold, color: ink })
+  const name = safeText(fonts.display, joinPetNames(input.petNames))
+  page.drawText(name, { x: X(B.panelLeft), y: Y(B.nameBaseline), size: fitSize(fonts.display, name, B.nameSize * PT, B.panelInner * PT), font: fonts.display, color: ink })
+  caps(safeText(fonts.sansBold, `${input.year} · ${input.styleName} edition`), B.panelLeft, B.editionBaseline)
+  page.drawText(`Made with ${SITE.name}`, { x: X(B.panelLeft), y: Y(B.footerBaseline), size: 8.5, font: fonts.sansBold, color: ink })
+
+  page.drawText('The year at a glance', { x: X(B.gridLeft), y: Y(B.headingBaseline), size: B.headingSize * PT, font: fonts.display, color: ink })
+  for (let i = 0; i < input.months.length && i < 12; i++) {
+    const box = L.months[i]
+    const thumb = await embedThumb(doc, input.months[i])
+    drawCover(page, thumb, X(box.x), Y(box.y + box.height), box.width * PT, box.height * PT)
+    caps(MONTH_NAMES[i], box.x, box.y + box.height + B.monthLabelGap, 7)
+  }
+
   const note = 'Artwork created from your photos. Dates typeset for print.'
-  page.drawText(note, {
-    x: X(10.5) - fonts.sans.widthOfTextAtSize(note, 8),
-    y: Y(8.05),
-    size: 8,
-    font: fonts.sans,
-    color: muted,
-  })
+  page.drawText(note, { x: X(B.gridRight) - fonts.sans.widthOfTextAtSize(note, 7.5), y: Y(B.footerBaseline), size: 7.5, font: fonts.sans, color: muted })
 }
 
 function newPage(doc: PDFDocument): PDFPage {

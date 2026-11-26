@@ -101,7 +101,7 @@ export default function CalendarFlipbook({ petNames, petType, styleName, year, a
               <CoverTitle petNames={petNames} year={year} styleName={styleName} petType={petType} />
             </button>
           ) : view === LAST && !turn ? (
-            <BackCover petNames={petNames} months={months} photos={photos} />
+            <BackCover petNames={petNames} months={months} photos={photos} year={year} styleName={styleName} />
           ) : (
             <div className="relative rounded-[3px] shadow-lift">
               <div className="relative aspect-[11/8.5] overflow-hidden rounded-t-[3px] bg-paper-deep">

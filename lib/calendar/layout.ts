@@ -253,26 +253,63 @@ export function printableAccent(color: string | undefined, fallback = '#3f6fa8')
 
 /**
  * Back cover (inches from the trim edge), shared by the on-screen preview and
- * the print file. With the customer's own photos the twelve months sit in two
- * rows of six and the photos run underneath; without any, the months fill the
- * page in three rows of four.
+ * the print file. A tinted panel on the left tells the story — the photos it
+ * started with, then the pet's name and the edition — and the twelve months
+ * run down the right in three columns, each labelled.
  */
-export const BACK_COVER = { left: 0.5, right: 10.5, headingBaseline: 0.95, gridTop: 1.25, gap: 0.2, maxPhotos: 4, footerBaseline: 8.05 }
+export const BACK_COVER = {
+  panelWidth: 3.9,
+  panelColor: '#efe7d8',
+  panelLeft: 0.5,
+  panelInner: 2.9,
+  labelBaseline: 0.95,
+  photoTop: 1.25,
+  photoBottom: 6.35,
+  photoGap: 0.36,
+  frame: 0.09,
+  maxPhotos: 3,
+  nameBaseline: 7.15,
+  nameSize: 0.6,
+  editionBaseline: 7.5,
+  footerBaseline: 8.05,
+  gridLeft: 4.4,
+  gridRight: 10.5,
+  gridTop: 1.25,
+  gridBottom: 7.72,
+  headingBaseline: 0.95,
+  headingSize: 0.36,
+  columns: 3,
+  monthLabelGap: 0.17,
+}
+
+export interface Box {
+  x: number
+  y: number
+  width: number
+  height: number
+}
 
 export function backCoverLayout(photoCount: number) {
   const B = BACK_COVER
-  const width = B.right - B.left
-  const photos = Math.min(Math.max(photoCount, 0), B.maxPhotos)
-  const columns = photos ? 6 : 4
-  const thumbW = (width - B.gap * (columns - 1)) / columns
-  const thumbH = thumbW * (PAGE.trimHeight / PAGE.trimWidth)
-  const rowPitch = thumbH + 0.3
-  const rows = 12 / columns
-  const gridBottom = B.gridTop + rows * rowPitch
-  // The photo strip: squares, as large as fits, capped so one photo is not enormous.
-  const photoLabelBaseline = gridBottom + 0.38
-  const photoTop = photoLabelBaseline + 0.2
-  const photoGap = 0.25
-  const photoSize = photos ? Math.min(2.45, (width - photoGap * (photos - 1)) / photos, B.footerBaseline - 0.45 - photoTop) : 0
-  return { columns, thumbW, thumbH, rowPitch, photos, photoLabelBaseline, photoTop, photoGap, photoSize }
+  const count = Math.min(Math.max(photoCount, 0), B.maxPhotos)
+  // Photos: one column of prints, as tall as fits; a single photo is a square.
+  const zone = B.photoBottom - B.photoTop
+  const height = count ? Math.min(B.panelInner, (zone - B.photoGap * (count - 1)) / count) : 0
+  const used = count * height + Math.max(0, count - 1) * B.photoGap
+  const start = B.photoTop + (zone - used) / 2
+  const photos: Box[] = Array.from({ length: count }, (_, i) => ({ x: B.panelLeft, y: start + i * (height + B.photoGap), width: B.panelInner, height }))
+
+  // Months: three columns, four rows, sized to fill the height.
+  const rows = 12 / B.columns
+  const rowPitch = (B.gridBottom - B.gridTop) / rows
+  const thumbH = rowPitch - 0.32
+  const thumbW = thumbH * (PAGE.trimWidth / PAGE.trimHeight)
+  const gap = (B.gridRight - B.gridLeft - thumbW * B.columns) / (B.columns - 1)
+  const months: Box[] = Array.from({ length: 12 }, (_, i) => ({
+    x: B.gridLeft + (i % B.columns) * (thumbW + gap),
+    y: B.gridTop + Math.floor(i / B.columns) * rowPitch,
+    width: thumbW,
+    height: thumbH,
+  }))
+  return { photos, months }
 }
