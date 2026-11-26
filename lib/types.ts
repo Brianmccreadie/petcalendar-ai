@@ -1,5 +1,5 @@
 // ============================================================
-// PetCalendar.ai — TypeScript Types & Constants
+// Epic Pet Calendars — TypeScript Types & Constants
 // ============================================================
 
 // ---- Database row types ----

@@ -171,11 +171,11 @@ export async function createLuluOrder(
   const address = order.shipping_address!
 
   const body = {
-    contact_email: process.env.LULU_CONTACT_EMAIL || 'orders@petcalendar.ai',
+    contact_email: process.env.LULU_CONTACT_EMAIL || 'orders@epicpetcalendars.com',
     external_id: order.id,
     line_items: [
       {
-        title: `PetCalendar - ${order.id.slice(0, 8)}`,
+        title: `Epic Pet Calendars - ${order.id.slice(0, 8)}`,
         pod_package_id: CALENDAR_POD_PACKAGE_ID,
         quantity: Math.max(1, order.quantity ?? 1),
         interior: interiorPdfUrl,

@@ -183,7 +183,7 @@ ${monthScenes}
       <section class="clip scene" id="outro" data-start="${outroStart.toFixed(3)}" data-duration="${O}" data-track-index="3">
         <div id="outro-grid">${thumbs}</div>
         <div class="display" id="outro-title">${esc(input.title)}</div>
-        <div id="outro-site">${esc(input.siteLabel ?? 'petcalendar.ai')}</div>
+        <div id="outro-site">${esc(input.siteLabel ?? 'epicpetcalendars.com')}</div>
       </section>
     </div>
     <script>

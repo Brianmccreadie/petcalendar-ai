@@ -43,7 +43,7 @@ export async function GET(request: NextRequest, ctx: RouteContext<'/reveal/[proj
     referenceUrls: (photos ?? []).map((p) => p.cloudinary_url).filter(Boolean),
     fontBase,
     gsapUrl,
-    siteLabel: new URL(SITE.url).host.replace(/^www\./, '') || 'petcalendar.ai',
+    siteLabel: SITE.domain,
   })
 
   return new Response(html, {

@@ -4,7 +4,7 @@ import { SITE } from '@/lib/config'
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: SITE.name,
-    short_name: 'PetCalendar',
+    short_name: 'Epic Pet Calendars',
     description: SITE.description,
     start_url: '/',
     display: 'standalone',
