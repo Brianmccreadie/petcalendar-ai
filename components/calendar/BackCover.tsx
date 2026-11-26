@@ -19,7 +19,7 @@ export default function BackCover({ petNames, months, className = '' }: BackCove
     <div
       className={`relative aspect-[11/8.5] overflow-hidden rounded-[3px] bg-[#fdfbf6] text-[#1a1816] shadow-lift [container-type:inline-size] ${className}`}
     >
-      <div className="absolute inset-0 flex flex-col px-[4.5cqw] pb-[3.2cqw] pt-[4.6cqw]">
+      <div className="absolute inset-0 flex flex-col px-[4.5cqw] pb-[5.2cqw] pt-[4.6cqw]">
         <p className="truncate font-display leading-none" style={{ fontSize: '4.9cqw' }}>
           Twelve months of {joinPetNames(petNames)}
         </p>
