@@ -31,7 +31,10 @@ export const LIMITS = {
    * interface never mentions a count.
    */
   maxRevisionsPerPage: 40,
-  maxInstructionLength: 400,
+  /** Typed note plus any quick fixes the customer ticked. */
+  maxInstructionLength: 900,
+  /** What a customer can type themselves. */
+  maxNoteLength: 400,
   /** New calendars one visitor may start per 24h (cost guard for free previews). */
   maxProjectsPerDay: 5,
   /** A page stuck in "generating" longer than this is treated as failed. */
