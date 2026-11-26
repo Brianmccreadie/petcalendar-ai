@@ -91,24 +91,7 @@ export const LOOK_RULES = [
 // ---------------------------------------------------------------------------
 
 const MEDIUM_LOOK: Record<Exclude<Medium, 'photo'>, string> = {
-  watercolor:
-    'a loose hand-painted watercolor on rough cold-pressed paper. Wet-into-wet washes bleed and bloom into each other, pigment pools at the edges of shapes, large areas of bare white paper are left around the subject, and detail is suggested with a few quick darker strokes. The pet itself is painted in soft washes, not rendered hair by hair',
-  oil: 'a classical 18th-century oil painting on canvas: deep glazed shadows, warm golden light, soft lost-and-found edges, a dark old-master palette and visible brushwork with a faint craquelure',
-  impressionist:
-    'an impressionist oil painting made of short, thick, separate dabs of unblended colour and palette-knife marks. Forms dissolve into flickering light; up close it is all strokes of paint. The pet is built from the same broken dabs, with no fine detail',
-  cartoon:
-    'a hand-drawn 2D cartoon in the style of a classic animated film cel: thick, even black ink outlines around every shape, completely flat colour fills with one tone of simple shadow, huge glossy eyes, a simplified rounded body and a big comic expression. The pet is a cartoon character, with no realistic fur or photographic texture at all',
-  storybook:
-    'a gouache and coloured-pencil illustration from a mid-century children’s picture book: flat matte shapes, visible dry-brush and pencil texture, simplified charming proportions, small dot eyes and a soft, limited, slightly muted palette on off-white paper',
-  popart: 'a pop-art screen print: flat saturated colour blocks, thick black contours, coarse halftone dots for shading and a clashing bright background',
-  sketch:
-    'a pencil and ink sketchbook drawing on cream paper: the image is mostly line — graphite hatching, cross-hatching and loose ink contours — with only a pale wash of two or three colours and plenty of bare paper. Unfinished edges trail off into the page',
-  woodblock: 'a traditional Japanese woodblock print: flat colour areas, flowing black keylines, subtle printed gradients and visible paper grain',
-  poster: 'a 1930s lithographic travel poster: bold simplified shapes, hard edges and four or five flat, slightly faded inks',
-  clay:
-    'a stop-motion claymation still: every single thing, the pet included, is a hand-sculpted figure of matte modelling clay with smooth rounded simplified forms, bead-like eyes, visible fingerprints and tool marks, standing on a miniature handmade tabletop set under soft studio lights. No real fur anywhere',
-  papercut:
-    'a layered cut-paper collage photographed from above: every shape, the pet included, is cut from flat coloured craft paper with crisp scissor edges and stacked in layers that cast small soft shadows on one another. No painted shading, no fur texture — only flat paper shapes',
+  oil: 'a Renaissance court portrait in oils on panel: deep glazed shadows, warm directional light, soft lost-and-found edges, a dark old-master palette of umber, crimson, forest green and gold, with visible brushwork and a faint craquelure',
 }
 
 /** The look rules for a theme: photographic by default, or the theme's own medium. */

@@ -73,7 +73,7 @@ export function MuralWorld() {
               <span className="sans">a legend</span>
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg font-medium text-ivory drop-shadow-[0_2px_12px_rgb(8_18_40/0.9)] sm:text-xl">
-              A custom wall calendar starring your pet, in any world or art style. Upload three photos, pick a theme,
+              A custom wall calendar starring your pet, in any world you choose. Upload three photos, pick a theme,
               and the whole year is ready to preview in minutes.
             </p>
             <div className="mt-8 flex flex-col items-center gap-4">
@@ -203,7 +203,7 @@ export function VoyageWorld() {
 
 const steps = [
   ['Show us who they are', 'Three to five photos straight from your phone — face, profile, full body. No account, no editing, no skill needed. More than one pet? They can star together.', 'dachshund'],
-  ['Choose their world', `${CALENDAR_STYLES.length} themes and art styles, each with its own scene for every month: a January that feels like January, a December that feels like the holidays.`, 'wizard'],
+  ['Choose their world', `${CALENDAR_STYLES.length} themes, each with its own scene for every month: a January that feels like January, a December that feels like the holidays.`, 'wizard'],
   ['Direct the final cut', 'All thirteen pages appear in a few minutes. Redo any of them or ask for a change in plain words, as often as you like. Then we print and ship.', 'sorceress'],
 ] as const
 
@@ -257,8 +257,8 @@ export function DeepWorld() {
     <WorldSection
       id="themes"
       backdrop="sky-blush"
-      serif="Worlds &"
-      sans="art styles"
+      serif="Pick their"
+      sans="world"
       cast={
         <>
           <Cutout name="pirate" flip className={`-left-[1%] top-[5%] hidden ${size.lg} lg:block`} depth={0.6} rotate={4} bob={0} />

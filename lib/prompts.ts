@@ -5,41 +5,8 @@ import { MONTH_THEMES, type StyleId } from './types'
 // ============================================================
 
 const STYLE_DESCRIPTIONS: Record<StyleId, string> = {
-  'studio-portrait':
-    'A timeless studio pet portrait photograph: soft diffused window light, a hand-painted canvas backdrop or a simple styled set of linens, baskets and seasonal flowers, shallow depth of field and gentle, flattering colour. Elegant and uncluttered, like the work of a fine-art portrait photographer.',
-
-  'watercolor':
-    'A loose, luminous watercolor painting on cold-pressed paper: transparent washes that bleed softly into one another, visible paper texture, a little white paper left showing, and a few confident darker strokes for detail. Fresh, airy colour.',
-
-  'classic-oil':
-    'A classical oil painting in the manner of an 18th-century landscape master: rich glazed shadows, warm golden light, soft sfumato edges, deep umbers and olive greens with touches of crimson, and visible brushwork on canvas.',
-
-  'impressionist':
-    'A sunlit impressionist oil painting: thick, broken brushstrokes and palette-knife marks, dappled light, soft pastel colour with bright complementary accents, and edges that dissolve into light. Painted quickly, outdoors, on a bright day.',
-
-  'cartoon':
-    'A cheerful, funny cartoon illustration: bold clean outlines, big expressive eyes, exaggerated happy expressions, flat bright colour with simple cel shading and a punchy, playful background.',
-
-  'storybook':
-    'A gentle gouache illustration from a classic children’s picture book: soft matte colour, visible brush texture, rounded friendly shapes, cosy detail in the corners and a warm, slightly muted palette.',
-
-  'pop-art':
-    'A bold pop-art print: flat blocks of saturated colour, thick black contour lines, halftone dot shading and a graphic, high-contrast background in clashing brights. Screen-printed and confident.',
-
-  'pencil-sketch':
-    'A fine graphite and ink drawing on cream paper: delicate cross-hatching, confident contour lines, soft smudged shading, and a restrained wash of watercolor in just two or three colours.',
-
-  'woodblock':
-    'A traditional Japanese woodblock print: flat areas of colour, flowing black keylines, subtle gradient skies, stylised waves, clouds and plants, and the soft grain of printed paper. A calm indigo, vermilion and ochre palette.',
-
-  'vintage-poster':
-    'A vintage travel poster from the 1930s: bold simplified shapes, flat lithographic inks slightly faded by the sun, strong diagonals, a limited palette of four or five colours and a grand sense of place. No lettering of any kind.',
-
-  'claymation':
-    'A stop-motion clay animation still: everything hand-sculpted in modelling clay with visible thumbprints and tool marks, miniature handmade sets, soft studio lighting and a shallow depth of field.',
-
-  'paper-cut':
-    'A layered cut-paper illustration: crisp shapes cut from coloured and textured papers, stacked in layers with soft real shadows between them, simple forms and a harmonious, limited palette.',
+  'renaissance-royals':
+    'A formal royal court portrait painted in oils in the manner of the Renaissance masters: rich glazed colour, deep umber shadows, warm candle-like light, sumptuous velvet, ermine, brocade and gold, fine craquelure on the surface. The pet is the monarch — a king or a queen — painted with complete seriousness and dignity.',
 
   'mythical-quest':
     'A stunning, realistic photograph with cinematic lighting and epic scale. The scene resembles a big-budget fantasy film — lush, sweeping landscapes, dramatic skies, and golden-hour light. Photographic quality, sharp focus, rich color grading.',
@@ -198,35 +165,21 @@ const STYLE_DESCRIPTIONS: Record<StyleId, string> = {
 
 type MonthScenes = Record<number, string>
 
-/** The art-style themes share one gentle seasonal year; the medium is what changes. */
-const SEASONAL_YEAR: MonthScenes = {
-  1: 'on a crisp winter morning, sitting in fresh snow beside a frosted window, a red wool scarf around its neck and snowflakes drifting down.',
-  2: 'curled up among cushions and blankets with a few paper hearts and a small bunch of roses nearby. Warm lamplight on a cold evening.',
-  3: 'trotting through the first spring crocuses and daffodils on a breezy day, ears lifted by the wind, pale blue sky above.',
-  4: 'peeking out from under a big umbrella in a spring shower, raindrops falling and puddles reflecting blossom trees.',
-  5: 'lying in a meadow of wildflowers on a bright May day, butterflies passing and a picnic basket nearby.',
-  6: 'at the edge of a calm lake at the start of summer, paws on a wooden jetty, dragonflies over the water.',
-  7: 'on a sunny beach in high summer, sand on its nose, a striped towel and a beach ball beside it, waves rolling in.',
-  8: 'dozing in the shade of a big tree on a golden August afternoon, a slice of watermelon and a straw hat nearby.',
-  9: 'walking a country lane in early autumn, the first leaves turning, apples in a basket by the gate.',
-  10: 'sitting among pumpkins and fallen leaves on a misty October evening, a lantern glowing beside it.',
-  11: 'stretched out on a rug by a fireplace on a rainy November day, a knitted blanket and a steaming mug on the table.',
-  12: 'in a snowy garden at dusk before the holidays, a wreath on the door behind, string lights glowing and a wrapped present in the snow.',
-}
-
 const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
-  'studio-portrait': SEASONAL_YEAR,
-  'watercolor': SEASONAL_YEAR,
-  'classic-oil': SEASONAL_YEAR,
-  'impressionist': SEASONAL_YEAR,
-  'cartoon': SEASONAL_YEAR,
-  'storybook': SEASONAL_YEAR,
-  'pop-art': SEASONAL_YEAR,
-  'pencil-sketch': SEASONAL_YEAR,
-  'woodblock': SEASONAL_YEAR,
-  'vintage-poster': SEASONAL_YEAR,
-  'claymation': SEASONAL_YEAR,
-  'paper-cut': SEASONAL_YEAR,
+  'renaissance-royals': {
+    1: 'as a newly crowned monarch at a winter coronation, wearing a heavy gold crown and an ermine-trimmed crimson mantle, seated before a tall window with snow falling over the palace gardens.',
+    2: 'as a queen or king in rose velvet and pearls, a single red rose laid on a table beside a sealed love letter, painted against a dark green drape.',
+    3: 'as a young monarch in a spring garden loggia, wearing a pale gold doublet or gown and a slim circlet, with the first blossom on the branches behind and a small lute resting nearby.',
+    4: 'as a monarch in a jewelled collar and blue silk, standing at a balcony after a spring rain, with a walled city and a rainbow over the hills in the distance.',
+    5: 'as a queen or king of the May, crowned with a wreath of spring flowers over a small coronet, in a green and gold gown or robe, seated in a rose garden with a fountain behind.',
+    6: 'as a monarch in a summer hunting habit of emerald velvet with a feathered cap and a short cloak, in a sunlit forest glade with a distant castle on a hill.',
+    7: 'as a monarch on a throne beneath a canopy of crimson and gold, wearing full state robes with an orb resting on a cushion beside it, banners hanging in a great hall.',
+    8: 'as a monarch at a summer banquet, in a pale silk robe and a chain of office, seated at a table laid with figs, grapes, peaches and a silver ewer, with a view of golden fields through an arch.',
+    9: 'as a scholarly monarch in a study, wearing a dark fur-lined robe and a velvet cap, with a globe, an astrolabe and open books on the table, early autumn light at the window.',
+    10: 'as a monarch in black velvet with a high white lace ruff and a heavy gold chain, painted against deep shadow with a single candle, a pomegranate and autumn leaves on the ledge in front.',
+    11: 'as a monarch at a harvest feast, in russet and gold brocade with a fur collar, beside a table of bread, pears and a roast-laden platter, a tapestry of a hunt on the wall behind.',
+    12: 'as a monarch in midwinter, in a white ermine mantle over deep green velvet and a jewelled crown, with holly and candles on the mantel behind and snow at the window.',
+  },
   'mythical-quest': {
     1: 'wearing a fur-lined cloak and tiny crown, standing atop a snowy mountain pass with a frozen kingdom stretching below. Northern lights dance across the sky. A magical ice sword glows at their side. New Year quest beginning.',
     2: 'in an enchanted rose garden within a hidden elven valley, wearing a delicate flower crown. Heart-shaped gemstones glow among the blooming vines. Valentine magic fills the misty air.',
@@ -986,7 +939,7 @@ const STYLE_MONTH_SCENES: Record<StyleId, MonthScenes> = {
  * "Luna the dog", "Kiwi the pet", "Luna the dog and Milo the cat together".
  */
 /** Themes rendered in a painted or drawn medium rather than as photographs. */
-const PAINTED = new Set<StyleId>(['watercolor', 'classic-oil', 'impressionist', 'cartoon', 'storybook', 'pop-art', 'pencil-sketch', 'woodblock', 'vintage-poster', 'claymation', 'paper-cut'])
+const PAINTED = new Set<StyleId>(['renaissance-royals'])
 
 export function describeSubjects(pets: { name: string; petType: string }[]): string {
   const parts = pets.map((p) => `${p.name} the ${p.petType === 'other' ? 'pet' : p.petType}`)
@@ -1024,29 +977,7 @@ export function getCoverPrompt(
   const baseDescription = STYLE_DESCRIPTIONS[style]
 
   const coverScenes: Record<StyleId, string> = {
-    'studio-portrait': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'watercolor': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'classic-oil': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'impressionist': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'cartoon': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'storybook': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'pop-art': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'pencil-sketch': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'woodblock': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'vintage-poster': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'claymation': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
-
-    'paper-cut': `A cover portrait of ${subject}, sitting proudly and looking toward the viewer in a simple, beautiful setting of soft flowers and greenery, with calm open space to either side.`,
+    'renaissance-royals': `A grand state portrait of ${subject} as the reigning monarch, seated very upright on a carved and gilded throne, wearing a jewelled crown, a deep crimson velvet mantle lined with ermine and a heavy gold chain. A dark drape and a marble column behind, calm shadow to either side.`,
 
     'mythical-quest': `A stunning hero portrait of ${subject}, wearing epic fantasy armor and a flowing cloak, standing on a cliff overlooking a vast magical kingdom. Golden hour light, dramatic clouds, and a glowing enchanted sword. Cinematic, realistic, photographic quality.`,
 
