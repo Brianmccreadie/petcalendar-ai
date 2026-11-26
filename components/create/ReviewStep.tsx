@@ -56,6 +56,8 @@ export default function ReviewStep() {
   const [notice, setNotice] = useState<string | null>(null)
   const [scope, setScope] = useState<'page' | 'all'>('page')
   const [showBack, setShowBack] = useState(false)
+  // Changes are optional, so the form stays folded away until someone asks for it.
+  const [editing, setEditing] = useState(false)
   const [batch, setBatch] = useState<{ done: number; total: number } | null>(null)
   const [instructions, setInstructions] = useState('')
   const [newPhoto, setNewPhoto] = useState<File | null>(null)
@@ -260,6 +262,9 @@ export default function ReviewStep() {
   const revisable = slots.filter((s) => s.id && s.status === 'complete' && s.revisions_left > 0).length
   const anyBusy = working.size > 0 || batch !== null
   const hasInput = Boolean(instructions.trim() || newPhoto)
+  const pageName = slot.page_type === 'cover' ? 'the cover' : slotLabel(slot)
+  // A page that failed, or one being worked on, always shows its controls.
+  const formOpen = editing || slot.status === 'failed' || anyBusy || Boolean(notice)
   const canApply = hasInput && !anyBusy && (scope === 'all' ? revisable > 0 : Boolean(canRevise) && !outOfRevisions)
 
   return (
@@ -272,7 +277,7 @@ export default function ReviewStep() {
         </h1>
         <p className="lede mx-auto mt-4 max-w-xl">
           {allDone
-            ? 'Flip through every page. To change one, select it and tell us what to change — or apply one note to all of them.'
+            ? 'Flip through every page. Love it? Order it. Want something different? Any page can be changed for free.'
             : running
               ? 'Pages appear as they finish — usually a few minutes for all thirteen. You can leave this tab open or come back later.'
               : 'Some pages still need attention before you can order.'}
@@ -372,10 +377,7 @@ export default function ReviewStep() {
         {/* Pages + actions */}
         <aside className="space-y-6">
           <div>
-            <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-muted">
-              <span className="grid h-5 w-5 place-items-center rounded-full bg-ink text-[0.65rem] text-ivory">1</span>
-              Choose a page
-            </h2>
+            <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-muted">Your pages</h2>
             <ol className="mt-3 grid grid-cols-6 gap-2 lg:grid-cols-4">
               {slots.map((s, i) => {
                 const busy = Boolean(s.id && working.has(s.id)) || s.status === 'generating'
@@ -447,11 +449,21 @@ export default function ReviewStep() {
 
           {!ordered && !showBack && (
             <div className="card p-5">
-              <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-muted">
-                <span className="grid h-5 w-5 place-items-center rounded-full bg-ink text-[0.65rem] text-ivory">2</span>
-                Tell us what to change
-              </h2>
-              <p className="mt-3 font-display text-2xl">{slotLabel(slot)}</p>
+              <div className="flex items-start justify-between gap-3">
+                <h2 className="font-display text-2xl leading-tight">{formOpen ? `Change ${pageName}` : 'Want to change anything?'}</h2>
+                <span className="mt-1 shrink-0 rounded-full bg-paper-deep px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-ink-soft">Optional</span>
+              </div>
+              {!formOpen && (
+                <>
+                  <p className="mt-2 text-sm text-ink-soft">
+                    You don’t have to. If a page isn’t quite right, you can redo it or describe what to fix, free and as often as you like.
+                  </p>
+                  <button type="button" className="btn btn-ghost btn-sm mt-4 w-full" onClick={() => setEditing(true)} disabled={!slot.id}>
+                    Change {pageName}
+                  </button>
+                  <p className="mt-2 text-center text-xs text-ink-soft">Tap another page above to change that one instead.</p>
+                </>
+              )}
 
               {outOfRevisions && <p className="mt-1 text-sm text-ink-soft">This page has been changed a great many times. Pick your favourite version below.</p>}
 
@@ -482,6 +494,8 @@ export default function ReviewStep() {
                 </div>
               )}
 
+              {formOpen && (
+                <>
               <form
                 className="mt-4 space-y-3"
                 onSubmit={(e) => {
@@ -489,8 +503,8 @@ export default function ReviewStep() {
                   if (canApply) applyChange()
                 }}
               >
-                <label className="sr-only" htmlFor="changes">
-                  What should change?
+                <label className="label" htmlFor="changes">
+                  What should be different?
                 </label>
                 <textarea
                   id="changes"
@@ -576,6 +590,12 @@ export default function ReviewStep() {
                 </button>
                 <p className="mt-2 text-center text-xs text-ink-soft">A fresh take on the same scene, no note needed.</p>
               </div>
+
+                  <button type="button" className="mt-3 w-full text-center text-sm font-semibold text-ink-soft underline-offset-4 hover:underline" onClick={() => setEditing(false)} disabled={anyBusy}>
+                    No changes, it’s perfect
+                  </button>
+                </>
+              )}
 
               {isWorking && !batch && <p className="mt-3 text-sm font-semibold text-ink-soft">Working on it — about a minute.</p>}
               {notice && (
