@@ -11,7 +11,7 @@ async function send(to: string, subject: string, html: string): Promise<void> {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        from: process.env.EMAIL_FROM || `${SITE.name} <orders@petcalendar.ai>`,
+        from: process.env.EMAIL_FROM || `${SITE.name} <orders@epicpetcalendars.com>`,
         to,
         subject,
         html,

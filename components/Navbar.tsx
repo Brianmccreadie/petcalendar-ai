@@ -20,14 +20,14 @@ export function LogoMark({ size = 44 }: { size?: number }) {
   )
 }
 
-/** Two voices, like the headlines: a light serif "Pet" against a heavy grotesk "CALENDAR". */
+/** Two voices, like the headlines: a light serif "Epic Pet" against a heavy grotesk "CALENDARS". */
 export function Logo({ className = '' }: { className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <LogoMark />
       <span className="flex items-baseline leading-none">
-        <span className="font-display text-[1.75rem] tracking-tight">Pet</span>
-        <span className="ml-[0.18em] text-[1.05rem] font-black uppercase tracking-[-0.01em]">Calendar</span>
+        <span className="font-display text-[1.6rem] tracking-tight">Epic Pet</span>
+        <span className="ml-[0.2em] text-[0.98rem] font-black uppercase tracking-[-0.01em]">Calendars</span>
       </span>
     </span>
   )
@@ -61,7 +61,7 @@ export default function Navbar() {
       }`}
     >
       <div className="mx-auto flex h-16 max-w-[84rem] items-center justify-between px-5 sm:px-8">
-        <Link href="/" aria-label="PetCalendar.ai home" onClick={() => setOpen(false)}>
+        <Link href="/" aria-label="Epic Pet Calendars home" onClick={() => setOpen(false)}>
           <Logo />
         </Link>
 

@@ -1,12 +1,14 @@
 // Central product + site configuration. Prices are in cents.
 
 export const SITE = {
-  name: 'PetCalendar.ai',
+  name: 'Epic Pet Calendars',
+  /** The brand's own address, used where the name of the site is printed or shown. */
+  domain: 'epicpetcalendars.com',
   // Falls back to the Vercel production domain when NEXT_PUBLIC_APP_URL is not set.
   url:
     process.env.NEXT_PUBLIC_APP_URL ||
     (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:3000'),
-  supportEmail: 'hello@petcalendar.ai',
+  supportEmail: 'hello@epicpetcalendars.com',
   /** The legal name and postal address of the business, shown in the footer and legal pages once set. */
   legalName: process.env.NEXT_PUBLIC_BUSINESS_NAME || '',
   legalAddress: process.env.NEXT_PUBLIC_BUSINESS_ADDRESS || '',
