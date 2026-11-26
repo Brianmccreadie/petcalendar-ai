@@ -15,6 +15,7 @@ import {
   type RGB,
 } from 'pdf-lib'
 import {
+  BACK_COVER,
   COVER_PAGE,
   GRID_PAGE,
   INK,
@@ -24,6 +25,7 @@ import {
   PAPER,
   RULE,
   WEEKDAY_LABELS,
+  backCoverLayout,
   buildMonthGrid,
   coverText,
   coverTitle,
@@ -68,6 +70,8 @@ export interface PrintInput {
   cover: Buffer
   /** Raw image bytes for months 1-12, in order. */
   months: Buffer[]
+  /** The customer's own photos, for the back cover. Optional; up to four are used. */
+  photos?: Buffer[]
 }
 
 interface Fonts {
@@ -285,10 +289,10 @@ function drawCoverTitle(page: PDFPage, fonts: Fonts, input: PrintInput) {
 }
 
 /** Small copy of a page for the back-cover index (full image when sharp is unavailable). */
-async function embedThumb(doc: PDFDocument, input: Buffer): Promise<PDFImage> {
+async function embedThumb(doc: PDFDocument, input: Buffer, width = 660, height = 495): Promise<PDFImage> {
   const sharp = await loadSharp()
   if (!sharp) return (await embedArt(doc, input)).image
-  return doc.embedJpg(await sharp(input).rotate().resize(660, 495, { fit: 'cover' }).jpeg({ quality: 88 }).toBuffer())
+  return doc.embedJpg(await sharp(input).rotate().resize(width, height, { fit: 'cover' }).jpeg({ quality: 88 }).toBuffer())
 }
 
 async function drawBackCover(doc: PDFDocument, page: PDFPage, fonts: Fonts, input: PrintInput) {
@@ -300,28 +304,45 @@ async function drawBackCover(doc: PDFDocument, page: PDFPage, fonts: Fonts, inpu
   const headingSize = fitSize(fonts.display, heading, 40, 10 * PT)
   page.drawText(heading, { x: X(0.5), y: Y(0.95), size: headingSize, font: fonts.display, color: ink })
 
-  // 4 × 3 index of the months
-  const columns = 4
-  const gap = 0.2
-  const thumbW = (10 - gap * (columns - 1)) / columns
-  const thumbH = thumbW * (PAGE.trimHeight / PAGE.trimWidth)
-  const top = 1.25
-  const rowPitch = thumbH + 0.3
+  // Index of the months: two rows of six above the customer's photos, or three rows of four without any.
+  const photos = (input.photos ?? []).slice(0, BACK_COVER.maxPhotos)
+  const B = backCoverLayout(photos.length)
   for (let i = 0; i < input.months.length && i < 12; i++) {
-    const col = i % columns
-    const row = Math.floor(i / columns)
-    const x = 0.5 + col * (thumbW + gap)
-    const y = top + row * rowPitch
+    const col = i % B.columns
+    const row = Math.floor(i / B.columns)
+    const x = BACK_COVER.left + col * (B.thumbW + BACK_COVER.gap)
+    const y = BACK_COVER.gridTop + row * B.rowPitch
     const thumb = await embedThumb(doc, input.months[i])
-    drawCover(page, thumb, X(x), Y(y + thumbH), thumbW * PT, thumbH * PT)
+    drawCover(page, thumb, X(x), Y(y + B.thumbH), B.thumbW * PT, B.thumbH * PT)
     page.drawText(MONTH_NAMES[i].toUpperCase(), {
       x: X(x),
-      y: Y(y + thumbH + 0.16),
+      y: Y(y + B.thumbH + 0.16),
       size: 7,
       font: fonts.sansBold,
       color: muted,
       characterSpacing: 0.8,
     } as Parameters<PDFPage['drawText']>[1])
+  }
+
+  if (B.photos > 0) {
+    page.drawText(B.photos === 1 ? 'THE PHOTO IT STARTED WITH' : 'THE PHOTOS IT STARTED WITH', {
+      x: X(BACK_COVER.left),
+      y: Y(B.photoLabelBaseline),
+      size: 7.5,
+      font: fonts.sansBold,
+      color: muted,
+      characterSpacing: 0.9,
+    } as Parameters<PDFPage['drawText']>[1])
+    for (let i = 0; i < photos.length; i++) {
+      try {
+        const photo = await embedThumb(doc, photos[i], 900, 900)
+        const x = BACK_COVER.left + i * (B.photoSize + B.photoGap)
+        drawCover(page, photo, X(x), Y(B.photoTop + B.photoSize), B.photoSize * PT, B.photoSize * PT)
+      } catch (error) {
+        // A photo that cannot be read must never stop an order from printing.
+        console.error('[print] back-cover photo skipped:', error)
+      }
+    }
   }
 
   const footer = `Made with ${SITE.name}`

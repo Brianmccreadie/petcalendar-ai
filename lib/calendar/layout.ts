@@ -250,3 +250,29 @@ export function printableAccent(color: string | undefined, fallback = '#3f6fa8')
   const k = 0.42 / luminance
   return '#' + rgb.map((c) => Math.round(c * k).toString(16).padStart(2, '0')).join('')
 }
+
+/**
+ * Back cover (inches from the trim edge), shared by the on-screen preview and
+ * the print file. With the customer's own photos the twelve months sit in two
+ * rows of six and the photos run underneath; without any, the months fill the
+ * page in three rows of four.
+ */
+export const BACK_COVER = { left: 0.5, right: 10.5, headingBaseline: 0.95, gridTop: 1.25, gap: 0.2, maxPhotos: 4, footerBaseline: 8.05 }
+
+export function backCoverLayout(photoCount: number) {
+  const B = BACK_COVER
+  const width = B.right - B.left
+  const photos = Math.min(Math.max(photoCount, 0), B.maxPhotos)
+  const columns = photos ? 6 : 4
+  const thumbW = (width - B.gap * (columns - 1)) / columns
+  const thumbH = thumbW * (PAGE.trimHeight / PAGE.trimWidth)
+  const rowPitch = thumbH + 0.3
+  const rows = 12 / columns
+  const gridBottom = B.gridTop + rows * rowPitch
+  // The photo strip: squares, as large as fits, capped so one photo is not enormous.
+  const photoLabelBaseline = gridBottom + 0.38
+  const photoTop = photoLabelBaseline + 0.2
+  const photoGap = 0.25
+  const photoSize = photos ? Math.min(2.45, (width - photoGap * (photos - 1)) / photos, B.footerBaseline - 0.45 - photoTop) : 0
+  return { columns, thumbW, thumbH, rowPitch, photos, photoLabelBaseline, photoTop, photoGap, photoSize }
+}
