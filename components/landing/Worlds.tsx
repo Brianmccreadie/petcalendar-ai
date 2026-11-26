@@ -355,7 +355,7 @@ export function AcademyWorld() {
                 <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/80">Twelve date pages</figcaption>
               </figure>
               <figure>
-                <BackCover petNames={[SHOWCASE.petName]} months={SHOWCASE.months.map((m) => m.src)} />
+                <BackCover petNames={[SHOWCASE.petName]} months={SHOWCASE.months.map((m) => m.src)} photos={[SHOWCASE.reference]} />
                 <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/80">Back cover</figcaption>
               </figure>
             </div>
