@@ -60,10 +60,10 @@ export function Backdrop({ name }: { name: keyof typeof FALLBACK }) {
 export function Seam() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 h-0">
-      {/* each cloud is lifted by most of its own height, so it sits on the seam and barely enters the scene below */}
-      <Cutout name="cloud2" className="-left-[8%] top-[calc(clamp(14rem,40vw,34rem)*-0.3)] w-[clamp(14rem,40vw,34rem)]" depth={0.1} bob={0} />
-      <Cutout name="cloud1" className="left-[36%] top-[calc(clamp(10rem,26vw,22rem)*-0.5)] w-[clamp(10rem,26vw,22rem)]" depth={0.16} bob={0} />
-      <Cutout name="cloud2" flip className="-right-[8%] top-[calc(clamp(14rem,42vw,36rem)*-0.3)] w-[clamp(14rem,42vw,36rem)]" depth={0.12} bob={0} />
+      {/* Each cloud rises only a little above the seam (under 7rem), so it never covers the last line of the section above. */}
+      <Cutout name="cloud2" className="-left-[8%] top-[calc(clamp(12rem,36vw,28rem)*-0.2)] w-[clamp(12rem,36vw,28rem)]" depth={0.1} bob={0} />
+      <Cutout name="cloud1" className="left-[38%] top-[calc(clamp(9rem,22vw,17rem)*-0.36)] w-[clamp(9rem,22vw,17rem)]" depth={0.16} bob={0} />
+      <Cutout name="cloud2" flip className="-right-[8%] top-[calc(clamp(12rem,38vw,30rem)*-0.2)] w-[clamp(12rem,38vw,30rem)]" depth={0.12} bob={0} />
     </div>
   )
 }
