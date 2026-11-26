@@ -260,7 +260,7 @@ const anatomy = [
   ['11 × 8.5 in closed', 'Opens to 11 × 17 in on the wall.'],
   ['Wire binding, hanging hole', 'Lies flat, flips cleanly, hangs on one nail.'],
   ['Your artwork, full page', 'One finished scene above every month, edge to edge.'],
-  ['Real dates you can write in', 'Every day is a box with room for a note. US holidays and a few pet days are marked.'],
+  ['Real dates you can write in', 'Every day is a box with room for a note. US holidays are printed in, plus six pet days such as National Dog Day and National Cat Day.'],
   ['Heavy coated paper', '100# stock in full colour, the weight of a good art print.'],
 ]
 
