@@ -311,6 +311,8 @@ export default function ReviewStep() {
                 petNames={petNames}
                 months={slots.slice(1).map((m) => (m.status === 'complete' ? m.image_url : null))}
                 photos={(data.photos ?? []).map((photo) => photo.url)}
+                year={year}
+                styleName={style?.name}
               />
             ) : slot.page_type === 'cover' ? (
               <div className="relative aspect-[11/8.5] overflow-hidden rounded-[3px] shadow-lift">
