@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Footer from '@/components/Footer'
 import { faqs } from '@/components/landing/FAQ'
 import {
@@ -12,7 +13,23 @@ import {
 } from '@/components/landing/Worlds'
 import { PRICING, SITE } from '@/lib/config'
 
+export const metadata: Metadata = { alternates: { canonical: '/' } }
+
 const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+    logo: `${SITE.url}/icon.png`,
+    email: SITE.supportEmail,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE.name,
+    url: SITE.url,
+  },
   {
     '@context': 'https://schema.org',
     '@type': 'Product',
