@@ -38,6 +38,8 @@ export function MuralWorld() {
         {/* the painted world everything else is pinned onto */}
         <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden bg-[#27406b]">
           <Image src="/art/panorama.jpg" alt="" fill priority sizes="100vw" className="object-cover object-[50%_60%]" />
+          {/* an even dark veil so white type holds everywhere on the painting */}
+          <div className="absolute inset-0 bg-[#0b1730]/30" />
           <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0f2140]/55 to-transparent" />
         </div>
 
@@ -68,21 +70,22 @@ export function MuralWorld() {
           />
 
           <div className="relative z-10 mt-[clamp(8rem,19vh,12rem)] text-center">
-            <h1 className="collage-title drop-shadow-[0_6px_30px_rgb(8_18_40/0.75)]">
-              <span className="serif">Make your pet</span>
-              <span className="sans">a legend</span>
+            <h1 className="collage-title [text-shadow:0_3px_0_rgb(8_18_40/0.35),0_10px_40px_rgb(8_18_40/0.85)]">
+              <span className="serif">Custom pet</span>
+              <span className="sans">calendars</span>
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg font-medium text-ivory drop-shadow-[0_2px_12px_rgb(8_18_40/0.9)] sm:text-xl">
-              A custom wall calendar starring your pet, in any world you choose. Upload three photos, pick a theme,
-              and the whole year is ready to preview in minutes.
-            </p>
-            <div className="mt-8 flex flex-col items-center gap-4">
-              <Link href="/create" className="btn btn-light btn-lg shadow-[0_18px_40px_-12px_rgb(8_18_40/0.7)]">
-                Make your calendar <ArrowRight size={18} />
-              </Link>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ivory/85 drop-shadow-[0_1px_8px_rgb(8_18_40/0.9)]">
-                Three photos · five minutes · free to preview
+            {/* the words that matter sit on their own plaque, never straight on the painting */}
+            <div className="mx-auto mt-7 max-w-xl rounded-[1.5rem] bg-[#0b1730]/70 px-6 py-6 shadow-[0_24px_60px_-20px_rgb(8_18_40/0.8)] backdrop-blur-md sm:px-9 sm:py-7">
+              <p className="text-lg font-medium leading-snug text-white sm:text-xl">
+                Turn photos of your pet into a printed wall calendar. Upload three photos, pick a theme, and preview the
+                whole year in minutes.
               </p>
+              <div className="mt-5 flex flex-col items-center gap-3">
+                <Link href="/create" className="btn btn-light btn-lg">
+                  Make your calendar <ArrowRight size={18} />
+                </Link>
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/90">Three photos · five minutes · free to preview</p>
+              </div>
             </div>
           </div>
 
@@ -190,7 +193,7 @@ export function VoyageWorld() {
                 />
                 <figcaption className="mt-5 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
                   <span className="font-display text-2xl">{page.name}</span>
-                  <span className="text-xs font-medium uppercase tracking-[0.16em] text-ink/50">{SHOWCASE_PLACES[i]}</span>
+                  <span className="text-xs font-medium uppercase tracking-[0.16em] text-ink/75">{SHOWCASE_PLACES[i]}</span>
                 </figcaption>
               </figure>
             </Reveal>
@@ -343,17 +346,17 @@ export function AcademyWorld() {
                   <Art src={SHOWCASE.cover} alt={`Front cover: ${SHOWCASE.petName} ${year}`} sizes="(max-width: 768px) 33vw, 200px" />
                   <CoverTitle petNames={[SHOWCASE.petName]} year={year} styleName={SHOWCASE.styleName} petType="dog" />
                 </div>
-                <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Front cover</figcaption>
+                <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/80">Front cover</figcaption>
               </figure>
               <figure>
                 <div className="overflow-hidden rounded-[2px] shadow-lift">
                   <GridPage month={12} year={year} caption={`${SHOWCASE.petName} · ${SHOWCASE.styleName}`} />
                 </div>
-                <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Twelve date pages</figcaption>
+                <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/80">Twelve date pages</figcaption>
               </figure>
               <figure>
                 <BackCover petNames={[SHOWCASE.petName]} months={SHOWCASE.months.map((m) => m.src)} />
-                <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Back cover</figcaption>
+                <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/80">Back cover</figcaption>
               </figure>
             </div>
           </Reveal>
@@ -408,13 +411,13 @@ export function CourtWorld() {
                   <span className="text-[8rem] tracking-tight sm:text-[9.5rem]">{dollars}</span>
                   <span className="mt-3 text-4xl text-ink/70">.{cents}</span>
                 </p>
-                <p className="mt-2 text-ink/60">Shipping included · extra copies {formatPrice(PRICING.extraCopyCents)} each</p>
+                <p className="mt-2 text-ink/80">Shipping included · extra copies {formatPrice(PRICING.extraCopyCents)} each</p>
               </div>
               <div className="mt-10">
                 <Link href="/create" className="btn btn-primary btn-lg w-full">
                   Make your calendar <ArrowRight size={18} />
                 </Link>
-                <p className="mt-4 text-center text-xs text-ink/45">No account and no card needed to start.</p>
+                <p className="mt-4 text-center text-xs text-ink/70">No account and no card needed to start.</p>
               </div>
             </div>
             <div className="p-8 sm:p-12">
@@ -429,7 +432,7 @@ export function CourtWorld() {
               <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5">
                 {PRODUCT_SPECS.slice(0, 4).map((spec) => (
                   <div key={spec.label}>
-                    <dt className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-ink/45">{spec.label}</dt>
+                    <dt className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-ink/70">{spec.label}</dt>
                     <dd className="mt-1 text-sm text-ink/85">{spec.value}</dd>
                   </div>
                 ))}
@@ -488,6 +491,7 @@ export function HeavensWorld() {
     <section className="relative isolate overflow-x-clip text-ivory">
       <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden bg-[#27406b]">
         <Image src="/art/panorama.jpg" alt="" fill sizes="100vw" className="object-cover object-[50%_70%]" />
+        <div className="absolute inset-0 bg-[#0b1730]/35" />
       </div>
       <Seam />
       <div className="relative mx-auto flex min-h-[46rem] max-w-[110rem] flex-col items-center justify-center px-4 pb-[clamp(9rem,24vh,16rem)] pt-56 text-center sm:min-h-[56rem] lg:pt-72">
@@ -496,11 +500,11 @@ export function HeavensWorld() {
         <Cutout name="cherub" className={`left-[8%] top-[12%] ${size.md} max-sm:w-[26vw]`} depth={0.9} rotate={-8} bob={6} />
         <Cutout name="cherub2" className={`right-[9%] top-[9%] ${size.md} max-sm:w-[26vw]`} depth={0.8} rotate={6} bob={7} delay={0.2} />
 
-        <h2 className="collage-title relative z-10 !text-[clamp(3.2rem,11vw,11rem)] drop-shadow-[0_6px_30px_rgb(8_18_40/0.75)]">
+        <h2 className="collage-title relative z-10 !text-[clamp(3.2rem,11vw,11rem)] [text-shadow:0_3px_0_rgb(8_18_40/0.35),0_10px_40px_rgb(8_18_40/0.85)]">
           <span className="serif">Their year</span>
           <span className="sans">starts here</span>
         </h2>
-        <p className="relative z-10 mx-auto mt-7 max-w-md text-lg font-medium text-ivory drop-shadow-[0_2px_12px_rgb(8_18_40/0.9)] sm:text-xl">Three photos. Five minutes. One very proud pet.</p>
+        <p className="relative z-10 mx-auto mt-7 max-w-md rounded-full bg-[#0b1730]/70 px-6 py-3 text-lg font-medium text-white backdrop-blur-md sm:text-xl">Three photos. Five minutes. One very proud pet.</p>
         <div className="relative z-10 mt-8 flex flex-col items-center gap-4">
           <Link href="/create" className="btn btn-light btn-lg shadow-[0_18px_40px_-12px_rgb(8_18_40/0.7)]">
             Make your calendar <ArrowRight size={18} />

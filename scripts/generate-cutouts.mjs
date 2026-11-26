@@ -56,6 +56,7 @@ const CHARACTERS = {
   castle: ['5:4', 'A fairy-tale castle of pale stone with many slender towers and blue-grey conical roofs and tiny flying pennants, standing on a rocky crag wrapped in a ring of soft cloud at its base, as if floating. No animal in this one: only the castle on its crag.'],
   mesa: ['5:4', 'A cluster of red sandstone desert buttes and mesas glowing in warm evening light, with a few tiny cypress-like shrubs at the base, ending in a soft edge of dusty haze at the bottom. No animal in this one: only the rock formation.'],
   temple: ['5:4', 'A small round classical temple ruin with six marble columns, a broken domed roof overgrown with ivy and climbing roses, standing on a low grassy mound with two dark cypress trees beside it. No animal in this one: only the ruin.'],
+  emblem: ['1:1', 'A small oval portrait miniature in an ornate gilded baroque frame with a little gold crown and ribbon bow on top of the frame: inside, the head and shoulders of an Australian shepherd with a blue-merle coat and blue eyes, wearing a tiny gold crown and a crimson velvet mantle, against a dark olive background. Bold, simple shapes and strong contrast so it still reads when very small. Only the framed portrait: nothing else.'],
   garland: ['5:4', 'A swag of roses, peonies and laurel leaves tied with trailing rose-pink silk ribbons, hanging in a gentle curve as if suspended from its two ends. No animal in this one: only the garland.'],
 }
 
@@ -110,9 +111,9 @@ async function make(name) {
 
   const png = Buffer.from(await (await fetch(cutUrl)).arrayBuffer())
   // Two sizes: one for desktops, one a quarter of the pixels for phones (see the srcset in Cutout.tsx).
-  const cut = await sharp(png).trim({ threshold: 8 }).png().toBuffer()
-  const trimmed = await sharp(cut).resize({ width: 880, height: 880, fit: 'inside', withoutEnlargement: true }).webp({ quality: 76, alphaQuality: 80, effort: 6 }).toBuffer()
-  const small = await sharp(cut).resize({ width: 440, height: 440, fit: 'inside' }).webp({ quality: 74, alphaQuality: 78, effort: 6 }).toBuffer()
+  const shape = await sharp(png).trim({ threshold: 8 }).png().toBuffer()
+  const trimmed = await sharp(shape).resize({ width: 880, height: 880, fit: 'inside', withoutEnlargement: true }).webp({ quality: 76, alphaQuality: 80, effort: 6 }).toBuffer()
+  const small = await sharp(shape).resize({ width: 440, height: 440, fit: 'inside' }).webp({ quality: 74, alphaQuality: 78, effort: 6 }).toBuffer()
   await writeFile(path.join(OUT, `${name}.webp`), trimmed)
   await writeFile(path.join(OUT, `${name}-sm.webp`), small)
   const meta = await sharp(trimmed).metadata()
