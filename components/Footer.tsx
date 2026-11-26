@@ -31,7 +31,10 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-16 flex flex-col gap-2 border-t border-ivory/10 pt-6 text-xs text-ivory/40 sm:flex-row sm:justify-between">
-          <p>© {new Date().getFullYear()} {SITE.name}</p>
+          <p>
+            © {new Date().getFullYear()} {SITE.legalName || SITE.name}
+            {SITE.legalAddress && <> · {SITE.legalAddress}</>}
+          </p>
           <p>No pets were harmed in the making of this website. Many were spoiled.</p>
         </div>
       </div>

@@ -7,6 +7,9 @@ export const SITE = {
     process.env.NEXT_PUBLIC_APP_URL ||
     (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:3000'),
   supportEmail: 'hello@petcalendar.ai',
+  /** The legal name and postal address of the business, shown in the footer and legal pages once set. */
+  legalName: process.env.NEXT_PUBLIC_BUSINESS_NAME || '',
+  legalAddress: process.env.NEXT_PUBLIC_BUSINESS_ADDRESS || '',
   tagline: 'Your pet, starring in every month of the year.',
   description:
     'Upload a few photos of your pet, pick from dozens of themes, and we turn them into a 12-month wall calendar — printed on heavyweight paper and shipped free.',
@@ -63,7 +66,8 @@ export function defaultCalendarYear(now: Date = new Date()): number {
   return now.getMonth() >= 8 ? now.getFullYear() + 1 : now.getFullYear()
 }
 
+/** The years a calendar can be made for: the coming one and the one after. */
 export function calendarYearOptions(now: Date = new Date()): number[] {
-  const y = now.getFullYear()
-  return [y, y + 1, y + 2]
+  const first = defaultCalendarYear(now)
+  return [first, first + 1]
 }

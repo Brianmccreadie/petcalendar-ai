@@ -65,6 +65,8 @@ export async function POST(request: Request) {
       line_items,
       shipping_address_collection: { allowed_countries: countries },
       phone_number_collection: { enabled: true },
+      // Sales tax: turn on once Stripe Tax is set up in the Stripe dashboard (STRIPE_TAX_ENABLED=true).
+      ...(process.env.STRIPE_TAX_ENABLED === 'true' ? { automatic_tax: { enabled: true } } : {}),
       metadata: { project_id: projectId, quantity: String(quantity) },
       payment_intent_data: { metadata: { project_id: projectId } },
       success_url: `${SITE.url}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
