@@ -43,7 +43,7 @@ export default function ThemeExplorer() {
         (!q || s.name.toLowerCase().includes(q) || s.description.toLowerCase().includes(q))
     )
     if (category !== 'all' || q) return matches
-    // With no filter, open on a mix: four of the new art styles, then everything else.
+    // With no filter, lead with whatever is new.
     const lead = matches.filter((s) => isNewStyle(s.id)).slice(0, 4)
     return [...lead, ...matches.filter((s) => !lead.includes(s))]
   }, [category, query])

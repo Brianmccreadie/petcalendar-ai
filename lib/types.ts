@@ -77,18 +77,7 @@ export type StyleId =
   | 'anime-world'
   | 'galactic-emperor'
   | 'cottage-core'
-  | 'studio-portrait'
-  | 'watercolor'
-  | 'classic-oil'
-  | 'impressionist'
-  | 'cartoon'
-  | 'storybook'
-  | 'pop-art'
-  | 'pencil-sketch'
-  | 'woodblock'
-  | 'vintage-poster'
-  | 'claymation'
-  | 'paper-cut'
+  | 'renaissance-royals'
 
 export type MultiPetMode = 'alternate' | 'together'
 
@@ -181,7 +170,7 @@ export interface Order {
 // ---- Calendar Style definitions ----
 
 /** What the artwork is made of. Everything is a photograph unless a theme says otherwise. */
-export type Medium = 'photo' | 'watercolor' | 'oil' | 'impressionist' | 'cartoon' | 'storybook' | 'popart' | 'sketch' | 'woodblock' | 'poster' | 'clay' | 'papercut'
+export type Medium = 'photo' | 'oil'
 
 export interface CalendarStyle {
   id: StyleId
@@ -189,7 +178,7 @@ export interface CalendarStyle {
   description: string
   accentColor: string
   preview: string
-  /** Art-style themes: the same seasonal year, rendered in this medium. */
+  /** Set for themes that are painted rather than photographed. */
   medium?: Medium
 }
 
@@ -544,102 +533,13 @@ export const CALENDAR_STYLES: CalendarStyle[] = [
     accentColor: '#8FBC8F',
     preview: '/previews/cottage-core-dog.jpg',
   },
-  // ---- Art styles: one seasonal year, twelve ways to paint it ----
   {
-    id: 'studio-portrait',
-    name: 'Picture Perfect',
-    description: 'Timeless studio portraits, soft light and flowers',
-    accentColor: '#B08D74',
-    preview: '/previews/studio-portrait-dog.jpg',
-    medium: 'photo',
-  },
-  {
-    id: 'watercolor',
-    name: 'Watercolor',
-    description: 'Loose, luminous watercolor on textured paper',
-    accentColor: '#6FA8C9',
-    preview: '/previews/watercolor-dog.jpg',
-    medium: 'watercolor',
-  },
-  {
-    id: 'classic-oil',
-    name: 'Classic Oil Painting',
-    description: 'Old-master landscapes in rich, glazed oils',
-    accentColor: '#7A5C2E',
-    preview: '/previews/classic-oil-dog.jpg',
+    id: 'renaissance-royals',
+    name: 'Renaissance Royals',
+    description: 'Oil-painted portraits of your pet as king or queen',
+    accentColor: '#7A1F2B',
+    preview: '/previews/renaissance-royals-dog.jpg',
     medium: 'oil',
-  },
-  {
-    id: 'impressionist',
-    name: 'Sunlit Impressionist',
-    description: 'Thick, sunny brushstrokes and dappled light',
-    accentColor: '#E0A458',
-    preview: '/previews/impressionist-dog.jpg',
-    medium: 'impressionist',
-  },
-  {
-    id: 'cartoon',
-    name: 'Funny Cartoon',
-    description: 'Big eyes, bold outlines and Saturday-morning colour',
-    accentColor: '#F26B4E',
-    preview: '/previews/cartoon-dog.jpg',
-    medium: 'cartoon',
-  },
-  {
-    id: 'storybook',
-    name: 'Storybook',
-    description: 'Gentle gouache pages from a bedtime picture book',
-    accentColor: '#C97B63',
-    preview: '/previews/storybook-dog.jpg',
-    medium: 'storybook',
-  },
-  {
-    id: 'pop-art',
-    name: 'Pop Art',
-    description: 'Flat neon colour, halftone dots and attitude',
-    accentColor: '#E6399B',
-    preview: '/previews/pop-art-dog.jpg',
-    medium: 'popart',
-  },
-  {
-    id: 'pencil-sketch',
-    name: 'Pencil & Ink',
-    description: 'Fine graphite and ink with a wash of colour',
-    accentColor: '#6B6B6B',
-    preview: '/previews/pencil-sketch-dog.jpg',
-    medium: 'sketch',
-  },
-  {
-    id: 'woodblock',
-    name: 'Woodblock Print',
-    description: 'Flat colour and flowing line, in the Japanese print tradition',
-    accentColor: '#3E6E8E',
-    preview: '/previews/woodblock-dog.jpg',
-    medium: 'woodblock',
-  },
-  {
-    id: 'vintage-poster',
-    name: 'Vintage Travel Poster',
-    description: 'Bold shapes and sun-faded inks from the golden age of travel',
-    accentColor: '#D9822B',
-    preview: '/previews/vintage-poster-dog.jpg',
-    medium: 'poster',
-  },
-  {
-    id: 'claymation',
-    name: 'Clay Animation',
-    description: 'Hand-sculpted clay sets with thumbprints and all',
-    accentColor: '#C96F4A',
-    preview: '/previews/claymation-dog.jpg',
-    medium: 'clay',
-  },
-  {
-    id: 'paper-cut',
-    name: 'Paper Cut',
-    description: 'Layered cut-paper scenes with soft shadows',
-    accentColor: '#5B9A8B',
-    preview: '/previews/paper-cut-dog.jpg',
-    medium: 'papercut',
   },
 ]
 

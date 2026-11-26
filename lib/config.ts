@@ -9,7 +9,7 @@ export const SITE = {
   supportEmail: 'hello@petcalendar.ai',
   tagline: 'Your pet, starring in every month of the year.',
   description:
-    'Upload a few photos of your pet, pick from dozens of themes and art styles, and we turn them into a 12-month wall calendar — printed on heavyweight paper and shipped free.',
+    'Upload a few photos of your pet, pick from dozens of themes, and we turn them into a 12-month wall calendar — printed on heavyweight paper and shipped free.',
 }
 
 export const PRICING = {
