@@ -32,7 +32,7 @@ export default function SiteScene() {
   return (
     <div aria-hidden="true" className="pointer-events-none">
       <div className="fixed inset-0 -z-10 bg-[#f8f3ea]">
-        <Image src="/art/sky-cream.jpg" alt="" fill sizes="100vw" className="object-cover opacity-60" />
+        <Image src="/art/sky-cream.jpg" alt="" fill sizes="100vw" className="object-cover opacity-45" />
       </div>
       <div key={pathname} className="absolute inset-x-0 top-0 -z-10 h-0">
         <Cutout name="cloud2" className="-left-[12%] top-6 w-[clamp(14rem,34vw,30rem)]" depth={0.15} bob={18} />

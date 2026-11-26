@@ -12,38 +12,22 @@ const links = [
   { href: '/#faq', label: 'FAQ' },
 ]
 
-/** The mark: a calendar page that is also a dog — floppy ears over the binding, a face where the date would be. */
-export function LogoMark({ size = 36 }: { size?: number }) {
+/** The mark: the crowned dog from the homepage, painted, in a navy-and-gold medallion. */
+export function LogoMark({ size = 44 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="shrink-0">
-      {/* page */}
-      <rect x="11" y="12" width="42" height="44" rx="10" fill="var(--color-ivory)" />
-      {/* calendar header */}
-      <path d="M11 22a10 10 0 0 1 10-10h22a10 10 0 0 1 10 10v4H11z" fill="var(--color-gold)" />
-      {/* binder rings */}
-      <rect x="24" y="6" width="4" height="12" rx="2" fill="var(--color-night)" stroke="var(--color-ivory)" strokeWidth="1.5" />
-      <rect x="36" y="6" width="4" height="12" rx="2" fill="var(--color-night)" stroke="var(--color-ivory)" strokeWidth="1.5" />
-      {/* ears */}
-      <path d="M15 13C6 11 2 22 5 31c1 4 5 6 8 4 4-3 6-12 6-19 0-2-2-3-4-3z" fill="var(--color-gold-deep)" />
-      <path d="M49 13c9-2 13 9 10 18-1 4-5 6-8 4-4-3-6-12-6-19 0-2 2-3 4-3z" fill="var(--color-gold-deep)" />
-      {/* face */}
-      <circle cx="24.5" cy="36" r="2.6" fill="var(--color-night)" />
-      <circle cx="39.5" cy="36" r="2.6" fill="var(--color-night)" />
-      <path d="M28.6 42.2h6.8c.9 0 1.4 1 .8 1.7l-2.9 3.2a1.8 1.8 0 0 1-2.6 0l-2.9-3.2c-.6-.7-.1-1.7.8-1.700z" fill="var(--color-night)" />
-      <path d="M26.5 49.500c1.800 2 3.800 2 5.500.2 1.700 1.800 3.700 1.800 5.500-.2" fill="none" stroke="var(--color-night)" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/logo-mark-192.webp" alt="" width={size} height={size} className="shrink-0 drop-shadow-[0_2px_4px_rgb(8_18_40/0.35)]" />
   )
 }
 
-/** Two voices, like the section titles: a light serif "Pet" against a heavy grotesk "CALENDAR". */
+/** Two voices, like the headlines: a light serif "Pet" against a heavy grotesk "CALENDAR". */
 export function Logo({ className = '' }: { className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <LogoMark />
       <span className="flex items-baseline leading-none">
-        <span className="font-display text-[1.7rem] tracking-tight">Pet</span>
-        <span className="ml-[0.2em] text-[1.02rem] font-extrabold uppercase tracking-[-0.01em]">Calendar</span>
-        <span className="ml-[0.15em] text-[0.8rem] font-semibold text-gold">.ai</span>
+        <span className="font-display text-[1.75rem] tracking-tight">Pet</span>
+        <span className="ml-[0.18em] text-[1.05rem] font-black uppercase tracking-[-0.01em]">Calendar</span>
       </span>
     </span>
   )

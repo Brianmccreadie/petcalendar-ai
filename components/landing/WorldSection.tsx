@@ -50,6 +50,8 @@ export function Backdrop({ name }: { name: keyof typeof FALLBACK }) {
   return (
     <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden" style={{ background: FALLBACK[name] }}>
       <Image src={`/art/${name}.jpg`} alt="" fill sizes="100vw" className="object-cover" />
+      {/* an even veil of white: the sky stays painted, but text set on it stays easy to read */}
+      <div className="absolute inset-0 bg-white/55" />
     </div>
   )
 }
