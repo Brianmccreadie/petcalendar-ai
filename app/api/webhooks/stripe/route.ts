@@ -2,6 +2,9 @@ import { NextResponse, after } from 'next/server'
 import type Stripe from 'stripe'
 import { jsonError } from '@/lib/api'
 import { ensureOrderForSession, fulfilOrder } from '@/lib/orders'
+import { alertOwner } from '@/lib/alerts'
+import { formatPrice } from '@/lib/config'
+import { orderStatusUrl } from '@/lib/email'
 import { getStripe, stripeWebhookSecret } from '@/lib/stripe'
 
 // Building print PDFs happens in after(); give it time.
@@ -27,6 +30,15 @@ export async function POST(request: Request) {
       const result = await ensureOrderForSession(session.id)
       if (result) {
         const orderId = result.order.id
+        if (result.created) {
+          after(() =>
+            alertOwner({
+              title: `New order: ${formatPrice(result.order.amount_cents)}`,
+              lines: [`${result.order.quantity ?? 1} ${(result.order.quantity ?? 1) > 1 ? 'copies' : 'copy'}`, result.order.email && `Customer: ${result.order.email}`],
+              url: orderStatusUrl(orderId),
+            })
+          )
+        }
         after(async () => {
           try {
             await fulfilOrder(orderId)
@@ -37,6 +49,7 @@ export async function POST(request: Request) {
       }
     } catch (error) {
       console.error('stripe webhook: order creation failed', error)
+      await alertOwner({ urgent: true, title: 'A payment came in but the order could not be saved', lines: [`Stripe session ${session.id}`, error instanceof Error ? error.message : String(error), 'Stripe will retry automatically.'] })
       return jsonError('Order creation failed.', 500) // Stripe will retry
     }
   }

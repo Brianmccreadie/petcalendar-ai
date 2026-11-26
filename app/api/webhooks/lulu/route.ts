@@ -1,3 +1,5 @@
+import { alertOwner } from '@/lib/alerts'
+import { orderStatusUrl } from '@/lib/email'
 import { NextResponse } from 'next/server'
 import { jsonError } from '@/lib/api'
 import { sendShippedEmail } from '@/lib/email'
@@ -72,7 +74,15 @@ export async function POST(request: Request) {
       update.tracking_number = item?.tracking_id ?? null
       update.tracking_url = item?.tracking_urls?.[0] ?? null
     }
-    if (status === 'failed') update.fulfilment_error = `Lulu reported ${luluStatus}`
+    if (status === 'failed') {
+      update.fulfilment_error = `Lulu reported ${luluStatus}`
+      await alertOwner({
+        urgent: true,
+        title: `The printer ${luluStatus === 'CANCELED' ? 'cancelled' : 'rejected'} an order`,
+        lines: [`Order ${order.id}`, `Lulu job ${data.id ?? ''}`, 'The customer has paid. Check the job in Lulu for the reason.'],
+        url: orderStatusUrl(order.id),
+      })
+    }
     await supabase.from('orders').update(update).eq('id', order.id)
 
     if (luluStatus === 'SHIPPED' && order.status !== 'shipped') {

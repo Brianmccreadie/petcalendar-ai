@@ -1,3 +1,4 @@
+import { alertChannels } from './alerts'
 import { resolveProviderName, falApiKey, falKeyShape, geminiApiKey } from './ai/config'
 import { imageProcessingStatus } from './images'
 import { isLuluConfigured } from './lulu'
@@ -95,6 +96,8 @@ export async function readiness() {
     lulu_environment: process.env.LULU_API_ENVIRONMENT === 'sandbox' ? 'sandbox' : 'production',
     lulu: isLuluConfigured(),
     email: Boolean(process.env.RESEND_API_KEY),
+    // Where the owner is told about sales and failures: by email, a chat webhook, or neither.
+    alerts: alertChannels().email || alertChannels().webhook,
     app_url: Boolean(process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL),
   }
   return {

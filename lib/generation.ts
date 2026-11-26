@@ -1,3 +1,5 @@
+import { alertOwner } from './alerts'
+import { SITE } from './config'
 import {
   buildRevisionPrompt,
   buildScenePrompt,
@@ -246,6 +248,8 @@ export async function generateCalendar(projectId: string, options: { onlyIncompl
 
   const cache: ImageCache = new Map()
   let cursor = 0
+  let failedPages = 0
+  let lastFailure = ''
   const worker = async () => {
     while (cursor < queue.length) {
       const { page, plan } = queue[cursor++]
@@ -259,11 +263,23 @@ export async function generateCalendar(projectId: string, options: { onlyIncompl
         await renderAndStore(page, prompt, references, null)
       } catch (error) {
         console.error(`[generate] page ${page.page_type}/${page.month_number ?? '-'} failed:`, error)
+        failedPages++
+        lastFailure = error instanceof Error ? error.message : String(error)
         await setPageStatus(page.id, 'failed')
       }
     }
   }
   await Promise.all(Array.from({ length: Math.min(IMAGE_CONCURRENCY, queue.length) }, worker))
+
+  // Several failed pages in one run usually means the image service is down or out of credit.
+  if (failedPages >= 3) {
+    await alertOwner({
+      urgent: failedPages === queue.length,
+      title: `${failedPages} of ${queue.length} calendar pages failed to generate`,
+      lines: [`Calendar ${projectId}`, lastFailure.slice(0, 300)],
+      url: `${SITE.url}/create/preview?p=${projectId}`,
+    })
+  }
 
   await supabase.from('projects').update({ status: 'preview', updated_at: now() }).eq('id', projectId)
 }
