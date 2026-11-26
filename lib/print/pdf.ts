@@ -40,17 +40,23 @@ import { sniffImageMime } from '../validate'
 //
 // Every page is 11.25 × 8.75 in (trim + 0.125 in bleed on all sides), 72 pt/in.
 //
-// The layout is the one Lulu's API validates for its Wire-O calendar
-// (1100X0850.FC.PRE.WO.100CW200.GXX): a 4-page cover and, for twelve months,
-// a 26-page interior.
+// The arrangement follows Lulu's Calendar Creation Guide and template overlays
+// for its Wire-O calendar (SKU 1100X0850.FC.PRE.WO.100CW200.GXX). Twelve months
+// are 26 printed sides: front cover, then image/grid for each month, then back
+// cover. The first and last sheets are the cover stock, so the January image is
+// the inside of the front cover and the December grid is the inside of the back
+// cover. Lulu's API takes those four sides as the cover file and the rest as
+// the interior. All pages are upright; Lulu handles the turn for top binding.
 //
 //   cover.pdf     page 1  outside front (art + typeset title)
-//                 page 2  inside front  (plain)
-//                 page 3  inside back   (plain)
+//                 page 2  inside front  = January image
+//                 page 3  inside back   = December dates
 //                 page 4  outside back  (thumbnail index of the twelve months)
-//   interior.pdf  page 1  title page (seen under the lifted cover)
-//                 pages 2–25: for each month, the art page then the dates page
-//                 page 26 closing page (seen above the inside back cover)
+//   interior.pdf  22 pages: January dates, then image and dates for February
+//                 to November, then the December image.
+//
+// The wire covers 0.375 in at the top of date pages and the bottom of image
+// pages, and a hanging hole is punched 0.25 in below the top of image pages.
 //
 // Artwork never contains text — titles, month names and dates are typeset here
 // from the same layout constants the on-screen preview uses.
@@ -333,41 +339,15 @@ async function drawBackCover(doc: PDFDocument, page: PDFPage, fonts: Fonts, inpu
   }
 
   const footer = `Made with ${SITE.name}`
-  page.drawText(footer, { x: X(0.5), y: Y(8.05), size: 9, font: fonts.sansBold, color: ink })
+  page.drawText(footer, { x: X(0.5), y: Y(7.9), size: 9, font: fonts.sansBold, color: ink })
   const note = 'Artwork created from your photos. Dates typeset for print.'
   page.drawText(note, {
     x: X(10.5) - fonts.sans.widthOfTextAtSize(note, 8),
-    y: Y(8.05),
+    y: Y(7.9),
     size: 8,
     font: fonts.sans,
     color: muted,
   })
-}
-
-function drawPlainPage(page: PDFPage) {
-  page.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: PAGE_H, color: hex(PAPER) })
-}
-
-/** First inside page: the name, the year and the edition, centred. */
-function drawTitlePage(page: PDFPage, fonts: Fonts, input: PrintInput) {
-  drawPlainPage(page)
-  const centre = (text: string, font: PDFFont, size: number, baseline: number, color: RGB, spacing = 0) => {
-    const width = font.widthOfTextAtSize(text, size) + spacing * Math.max(0, text.length - 1)
-    page.drawText(text, { x: (PAGE_W - width) / 2, y: Y(baseline), size, font, color, characterSpacing: spacing } as Parameters<PDFPage['drawText']>[1])
-  }
-  const name = safeText(fonts.display, joinPetNames(input.petNames))
-  centre(name, fonts.display, fitSize(fonts.display, name, 92, 9 * PT), 4.15, hex(INK))
-  centre(String(input.year), fonts.display, 44, 4.95, hex(MUTED))
-  centre(safeText(fonts.sansBold, `The ${input.styleName} edition`.toUpperCase()), fonts.sansBold, 9, 5.55, hex(MUTED), 1.6)
-}
-
-/** Last inside page: a quiet sign-off. */
-function drawClosingPage(page: PDFPage, fonts: Fonts) {
-  drawPlainPage(page)
-  const text = `Made with ${SITE.name}`
-  page.drawText(text, { x: (PAGE_W - fonts.sansBold.widthOfTextAtSize(text, 10)) / 2, y: Y(4.3), size: 10, font: fonts.sansBold, color: hex(MUTED) })
-  const url = SITE.domain
-  page.drawText(url, { x: (PAGE_W - fonts.sans.widthOfTextAtSize(url, 9)) / 2, y: Y(4.55), size: 9, font: fonts.sans, color: hex(MUTED) })
 }
 
 function newPage(doc: PDFDocument): PDFPage {
@@ -389,8 +369,9 @@ export async function buildCoverPdf(input: PrintInput): Promise<Uint8Array> {
   drawCover(front, cover.image, 0, 0, PAGE_W, PAGE_H)
   drawCoverTitle(front, fonts, input)
 
-  drawPlainPage(newPage(doc))
-  drawPlainPage(newPage(doc))
+  if (input.months.length !== 12) throw new Error(`Expected 12 month images, got ${input.months.length}`)
+  await drawFullBleedArt(doc, newPage(doc), input.months[0])
+  drawGridPage(newPage(doc), fonts, 12, input)
 
   const back = newPage(doc)
   await drawBackCover(doc, back, fonts, input)
@@ -405,11 +386,10 @@ export async function buildInteriorPdf(input: PrintInput): Promise<Uint8Array> {
   doc.setCreator(SITE.name)
   const fonts = await loadFonts(doc)
 
-  drawTitlePage(newPage(doc), fonts, input)
+  // January's image and December's dates are on the cover sheets (see buildCoverPdf).
   for (let month = 1; month <= 12; month++) {
-    await drawFullBleedArt(doc, newPage(doc), input.months[month - 1])
-    drawGridPage(newPage(doc), fonts, month, input)
+    if (month > 1) await drawFullBleedArt(doc, newPage(doc), input.months[month - 1])
+    if (month < 12) drawGridPage(newPage(doc), fonts, month, input)
   }
-  drawClosingPage(newPage(doc), fonts)
   return doc.save()
 }

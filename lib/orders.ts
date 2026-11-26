@@ -98,7 +98,7 @@ export async function ensureOrderForSession(sessionId: string): Promise<{ order:
  * Safe to call again: it does nothing once the order has a Lulu id, and a
  * failed attempt leaves the order in `paid` with `fulfilment_error` set.
  */
-export async function fulfilOrder(orderId: string): Promise<Order> {
+export async function fulfilOrder(orderId: string, options: { rebuild?: boolean; prepareOnly?: boolean } = {}): Promise<Order> {
   const supabase = createAdminSupabaseClient()
   const now = () => new Date().toISOString()
 
@@ -116,7 +116,8 @@ export async function fulfilOrder(orderId: string): Promise<Order> {
     if (!order.shipping_address?.address1) await fail('Order has no shipping address')
 
     let { interior_pdf_url: interiorUrl, cover_pdf_url: coverUrl } = order
-    if (!interiorUrl || !coverUrl) {
+    // `rebuild` discards print files made by an earlier version of the layout.
+    if (options.rebuild || !interiorUrl || !coverUrl) {
       const ctx = await loadProjectContext(order.project_id)
       if (!ctx) await fail('Project not found')
       const { project, pets } = ctx!
@@ -155,7 +156,10 @@ export async function fulfilOrder(orderId: string): Promise<Order> {
         .update({ cover_pdf_url: coverUrl, interior_pdf_url: interiorUrl, updated_at: now() })
         .eq('id', orderId)
       console.log(`[fulfil] built print files for ${joinPetNames(input.petNames)} (${orderId})`)
+      order = { ...order, cover_pdf_url: coverUrl, interior_pdf_url: interiorUrl }
     }
+    // Stop here when the caller only wants the files (to have them checked before ordering).
+    if (options.prepareOnly) return order
 
     if (!isLuluConfigured()) {
       await fail('Print files are ready but Lulu is not configured — submit manually or set LULU_CLIENT_KEY / LULU_CLIENT_SECRET.')
