@@ -146,23 +146,6 @@ export async function fulfilOrder(orderId: string): Promise<Order> {
       }
       for (const page of months) input.months.push(await load(page!))
 
-      // The customer's own photos go on the back cover. Best effort: a missing photo never blocks printing.
-      const { data: photoRows } = await supabase
-        .from('pet_photos')
-        .select('cloudinary_url, created_at')
-        .eq('project_id', order.project_id)
-        .order('created_at')
-        .limit(4)
-      const photos: Buffer[] = []
-      for (const row of photoRows ?? []) {
-        try {
-          photos.push((await fetchStoredImage(row.cloudinary_url)).data)
-        } catch (error) {
-          console.error('[fulfil] could not load a reference photo for the back cover:', error)
-        }
-      }
-      Object.assign(input, { photos })
-
       const coverPdf = await buildCoverPdf(input)
       const interiorPdf = await buildInteriorPdf(input)
       coverUrl = (await uploadPrintFile(orderId, 'cover', coverPdf)).url

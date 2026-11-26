@@ -88,7 +88,6 @@ export default async function SharePage(props: PageProps<'/share/[projectId]'>) 
               caption={`${who} · ${style?.name ?? ''}`}
               cover={calendar.cover as string}
               months={calendar.months as string[]}
-              photos={photos.map((photo) => photo.url)}
             />
           </div>
         ) : (

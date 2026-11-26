@@ -18,8 +18,6 @@ interface CalendarFlipbookProps {
   cover: string
   /** Twelve month images, January first. */
   months: string[]
-  /** The customer's own photos, shown on the back cover. */
-  photos?: string[]
 }
 
 const FLIP_MS = 900
@@ -33,7 +31,7 @@ const label = (view: number) => (view === 0 ? 'Cover' : view === LAST ? 'Back co
  * twelve open spreads that turn over the wire like the real thing, and the back.
  * Arrow keys, swipes, the side buttons and the month strip all turn pages.
  */
-export default function CalendarFlipbook({ petNames, petType, styleName, year, accent, caption, cover, months, photos }: CalendarFlipbookProps) {
+export default function CalendarFlipbook({ petNames, petType, styleName, year, accent, caption, cover, months }: CalendarFlipbookProps) {
   const [view, setView] = useState(0)
   // While a sheet is turning: the two months involved and which way it is going.
   const [turn, setTurn] = useState<{ from: number; to: number; started: boolean } | null>(null)
@@ -101,7 +99,7 @@ export default function CalendarFlipbook({ petNames, petType, styleName, year, a
               <CoverTitle petNames={petNames} year={year} styleName={styleName} petType={petType} />
             </button>
           ) : view === LAST && !turn ? (
-            <BackCover petNames={petNames} months={months} photos={photos} year={year} styleName={styleName} />
+            <BackCover petNames={petNames} months={months} />
           ) : (
             <div className="relative rounded-[3px] shadow-lift">
               <div className="relative aspect-[11/8.5] overflow-hidden rounded-t-[3px] bg-paper-deep">
