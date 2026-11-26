@@ -3,7 +3,7 @@ import { SITE } from '@/lib/config'
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [{ userAgent: '*', allow: '/', disallow: ['/api/', '/create/', '/checkout', '/order/', '/dashboard', '/reveal/'] }],
+    rules: [{ userAgent: '*', allow: '/', disallow: ['/api/', '/create/', '/checkout', '/order/', '/dashboard', '/reveal/', '/share/'] }],
     sitemap: `${SITE.url}/sitemap.xml`,
   }
 }
