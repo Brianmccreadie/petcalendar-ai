@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import BackCover from '@/components/calendar/BackCover'
+import ProductDetails from '@/components/calendar/ProductDetails'
 import CoverTitle from '@/components/calendar/CoverTitle'
 import WallCalendar from '@/components/calendar/WallCalendar'
 import { ArrowLeft, ArrowRight, Check, Play, Refresh } from '@/components/icons'
@@ -346,6 +347,17 @@ export default function ReviewStep() {
                 <ArrowRight size={18} />
               </button>
             </div>
+
+            {!showBack && slot.page_type === 'month' && (
+              <p className="mt-4 text-center text-sm text-ink-soft">
+                This is the printed page as it hangs: your artwork on top, {slotLabel(slot)}’s dates underneath. 11 × 17 in open.
+              </p>
+            )}
+            {!showBack && slot.page_type === 'cover' && (
+              <p className="mt-4 text-center text-sm text-ink-soft">The front cover, 11 × 8.5 in. Pick a month to see its dated page.</p>
+            )}
+
+            <ProductDetails className="mt-8" />
 
             {(data.photos?.length ?? 0) > 0 && (
               <div className="mt-8 border-t border-rule pt-5">

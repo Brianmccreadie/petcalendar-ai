@@ -5,6 +5,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import CoverTitle from '@/components/calendar/CoverTitle'
+import ProductDetails from '@/components/calendar/ProductDetails'
+import WallCalendar from '@/components/calendar/WallCalendar'
 import { ArrowLeft, Lock, Truck } from '@/components/icons'
 import { joinPetNames } from '@/lib/calendar/layout'
 import { calendarSlots, isCalendarComplete, useCalendar } from '@/lib/client/use-calendar'
@@ -34,6 +36,7 @@ export default function CheckoutStep() {
   const names = joinPetNames(petNames)
   const style = styleById(data.project.style)
   const cover = calendarSlots(data)[0]
+  const january = calendarSlots(data)[1]
   const complete = isCalendarComplete(data)
   const ordered = data.project.status === 'ordered'
   const total = orderTotalCents(quantity)
@@ -76,13 +79,29 @@ export default function CheckoutStep() {
           <Link href={`/create/preview?p=${projectId}`} className="btn btn-quiet btn-sm mt-4">
             <ArrowLeft size={16} /> Back to review
           </Link>
+
+          {/* one month as it hangs, so the dated page is seen before paying */}
+          {january?.image_url && (
+            <div className="mx-auto mt-8 max-w-[22rem]">
+              <WallCalendar
+                imageUrl={january.image_url}
+                imageAlt={`January page of ${names}’s calendar`}
+                month={1}
+                year={data.project.start_year}
+                accent={style?.accentColor}
+                caption={`${names} · ${style?.name ?? ''}`}
+              />
+              <p className="mt-3 text-center text-sm text-ink-soft">Every month looks like this: artwork on top, dates underneath.</p>
+            </div>
+          )}
+          <ProductDetails className="mt-8" />
         </div>
 
         <div className="card p-6 sm:p-8">
           <h2 className="font-display text-3xl">
             {names} — {data.project.start_year}
           </h2>
-          <p className="mt-1 text-ink-soft">{style?.name} theme · 11 × 8.5 in wall calendar · cover + 12 months</p>
+          <p className="mt-1 text-ink-soft">{style?.name} theme · wire-bound wall calendar, 11 × 8.5 in (opens to 11 × 17 in) · cover + 12 months</p>
 
           <div className="mt-6 flex items-center justify-between border-y border-rule py-4">
             <div>
