@@ -41,7 +41,7 @@ export default function SiteScene() {
           <Cutout
             name={mascot[1]}
             flip={mascot[2]}
-            className="right-[max(1rem,calc(50%-41rem))] top-24 hidden w-[clamp(6rem,9vw,8.5rem)] xl:block"
+            className="right-[max(1rem,calc(50%-46.5rem))] top-24 hidden w-[8rem] min-[1560px]:block"
             depth={0.35}
             bob={0}
             delay={0.15}
