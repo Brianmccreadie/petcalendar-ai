@@ -14,9 +14,10 @@ const LULU_AUTH_BASE = process.env.LULU_API_ENVIRONMENT === 'sandbox'
   ? 'https://api.sandbox.lulu.com'
   : 'https://api.lulu.com'
 
-// Calendar product: 11x8.5" Wire-O, full color, premium, 100# coated white, glossy cover
-// Generate your exact pod_package_id at https://developers.lulu.com/price-calculator
-const CALENDAR_POD_PACKAGE_ID = process.env.LULU_CALENDAR_POD_PACKAGE_ID || '1100X0850FCPREWI100CW444GXX'
+// Calendar product, as shown by Lulu's pricing calculator for a 12-month calendar:
+// US Letter Landscape 11 x 8.5 in, Calendar Wire-O, Premium Color, 100# White Coated.
+// The calculator prints the SKU with dots (1100X0850.FC.PRE.WO.100CW200.GXX); the API takes it without.
+const CALENDAR_POD_PACKAGE_ID = (process.env.LULU_CALENDAR_POD_PACKAGE_ID || '1100X0850FCPREWO100CW200GXX').replace(/[.\s]/g, '')
 
 // Print files come from lib/print/pdf.ts: a 2-page cover PDF and a 24-page
 // interior PDF, each page 11.25 x 8.75 in (trim + 0.125 in bleed).
@@ -305,3 +306,51 @@ function mapShippingLevel(method: string): string {
 
 // Re-export types needed by other modules
 export type { LuluCostResult }
+
+// ---------------------------------------------------------------------------
+// File validation: ask Lulu whether it accepts the print files, without ordering
+// ---------------------------------------------------------------------------
+
+async function luluJson(path: string, init?: RequestInit): Promise<{ status: number; body: unknown }> {
+  const response = await fetch(`${LULU_API_BASE}${path}`, { ...init, headers: await luluHeaders() })
+  const text = await response.text()
+  try {
+    return { status: response.status, body: JSON.parse(text) }
+  } catch {
+    return { status: response.status, body: text.slice(0, 600) }
+  }
+}
+
+/** Poll a validation record until Lulu has finished looking at the file (or we give up). */
+async function pollValidation(path: string, id: unknown): Promise<unknown> {
+  for (let i = 0; i < 20; i++) {
+    await new Promise((resolve) => setTimeout(resolve, 3000))
+    const { body } = await luluJson(`${path}${id}/`)
+    const status = (body as { status?: string })?.status
+    if (status && !['NULL', 'VALIDATING', 'NORMALIZING'].includes(status)) return body
+  }
+  return { status: 'TIMED_OUT' }
+}
+
+/**
+ * Run Lulu's own checks on a pair of print files: the interior, the cover size
+ * it expects for that interior, and the cover. Nothing is ordered or charged.
+ */
+export async function validatePrintFiles(interiorPdfUrl: string, coverPdfUrl: string) {
+  const sku = CALENDAR_POD_PACKAGE_ID
+  const started = await luluJson('/validate-interior/', { method: 'POST', body: JSON.stringify({ file_url: interiorPdfUrl, pod_package_id: sku }) })
+  const interiorId = (started.body as { id?: unknown })?.id
+  const interior = interiorId ? await pollValidation('/validate-interior/', interiorId) : started
+  const pageCount = (interior as { page_count?: number })?.page_count
+
+  const coverDimensions = pageCount
+    ? await luluJson('/cover-dimensions/', { method: 'POST', body: JSON.stringify({ pod_package_id: sku, interior_page_count: pageCount }) })
+    : null
+  const coverStarted = pageCount
+    ? await luluJson('/validate-cover/', { method: 'POST', body: JSON.stringify({ file_url: coverPdfUrl, pod_package_id: sku, interior_page_count: pageCount }) })
+    : null
+  const coverId = (coverStarted?.body as { id?: unknown })?.id
+  const cover = coverId ? await pollValidation('/validate-cover/', coverId) : coverStarted
+
+  return { environment: LULU_API_BASE, sku, interior, coverDimensions, cover }
+}
