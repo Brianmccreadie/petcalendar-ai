@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Plus } from '@/components/icons'
 import { joinPetNames } from '@/lib/calendar/layout'
+import { SITE } from '@/lib/config'
 import { removeProject, useSavedProjects, type SavedProject } from '@/lib/client/project-store'
 import type { CalendarData } from '@/lib/client/use-calendar'
 import { styleById } from '@/lib/style-meta'
@@ -63,10 +64,7 @@ export default function MyCalendars() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="eyebrow">Saved in this browser</p>
-          <h1 className="display mt-3 text-5xl sm:text-6xl">My calendars</h1>
-        </div>
+        <h1 className="display text-5xl sm:text-6xl">My calendars</h1>
         <Link href="/create" className="btn btn-primary">
           <Plus size={18} /> New calendar
         </Link>
@@ -128,6 +126,21 @@ export default function MyCalendars() {
           })}
         </ul>
       )}
+
+      <aside className="mx-auto mt-14 max-w-2xl rounded-2xl bg-white/70 px-6 py-5 text-center text-sm text-ink-soft">
+        <p className="font-semibold text-ink">Not seeing a calendar you made?</p>
+        <p className="mt-1">
+          Calendars are remembered by the browser you made them in, not by an account. Open this page in that same browser and
+          device. Or find your calendar’s review page in your browser history: opening it once adds it back to this list.
+        </p>
+        <p className="mt-1">
+          Still stuck? Write to{' '}
+          <a className="link-line text-ink" href={`mailto:${SITE.supportEmail}`}>
+            {SITE.supportEmail}
+          </a>{' '}
+          and we’ll find it.
+        </p>
+      </aside>
     </div>
   )
 }
