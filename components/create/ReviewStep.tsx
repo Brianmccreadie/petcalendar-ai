@@ -310,9 +310,6 @@ export default function ReviewStep() {
               <BackCover
                 petNames={petNames}
                 months={slots.slice(1).map((m) => (m.status === 'complete' ? m.image_url : null))}
-                photos={(data.photos ?? []).map((photo) => photo.url)}
-                year={year}
-                styleName={style?.name}
               />
             ) : slot.page_type === 'cover' ? (
               <div className="relative aspect-[11/8.5] overflow-hidden rounded-[3px] shadow-lift">
@@ -456,7 +453,7 @@ export default function ReviewStep() {
             <div className="card p-5">
               <h2 className="font-display text-2xl">Back cover</h2>
               <p className="mt-2 text-sm text-ink-soft">
-                The back shows all twelve months and the original photos you uploaded. It’s built from your pages, so it updates by itself whenever you change one.
+                The back is an index of all twelve months. It’s built from your pages, so it updates by itself whenever you change one.
               </p>
             </div>
           )}
