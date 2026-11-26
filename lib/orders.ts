@@ -1,3 +1,5 @@
+import { alertOwner } from './alerts'
+import { orderStatusUrl } from './email'
 import type Stripe from 'stripe'
 import { joinPetNames } from './calendar/layout'
 import { sendOrderConfirmation } from './email'
@@ -182,6 +184,12 @@ export async function fulfilOrder(orderId: string, options: { rebuild?: boolean;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     console.error(`[fulfil] order ${orderId} failed:`, message)
+    await alertOwner({
+      urgent: true,
+      title: 'A paid order did not reach the printer',
+      lines: [`Order ${orderId}`, message.slice(0, 400), 'The customer has paid. Fix the cause, then re-send it with the admin fulfil tool.'],
+      url: orderStatusUrl(orderId),
+    })
     await supabase.from('orders').update({ fulfilment_error: message.slice(0, 1000), updated_at: now() }).eq('id', orderId)
     throw error
   }
