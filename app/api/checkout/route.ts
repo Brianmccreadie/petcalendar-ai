@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type Stripe from 'stripe'
 import { jsonError, readJson } from '@/lib/api'
 import { joinPetNames } from '@/lib/calendar/layout'
-import { PRICING, SHIPPING, SITE } from '@/lib/config'
+import { PRICING, SHIP_TO, SITE, type ShipCountry } from '@/lib/config'
 import { ordersTableReady } from '@/lib/readiness'
 import { getStripe, stripeSecretKey } from '@/lib/stripe'
 import { styleById } from '@/lib/style-meta'
@@ -14,7 +14,7 @@ type Country = Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.All
 // Guest checkout: Stripe collects email, phone and a validated shipping address.
 export async function POST(request: Request) {
   try {
-    const body = await readJson<{ project_id?: unknown; quantity?: unknown }>(request)
+    const body = await readJson<{ project_id?: unknown; quantity?: unknown; country?: unknown }>(request)
     const projectId = body?.project_id
     if (!isUuid(projectId)) return jsonError('project_id is required.', 400)
     const quantity = Math.max(1, Math.min(PRICING.maxCopies, Math.floor(Number(body?.quantity)) || 1))
@@ -40,10 +40,10 @@ export async function POST(request: Request) {
 
     const names = joinPetNames((pets ?? []).map((p) => p.name).filter(Boolean)) || project.pet_name || 'Your pet'
     const style = styleById(project.style)
-    const countries = (process.env.SHIPPING_COUNTRIES || 'US')
-      .split(',')
-      .map((c) => c.trim().toUpperCase())
-      .filter(Boolean) as Country[]
+    // Stripe shows every rate to every address, so the destination is chosen
+    // before checkout and the session only accepts addresses in that country.
+    const country: ShipCountry = typeof body?.country === 'string' && body.country in SHIP_TO ? (body.country as ShipCountry) : 'US'
+    const countries: Country[] = [country]
 
     const product = (label: string) => ({
       name: `${names} — ${project.start_year} wall calendar${label}`,
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
 
     const taxed = process.env.STRIPE_TAX_ENABLED === 'true'
     // Flat rate per order; the customer picks the speed on Stripe's page.
-    const shipping_options = Object.values(SHIPPING).map((option) => ({
+    const shipping_options = Object.values(SHIP_TO[country].rates).map((option) => ({
       shipping_rate_data: {
         type: 'fixed_amount' as const,
         display_name: `${option.name} shipping`,

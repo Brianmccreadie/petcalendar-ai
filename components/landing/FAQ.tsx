@@ -27,7 +27,7 @@ export const faqs = [
   },
   {
     q: 'How long does delivery take?',
-    a: 'Printing takes 3–5 business days. Standard US shipping then takes another 5–7 business days, or you can choose expedited at checkout for 2–3. You get a tracking link as soon as it leaves the printer.',
+    a: 'Printing takes 3–5 business days. Standard US shipping then takes another 5–7 business days, or you can choose expedited at checkout for 2–3. We ship to the US and Canada; Canadian orders take a little longer, and the date pages mark US holidays. You get a tracking link as soon as it leaves the printer.',
   },
   {
     q: 'Can I order extra copies?',

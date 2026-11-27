@@ -10,7 +10,7 @@ import WallCalendar from '@/components/calendar/WallCalendar'
 import { ArrowLeft, Lock, Truck } from '@/components/icons'
 import { joinPetNames } from '@/lib/calendar/layout'
 import { calendarSlots, isCalendarComplete, useCalendar } from '@/lib/client/use-calendar'
-import { PRICING, SHIPPING, formatPrice, orderTotalCents } from '@/lib/config'
+import { PRICING, SHIP_TO, formatPrice, orderTotalCents, type ShipCountry } from '@/lib/config'
 import { styleById } from '@/lib/style-meta'
 import MissingProject from './MissingProject'
 import StepHeader from './StepHeader'
@@ -20,6 +20,7 @@ export default function CheckoutStep() {
   const { data, state } = useCalendar(projectId, 5000)
   const [quantity, setQuantity] = useState(1)
   const [submitting, setSubmitting] = useState(false)
+  const [country, setCountry] = useState<ShipCountry>('US')
   const [error, setError] = useState<string | null>(null)
 
   if (state === 'missing') return <MissingProject />
@@ -48,7 +49,7 @@ export default function CheckoutStep() {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ project_id: projectId, quantity }),
+        body: JSON.stringify({ project_id: projectId, quantity, country }),
       })
       const body = await res.json().catch(() => ({}))
       if (!res.ok || !body.url) throw new Error(body.error || 'Could not start checkout. Please try again.')
@@ -133,6 +134,23 @@ export default function CheckoutStep() {
             </div>
           </div>
 
+          <div className="flex items-center justify-between border-b border-rule py-4">
+            <p className="font-bold">Ship to</p>
+            <div className="flex gap-1 rounded-full border-[1.5px] border-ink p-1" role="group" aria-label="Ship to">
+              {(Object.keys(SHIP_TO) as ShipCountry[]).map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  aria-pressed={country === code}
+                  onClick={() => setCountry(code)}
+                  className={`rounded-full px-4 py-1.5 text-sm font-bold ${country === code ? 'bg-ink text-paper' : 'hover:bg-paper-deep'}`}
+                >
+                  {SHIP_TO[code].label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <dl className="mt-4 space-y-2 text-[0.95rem]">
             <div className="flex justify-between">
               <dt className="text-ink-soft">First calendar</dt>
@@ -148,7 +166,7 @@ export default function CheckoutStep() {
             )}
             <div className="flex justify-between">
               <dt className="text-ink-soft">Shipping</dt>
-              <dd className="font-semibold">from {formatPrice(SHIPPING.standard.cents)}</dd>
+              <dd className="font-semibold">from {formatPrice(SHIP_TO[country].rates.standard.cents)}</dd>
             </div>
             <div className="flex justify-between border-t border-rule pt-3 text-lg">
               <dt className="font-bold">Subtotal</dt>

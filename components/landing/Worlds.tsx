@@ -351,7 +351,7 @@ const included = [
   'Cover and twelve months of custom artwork',
   'Redo or revise any page, as often as you like',
   'Your pet’s name and every date typeset for print',
-  'Tracked US shipping, standard or expedited',
+  'Tracked shipping to the US and Canada',
 ]
 
 export function CourtWorld() {

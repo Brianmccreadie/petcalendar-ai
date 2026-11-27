@@ -55,12 +55,25 @@ export const SHIPPING = {
   expedited: { method: 'EXPEDITED', cents: 1999, name: 'Expedited', minDays: 2, maxDays: 3 },
 } as const
 
+/** Where we ship, and what each destination pays. Prices are in USD. */
+export const SHIP_TO = {
+  US: { label: 'United States', rates: SHIPPING },
+  CA: {
+    label: 'Canada',
+    rates: {
+      standard: { method: 'STANDARD', cents: 1299, name: 'Standard', minDays: 7, maxDays: 14 },
+      expedited: { method: 'EXPEDITED', cents: 2999, name: 'Expedited', minDays: 3, maxDays: 5 },
+    },
+  },
+} as const
+export type ShipCountry = keyof typeof SHIP_TO
+
 export const PRODUCT_SPECS = [
   { label: 'Size', value: '11 × 8.5 in, opens to 11 × 17 in' },
   { label: 'Paper', value: '100# coated, full colour' },
   { label: 'Binding', value: 'Wire-O with hanging hole' },
   { label: 'Pages', value: 'Cover + 12 months' },
-  { label: 'Shipping', value: `US, from ${formatPrice(SHIPPING.standard.cents)}` },
+  { label: 'Shipping', value: `US from ${formatPrice(SHIPPING.standard.cents)}, Canada from ${formatPrice(SHIP_TO.CA.rates.standard.cents)}` },
 ]
 
 export function formatPrice(cents: number): string {
