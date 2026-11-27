@@ -729,7 +729,7 @@ export default function ReviewStep() {
               </Link>
               <div className="flex items-center gap-4">
                 <p className="hidden text-sm font-semibold text-ink-soft sm:block">
-                  {allDone ? 'Free shipping · printed in 3–5 days' : 'Ordering unlocks when all 13 pages are ready'}
+                  {allDone ? 'Printed in 3–5 days' : 'Ordering unlocks when all 13 pages are ready'}
                 </p>
                 {allDone ? (
                   <Link href={`/checkout?p=${projectId}`} className="btn btn-primary">

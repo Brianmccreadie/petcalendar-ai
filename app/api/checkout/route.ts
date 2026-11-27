@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type Stripe from 'stripe'
 import { jsonError, readJson } from '@/lib/api'
 import { joinPetNames } from '@/lib/calendar/layout'
-import { PRICING, SITE } from '@/lib/config'
+import { PRICING, SHIPPING, SITE } from '@/lib/config'
 import { ordersTableReady } from '@/lib/readiness'
 import { getStripe, stripeSecretKey } from '@/lib/stripe'
 import { styleById } from '@/lib/style-meta'
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 
     const product = (label: string) => ({
       name: `${names} — ${project.start_year} wall calendar${label}`,
-      description: `${style?.name ?? 'Custom'} theme · 11 × 8.5 in, Wire-O bound · free shipping`,
+      description: `${style?.name ?? 'Custom'} theme · 11 × 8.5 in, Wire-O bound`,
       images: [cover.cloudinary_url as string],
     })
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
@@ -60,13 +60,30 @@ export async function POST(request: Request) {
       })
     }
 
+    const taxed = process.env.STRIPE_TAX_ENABLED === 'true'
+    // Flat rate per order; the customer picks the speed on Stripe's page.
+    const shipping_options = Object.values(SHIPPING).map((option) => ({
+      shipping_rate_data: {
+        type: 'fixed_amount' as const,
+        display_name: `${option.name} shipping`,
+        fixed_amount: { amount: option.cents, currency: PRICING.currency },
+        delivery_estimate: {
+          minimum: { unit: 'business_day' as const, value: option.minDays },
+          maximum: { unit: 'business_day' as const, value: option.maxDays },
+        },
+        metadata: { method: option.method },
+        ...(taxed ? { tax_behavior: 'exclusive' as const } : {}),
+      },
+    }))
+
     const session = await getStripe().checkout.sessions.create({
       mode: 'payment',
       line_items,
       shipping_address_collection: { allowed_countries: countries },
+      shipping_options,
       phone_number_collection: { enabled: true },
       // Sales tax: turn on once Stripe Tax is set up in the Stripe dashboard (STRIPE_TAX_ENABLED=true).
-      ...(process.env.STRIPE_TAX_ENABLED === 'true' ? { automatic_tax: { enabled: true } } : {}),
+      ...(taxed ? { automatic_tax: { enabled: true } } : {}),
       metadata: { project_id: projectId, quantity: String(quantity) },
       payment_intent_data: { metadata: { project_id: projectId } },
       success_url: `${SITE.url}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,

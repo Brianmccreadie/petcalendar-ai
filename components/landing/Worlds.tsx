@@ -8,7 +8,7 @@ import GridPage from '@/components/calendar/GridPage'
 import WallCalendar from '@/components/calendar/WallCalendar'
 import Reveal from '@/components/Reveal'
 import { ArrowRight, Plus } from '@/components/icons'
-import { PRICING, PRODUCT_SPECS, SITE, defaultCalendarYear, formatPrice } from '@/lib/config'
+import { PRICING, PRODUCT_SPECS, SHIPPING, SITE, defaultCalendarYear, formatPrice } from '@/lib/config'
 import { SHOWCASE, SHOWCASE_PLACES } from '@/lib/showcase'
 import { CALENDAR_STYLES } from '@/lib/types'
 import Cutout from './Cutout'
@@ -351,7 +351,7 @@ const included = [
   'Cover and twelve months of custom artwork',
   'Redo or revise any page, as often as you like',
   'Your pet’s name and every date typeset for print',
-  'Free US shipping with tracking',
+  'Tracked US shipping, standard or expedited',
 ]
 
 export function CourtWorld() {
@@ -388,7 +388,7 @@ export function CourtWorld() {
                   <span className="text-[8rem] tracking-tight sm:text-[9.5rem]">{dollars}</span>
                   <span className="mt-3 text-4xl text-ink/70">.{cents}</span>
                 </p>
-                <p className="mt-2 text-ink/80">Shipping included · extra copies {formatPrice(PRICING.extraCopyCents)} each</p>
+                <p className="mt-2 text-ink/80">Plus shipping from {formatPrice(SHIPPING.standard.cents)} · extra copies {formatPrice(PRICING.extraCopyCents)} each</p>
               </div>
               <div className="mt-10">
                 <Link href="/create" className="btn btn-primary btn-lg w-full">

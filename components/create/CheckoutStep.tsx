@@ -10,7 +10,7 @@ import WallCalendar from '@/components/calendar/WallCalendar'
 import { ArrowLeft, Lock, Truck } from '@/components/icons'
 import { joinPetNames } from '@/lib/calendar/layout'
 import { calendarSlots, isCalendarComplete, useCalendar } from '@/lib/client/use-calendar'
-import { PRICING, formatPrice, orderTotalCents } from '@/lib/config'
+import { PRICING, SHIPPING, formatPrice, orderTotalCents } from '@/lib/config'
 import { styleById } from '@/lib/style-meta'
 import MissingProject from './MissingProject'
 import StepHeader from './StepHeader'
@@ -148,10 +148,10 @@ export default function CheckoutStep() {
             )}
             <div className="flex justify-between">
               <dt className="text-ink-soft">Shipping</dt>
-              <dd className="font-semibold text-ok">Free</dd>
+              <dd className="font-semibold">from {formatPrice(SHIPPING.standard.cents)}</dd>
             </div>
             <div className="flex justify-between border-t border-rule pt-3 text-lg">
-              <dt className="font-bold">Total</dt>
+              <dt className="font-bold">Subtotal</dt>
               <dd className="font-display text-3xl">{formatPrice(total)}</dd>
             </div>
           </dl>
@@ -167,7 +167,7 @@ export default function CheckoutStep() {
             </p>
           ) : (
             <button type="button" className="btn btn-primary btn-lg mt-6 w-full" onClick={pay} disabled={submitting}>
-              <Lock size={18} /> {submitting ? 'Opening secure checkout…' : `Pay ${formatPrice(total)}`}
+              <Lock size={18} /> {submitting ? 'Opening secure checkout…' : 'Continue to payment'}
             </button>
           )}
 

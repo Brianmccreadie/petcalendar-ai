@@ -46,12 +46,21 @@ export const LIMITS = {
   staleGenerationMs: 6 * 60 * 1000,
 }
 
+/**
+ * One flat shipping charge per order, however many copies are in it. `method`
+ * is what the order stores and lib/lulu.ts maps to the printer's service.
+ */
+export const SHIPPING = {
+  standard: { method: 'STANDARD', cents: 699, name: 'Standard', minDays: 5, maxDays: 7 },
+  expedited: { method: 'EXPEDITED', cents: 1999, name: 'Expedited', minDays: 2, maxDays: 3 },
+} as const
+
 export const PRODUCT_SPECS = [
   { label: 'Size', value: '11 × 8.5 in, opens to 11 × 17 in' },
   { label: 'Paper', value: '100# coated, full colour' },
   { label: 'Binding', value: 'Wire-O with hanging hole' },
   { label: 'Pages', value: 'Cover + 12 months' },
-  { label: 'Shipping', value: 'Free in the US' },
+  { label: 'Shipping', value: `US, from ${formatPrice(SHIPPING.standard.cents)}` },
 ]
 
 export function formatPrice(cents: number): string {

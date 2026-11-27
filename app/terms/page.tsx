@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import LegalPage from '@/components/LegalPage'
-import { PRICING, SITE, formatPrice } from '@/lib/config'
+import { PRICING, SHIPPING, SITE, formatPrice } from '@/lib/config'
 
 export const metadata: Metadata = { title: 'Terms of Service', alternates: { canonical: '/terms' } }
 
@@ -36,8 +36,8 @@ export default function TermsPage() {
 
       <h2>Prices and payment</h2>
       <p>
-        The first calendar is {formatPrice(PRICING.firstCopyCents)} and each extra copy in the same order is {formatPrice(PRICING.extraCopyCents)}, with
-        shipping to US addresses included. Any sales tax is shown at checkout. Payment is taken by Stripe when you place the order.
+        The first calendar is {formatPrice(PRICING.firstCopyCents)} and each extra copy in the same order is {formatPrice(PRICING.extraCopyCents)}, plus
+        shipping to a US address: {formatPrice(SHIPPING.standard.cents)} standard or {formatPrice(SHIPPING.expedited.cents)} expedited per order. Any sales tax is shown at checkout. Payment is taken by Stripe when you place the order.
         Previews are free and there is no charge unless you order.
       </p>
 

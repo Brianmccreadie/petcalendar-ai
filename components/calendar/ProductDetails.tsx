@@ -57,7 +57,7 @@ export default function ProductDetails({ className = '', compact = false }: { cl
             </div>
           ))}
           <div>
-            <dt className="font-semibold leading-snug">{PRODUCT_SPECS.find((s) => s.label === 'Shipping')?.value ?? 'Free US shipping'}</dt>
+            <dt className="font-semibold leading-snug">{PRODUCT_SPECS.find((s) => s.label === 'Shipping')?.value ?? 'US shipping'}</dt>
             <dd className="text-sm text-ink-soft">Printed in 3–5 business days, then shipped with tracking.</dd>
           </div>
         </dl>

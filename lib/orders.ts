@@ -54,12 +54,15 @@ export async function ensureOrderForSession(sessionId: string): Promise<{ order:
   const existing = await findExisting()
   if (existing) return { order: existing, created: false }
 
-  const session = (await getStripe().checkout.sessions.retrieve(sessionId)) as SessionWithShipping
+  const session = (await getStripe().checkout.sessions.retrieve(sessionId, { expand: ['shipping_cost.shipping_rate'] })) as SessionWithShipping
   if (session.payment_status !== 'paid') return null
   const projectId = session.metadata?.project_id
   if (!isUuid(projectId)) return null
 
   const shipping = shippingFromSession(session)
+  // The speed the customer paid for, set as metadata on the rate at checkout.
+  const rate = session.shipping_cost?.shipping_rate
+  const shippingMethod = (rate && typeof rate === 'object' && rate.metadata?.method) || 'STANDARD'
   const { data: inserted, error } = await supabase
     .from('orders')
     .insert({
@@ -70,6 +73,7 @@ export async function ensureOrderForSession(sessionId: string): Promise<{ order:
       status: 'paid',
       shipping_name: shipping?.name || null,
       shipping_address: shipping,
+      shipping_method: shippingMethod,
       amount_cents: session.amount_total ?? 0,
       currency: session.currency || 'usd',
       email: session.customer_details?.email || null,
